@@ -6,7 +6,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
 
+# Build outputs
 node_modules
 dist
 dist-ssr
@@ -23,8 +27,14 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment
-.env.local
-.env.production.local
+# Environment & Secrets (NEVER COMMIT!)
 .env
+.env.local
+.env.*.local
+*.env.local
+serviceAccountKey*.json
+service-account*.json
+*firebase-adminsdk*.json
+credentials.json
+
 *.timestamp-*.mjs

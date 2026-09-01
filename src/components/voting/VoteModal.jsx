@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../common/Modal';
 import { useVote } from '../../hooks/useVote';
+import { useAuth } from '../../context/AuthContext';
 
 export function VoteModal({ 
   pandhal, 
@@ -8,6 +9,7 @@ export function VoteModal({
   onClose, 
   onVoteRecorded 
 }) {
+  const { user } = useAuth();
   const [phoneNumber, setPhoneNumber] = useState('');
   const { 
     isSubmitting, 
@@ -99,7 +101,7 @@ export function VoteModal({
         )}
 
         {/* Selected Pandhal Avatar & Title */}
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '16px' }}>
           <img 
             src={pandhal.photos[0]?.src || ''} 
             alt={pandhal.name} 
@@ -128,6 +130,41 @@ export function VoteModal({
             📍 {pandhal.location}
           </p>
         </div>
+
+        {/* Verified Google User Badge */}
+        {user && (
+          <div 
+            style={{
+              background: 'rgba(204, 255, 0, 0.08)',
+              border: '1.5px solid var(--neon-lime)',
+              borderRadius: '12px',
+              padding: '8px 12px',
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              textAlign: 'left'
+            }}
+          >
+            {user.photoURL ? (
+              <img 
+                src={user.photoURL} 
+                alt={user.displayName || 'Voter'} 
+                style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1.5px solid var(--neon-lime)' }}
+              />
+            ) : (
+              <span style={{ fontSize: '18px' }}>👤</span>
+            )}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--neon-lime)', fontWeight: 800, textTransform: 'uppercase' }}>
+                ✓ VERIFIED GOOGLE VOTER
+              </div>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {user.displayName || user.email}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* STATE 1: Phone Form */}
         {!isDelayed && !successData && (

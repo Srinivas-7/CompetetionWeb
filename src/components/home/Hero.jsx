@@ -1,6 +1,9 @@
 import React from 'react';
+import { useAuth } from '../../context/AuthContext';
 
 export function Hero({ onExploreClick, totalVotes = 0 }) {
+  const { user, logout } = useAuth();
+
   return (
     <div style={{ background: 'var(--bg-page)', color: '#ffffff', overflow: 'hidden' }}>
       {/* 1. Sticky High-Energy Header (Mobile-Optimized Spacing) */}
@@ -63,29 +66,50 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
             </div>
           </div>
 
-          {/* Right Live Pill + Quick Action */}
+          {/* Right User Profile + Live Pill + Quick Action */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-            <span 
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.66rem',
-                fontWeight: 800,
-                color: '#000000',
-                background: 'var(--neon-lime)',
-                border: '1.5px solid #000000',
-                padding: '3px 8px',
-                borderRadius: 'var(--radius-pill)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                boxShadow: '1.5px 1.5px 0px #ffffff',
-                whiteSpace: 'nowrap',
-                flexShrink: 0
-              }}
-            >
-              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#ff0000' }} />
-              2026 LIVE
-            </span>
+            {/* Logged in Google User Pill */}
+            {user && (
+              <div 
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  borderRadius: 'var(--radius-pill)',
+                  padding: '2px 8px 2px 2px',
+                  cursor: 'pointer'
+                }}
+                onClick={logout}
+                title={`Signed in as ${user.email}. Click to sign out.`}
+              >
+                {user.photoURL ? (
+                  <img 
+                    src={user.photoURL} 
+                    alt={user.displayName || 'User'} 
+                    style={{ width: '22px', height: '22px', borderRadius: '50%', border: '1px solid var(--neon-lime)' }}
+                  />
+                ) : (
+                  <span style={{ fontSize: '13px' }}>👤</span>
+                )}
+                <span 
+                  style={{ 
+                    fontFamily: 'var(--font-sans)', 
+                    fontSize: '0.68rem', 
+                    fontWeight: 700, 
+                    color: '#ffffff', 
+                    maxWidth: '80px', 
+                    overflow: 'hidden', 
+                    textOverflow: 'ellipsis', 
+                    whiteSpace: 'nowrap' 
+                  }}
+                >
+                  {user.displayName?.split(' ')[0] || user.email?.split('@')[0]}
+                </span>
+                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>✕</span>
+              </div>
+            )}
 
             <button
               onClick={onExploreClick}

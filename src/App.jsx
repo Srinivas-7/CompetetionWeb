@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Home } from './pages/Home';
 import { PandhalDetails } from './components/pandhal/PandhalDetails';
 import { VoteModal } from './components/voting/VoteModal';
+import { AuthProvider } from './context/AuthContext';
+import { AuthGate } from './components/auth/AuthGate';
 import { useLiveVotes } from './hooks/useLiveVotes';
 import { usePandhal } from './hooks/usePandhal';
 import { pandhalService } from './services/pandhalService';
 import { votingService } from './services/votingService';
 
-export function App() {
+function MainDashboard() {
   const { counts: liveCounts, totalVotes } = useLiveVotes();
   const { 
     pandhals, 
@@ -112,7 +114,7 @@ export function App() {
         onShareClick={handleShareOnWhatsApp}
       />
 
-      {/* Direct Voting Modal (1-Phone = 1-Vote) */}
+      {/* Direct Voting Modal */}
       <VoteModal 
         pandhal={selectedVotePandhal}
         isOpen={Boolean(selectedVotePandhal)}
@@ -120,5 +122,15 @@ export function App() {
         onVoteRecorded={handleVoteRecorded}
       />
     </div>
+  );
+}
+
+export function App() {
+  return (
+    <AuthProvider>
+      <AuthGate>
+        <MainDashboard />
+      </AuthGate>
+    </AuthProvider>
   );
 }
