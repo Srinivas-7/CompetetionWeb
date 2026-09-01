@@ -30,19 +30,28 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Maximalist Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* Hide Scrollbars Everywhere (Cross-Browser) */
+* {
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
 }
 
-::-webkit-scrollbar-track {
-  background: #08090e;
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--neon-pink);
-  border-radius: var(--radius-pill);
+html, body {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+html::-webkit-scrollbar, 
+body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* Selection */

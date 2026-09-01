@@ -31,10 +31,10 @@
   --border-neon-pink: 2px solid #ff007f;
   --border-neon-lime: 2px solid #ccff00;
   --border-neon-cyan: 2px solid #00f0ff;
-  --shadow-3d-pink: 6px 6px 0px #ff007f;
-  --shadow-3d-lime: 6px 6px 0px #ccff00;
-  --shadow-3d-cyan: 6px 6px 0px #00f0ff;
-  --shadow-3d-white: 6px 6px 0px #ffffff;
+  --shadow-3d-pink: 4px 4px 0px #ff007f;
+  --shadow-3d-lime: 4px 4px 0px #ccff00;
+  --shadow-3d-cyan: 4px 4px 0px #00f0ff;
+  --shadow-3d-white: 4px 4px 0px #ffffff;
 
   /* Distinctive Typography */
   --font-display: 'Unbounded', system-ui, sans-serif;
@@ -44,10 +44,10 @@
   --font-mono: 'Space Grotesk', monospace;
 
   /* Sizing */
-  --radius-xs: 8px;
-  --radius-sm: 12px;
-  --radius-md: 18px;
-  --radius-lg: 24px;
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
   --radius-pill: 9999px;
-  --container-max: 640px;
+  --container-max: 1240px; /* 3-column wide container */
 }

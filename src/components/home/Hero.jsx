@@ -3,17 +3,17 @@ import React from 'react';
 export function Hero({ onExploreClick, totalVotes = 0 }) {
   return (
     <div style={{ background: 'var(--bg-page)', color: '#ffffff', overflow: 'hidden' }}>
-      {/* 1. Sticky High-Energy Header */}
+      {/* 1. Sticky High-Energy Header (Mobile-Optimized Spacing) */}
       <header 
         style={{
           position: 'sticky',
           top: 0,
           zIndex: 80,
-          background: 'rgba(8, 9, 14, 0.92)',
+          background: 'rgba(8, 9, 14, 0.94)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           borderBottom: '2px solid rgba(255, 255, 255, 0.12)',
-          padding: '12px 18px'
+          padding: '10px 14px'
         }}
       >
         <div 
@@ -22,25 +22,27 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
             margin: '0 auto',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            gap: '8px'
           }}
         >
           {/* Logo Badge */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
             <div 
               style={{
-                width: '34px',
-                height: '34px',
-                borderRadius: '8px',
+                width: '28px',
+                height: '28px',
+                borderRadius: '6px',
                 background: 'var(--gradient-hyper)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#000000',
-                fontSize: '1.1rem',
+                fontSize: '0.92rem',
                 fontWeight: 900,
                 border: '1.5px solid #ffffff',
-                boxShadow: '2px 2px 0px #ff007f'
+                boxShadow: '1.5px 1.5px 0px #ff007f',
+                flexShrink: 0
               }}
             >
               ⚡
@@ -50,9 +52,10 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                 style={{
                   fontFamily: 'var(--font-heading)',
                   fontWeight: 800,
-                  fontSize: '1.08rem',
-                  letterSpacing: '-0.03em',
-                  color: '#ffffff'
+                  fontSize: '0.94rem',
+                  letterSpacing: '-0.02em',
+                  color: '#ffffff',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 BAPPA<span style={{ color: 'var(--neon-lime)' }}>TRAIL</span>
@@ -61,24 +64,26 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           </div>
 
           {/* Right Live Pill + Quick Action */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
             <span 
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.72rem',
+                fontSize: '0.66rem',
                 fontWeight: 800,
                 color: '#000000',
                 background: 'var(--neon-lime)',
                 border: '1.5px solid #000000',
-                padding: '4px 10px',
+                padding: '3px 8px',
                 borderRadius: 'var(--radius-pill)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '5px',
-                boxShadow: '2px 2px 0px #ffffff'
+                gap: '4px',
+                boxShadow: '1.5px 1.5px 0px #ffffff',
+                whiteSpace: 'nowrap',
+                flexShrink: 0
               }}
             >
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ff0000' }} />
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#ff0000' }} />
               2026 LIVE
             </span>
 
@@ -86,12 +91,18 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               onClick={onExploreClick}
               className="btn-3d-pink"
               style={{
-                padding: '7px 16px',
-                fontSize: '0.82rem',
-                fontFamily: 'var(--font-display)'
+                padding: '5px 12px',
+                fontSize: '0.74rem',
+                fontFamily: 'var(--font-display)',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px'
               }}
             >
-              VOTE 🏆
+              <span>VOTE</span>
+              <span>🏆</span>
             </button>
           </div>
         </div>
@@ -102,13 +113,13 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         style={{
           maxWidth: 'var(--container-max)',
           margin: '0 auto',
-          padding: '38px 18px 24px',
+          padding: '32px 16px 20px',
           textAlign: 'center',
           position: 'relative'
         }}
       >
         {/* Floating Angled Sticker */}
-        <div style={{ marginBottom: '18px' }}>
+        <div style={{ marginBottom: '16px' }}>
           <span 
             className="animate-wiggle"
             style={{
@@ -119,9 +130,9 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               boxShadow: '3px 3px 0px var(--neon-pink)',
               fontFamily: 'var(--font-mono)',
               fontWeight: 800,
-              fontSize: '0.78rem',
-              letterSpacing: '0.08em',
-              padding: '6px 14px',
+              fontSize: '0.76rem',
+              letterSpacing: '0.06em',
+              padding: '6px 12px',
               borderRadius: '6px',
               transform: 'rotate(-2deg)'
             }}
@@ -133,12 +144,12 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         {/* Massive Maximalist Display Typography */}
         <h1 
           style={{
-            fontSize: 'clamp(2.1rem, 7.8vw, 3.2rem)',
+            fontSize: 'clamp(2rem, 7.5vw, 3.1rem)',
             lineHeight: 1.08,
             fontFamily: 'var(--font-display)',
             fontWeight: 800,
             letterSpacing: '-0.035em',
-            margin: '0 0 16px',
+            margin: '0 0 14px',
             textTransform: 'uppercase'
           }}
         >
@@ -147,14 +158,14 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           <div className="stroke-text">ONE VOTE.</div>
         </h1>
 
-        {/* Punchy High-Energy Subtext */}
+        {/* Subtext */}
         <p 
           style={{
-            fontSize: '1.02rem',
+            fontSize: '0.96rem',
             lineHeight: 1.5,
             color: 'var(--text-secondary)',
-            maxWidth: '460px',
-            margin: '0 auto 26px',
+            maxWidth: '440px',
+            margin: '0 auto 24px',
             fontWeight: 500
           }}
         >
@@ -162,7 +173,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         </p>
 
         {/* THE GIANT MAXIMALIST 3D VOTE BUTTON */}
-        <div style={{ maxWidth: '440px', margin: '0 auto 28px' }}>
+        <div style={{ maxWidth: '420px', margin: '0 auto 24px' }}>
           <button
             onClick={onExploreClick}
             className="btn-3d-giant"
@@ -171,11 +182,12 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           </button>
         </div>
 
-        {/* 3 Maximalist Sticker Chips */}
+        {/* 3 Maximalist Sticker Chips (Clean Mobile Wrapping) */}
         <div 
           style={{
             display: 'flex',
             justifyContent: 'center',
+            alignItems: 'center',
             gap: '8px',
             flexWrap: 'wrap',
             marginBottom: '10px'
@@ -184,14 +196,15 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           <span 
             style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.78rem',
+              fontSize: '0.74rem',
               fontWeight: 700,
               color: '#ffffff',
               background: '#161928',
               border: '1.5px solid var(--border-medium)',
-              padding: '5px 12px',
+              padding: '5px 11px',
               borderRadius: 'var(--radius-pill)',
-              boxShadow: '2px 2px 0px rgba(255, 255, 255, 0.2)'
+              boxShadow: '2px 2px 0px rgba(255, 255, 255, 0.2)',
+              whiteSpace: 'nowrap'
             }}
           >
             🏛️ 21 PANDHALS
@@ -200,14 +213,15 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           <span 
             style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.78rem',
+              fontSize: '0.74rem',
               fontWeight: 700,
               color: 'var(--neon-lime)',
               background: '#161928',
               border: '1.5px solid var(--neon-lime)',
-              padding: '5px 12px',
+              padding: '5px 11px',
               borderRadius: 'var(--radius-pill)',
-              boxShadow: '2px 2px 0px var(--neon-lime)'
+              boxShadow: '2px 2px 0px var(--neon-lime)',
+              whiteSpace: 'nowrap'
             }}
           >
             🌱 100% ECO-VERIFIED
@@ -216,14 +230,15 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           <span 
             style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.78rem',
+              fontSize: '0.74rem',
               fontWeight: 700,
               color: 'var(--neon-pink)',
               background: '#161928',
               border: '1.5px solid var(--neon-pink)',
-              padding: '5px 12px',
+              padding: '5px 11px',
               borderRadius: 'var(--radius-pill)',
-              boxShadow: '2px 2px 0px var(--neon-pink)'
+              boxShadow: '2px 2px 0px var(--neon-pink)',
+              whiteSpace: 'nowrap'
             }}
           >
             🔒 1-PHONE = 1-VOTE
@@ -242,14 +257,14 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           borderBottom: '2px solid #ffffff',
           boxShadow: '0 4px 20px rgba(255, 0, 127, 0.4)',
           transform: 'rotate(-0.5deg)',
-          margin: '10px -10px 20px'
+          margin: '8px -10px 18px'
         }}
       >
         <div className="animate-marquee">
-          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.88rem', letterSpacing: '0.06em', whiteSpace: 'nowrap', padding: '0 20px' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.86rem', letterSpacing: '0.06em', whiteSpace: 'nowrap', padding: '0 20px' }}>
             ⚡ 21 GRAND PANDHALS ★ 1 UNIQUE PHONE VOTE ★ 4K PHOTO GALLERIES ★ REALTIME LEADERBOARD ★ 100% ZERO-WASTE ECO CHECK ★ GANPATI BAPPA MORYA ★ 
           </span>
-          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.88rem', letterSpacing: '0.06em', whiteSpace: 'nowrap', padding: '0 20px' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.86rem', letterSpacing: '0.06em', whiteSpace: 'nowrap', padding: '0 20px' }}>
             ⚡ 21 GRAND PANDHALS ★ 1 UNIQUE PHONE VOTE ★ 4K PHOTO GALLERIES ★ REALTIME LEADERBOARD ★ 100% ZERO-WASTE ECO CHECK ★ GANPATI BAPPA MORYA ★ 
           </span>
         </div>

@@ -36,8 +36,8 @@ export function PandhalGrid({
     <div 
       style={{
         display: 'grid',
-        gridTemplateColumns: '1fr',
-        gap: '20px',
+        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+        gap: 'clamp(8px, 2vw, 16px)',
         width: '100%'
       }}
     >
