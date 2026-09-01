@@ -1,8 +1,49 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 
 export function AuthGate({ children }) {
-  const { user, loading, error, signInWithGoogle, isAuthenticated } = useAuth();
+  const { 
+    user, 
+    loading, 
+    error, 
+    signInWithGoogle, 
+    handleGoogleCredentialResponse, 
+    isAuthenticated 
+  } = useAuth();
+  
+  const oneTapInitialized = useRef(false);
+
+  // Initialize Google One Tap when available to automatically surface the user's active Google account
+  useEffect(() => {
+    if (isAuthenticated || loading || oneTapInitialized.current) return;
+
+    const clientId = import.meta.env.VITE_FIREBASE_GOOGLE_CLIENT_ID || '707993544116-web.apps.googleusercontent.com';
+
+    const checkAndInitOneTap = () => {
+      if (typeof window !== 'undefined' && window.google?.accounts?.id) {
+        try {
+          window.google.accounts.id.initialize({
+            client_id: clientId,
+            callback: handleGoogleCredentialResponse,
+            auto_select: true, // Automatically logs in if only one Google account is active
+            cancel_on_tap_outside: false
+          });
+
+          window.google.accounts.id.prompt();
+          oneTapInitialized.current = true;
+        } catch (err) {
+          console.warn('[Google One Tap] Prompt info:', err);
+        }
+      }
+    };
+
+    if (window.google?.accounts?.id) {
+      checkAndInitOneTap();
+    } else {
+      const timer = setTimeout(checkAndInitOneTap, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, loading]);
 
   // 1. Loading Spinner during initial session check
   if (loading) {
@@ -35,7 +76,7 @@ export function AuthGate({ children }) {
           CONNECTING TO BAPPA TRAIL
         </div>
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--neon-lime)' }}>
-          Verifying your secure session…
+          Verifying your Google session…
         </p>
       </div>
     );
@@ -158,9 +199,9 @@ export function AuthGate({ children }) {
             </div>
           )}
 
-          {/* 1-Tap Google Sign In & Register Button */}
+          {/* 1-Tap Google Sign In Button */}
           <button
-            onClick={signInWithGoogle}
+            onClick={() => signInWithGoogle().catch(() => {})}
             style={{
               width: '100%',
               background: '#ffffff',
@@ -228,7 +269,7 @@ export function AuthGate({ children }) {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
               <span>⚡</span>
-              <span>Instant 1-Tap Login (No Passwords Required)</span>
+              <span>Uses your active device Gmail session seamlessly</span>
             </div>
           </div>
         </div>

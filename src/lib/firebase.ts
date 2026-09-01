@@ -3,22 +3,35 @@ import {
   getAuth, 
   signInWithPopup, 
   signInWithRedirect, 
+  signInWithCredential,
   signOut as firebaseSignOut, 
   GoogleAuthProvider, 
-  onAuthStateChanged, 
   type Auth, 
   type User 
 } from 'firebase/auth';
 import { initializeAppCheck, ReCaptchaV3Provider, type AppCheck } from 'firebase/app-check';
 
 // Client-side Firebase configuration from VITE_ environment variables
+const apiKey = import.meta.env.VITE_FIREBASE_API_KEY;
+const authDomain = import.meta.env.VITE_FIREBASE_AUTH_DOMAIN;
+const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID;
+const storageBucket = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET;
+const messagingSenderId = import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID;
+const appId = import.meta.env.VITE_FIREBASE_APP_ID;
+
+if (!apiKey || apiKey.includes('DummyKey')) {
+  console.error(
+    '[Firebase Error] Invalid or missing VITE_FIREBASE_API_KEY. Please ensure your Firebase Web API Key is properly configured in .env.local or Vercel Environment Variables.'
+  );
+}
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey,
+  authDomain,
+  projectId,
+  storageBucket,
+  messagingSenderId,
+  appId,
 };
 
 // 1. Singleton App Initialization
@@ -27,27 +40,33 @@ export const app: FirebaseApp = getApps().length === 0 ? initializeApp(firebaseC
 // 2. Client-side Auth
 export const auth: Auth = getAuth(app);
 
-// 3. Google Auth Provider
+// 3. Google Auth Provider (Configured to silently reuse active logged-in Google session)
 export const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({
-  prompt: 'select_account' // Always lets user choose their active Gmail account seamlessly
-});
+// NOTE: We deliberately DO NOT set prompt: 'select_account' so Google automatically reuses the user's active session!
 
 /**
- * Sign in with Google Popup (or Redirect on mobile webviews)
+ * Sign in with Google (reusing the user's current logged-in Google account)
  */
 export async function signInWithGoogle(): Promise<User> {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     return result.user;
   } catch (error: any) {
-    // If popup was blocked on some mobile browsers, fallback to redirect
     if (error?.code === 'auth/popup-blocked' || error?.code === 'auth/popup-closed-by-user') {
-      console.warn('[Firebase Auth] Popup blocked/closed, attempting redirect...');
+      console.warn('[Firebase Auth] Popup closed or blocked, attempting redirect...');
       await signInWithRedirect(auth, googleProvider);
     }
     throw error;
   }
+}
+
+/**
+ * Sign in with a Google One Tap credential ID token
+ */
+export async function signInWithGoogleCredential(idToken: string): Promise<User> {
+  const credential = GoogleAuthProvider.credential(idToken);
+  const result = await signInWithCredential(auth, credential);
+  return result.user;
 }
 
 /**
@@ -61,7 +80,7 @@ export async function signOut(): Promise<void> {
 let appCheckInstance: AppCheck | null = null;
 if (typeof window !== 'undefined') {
   const recaptchaSiteKey = import.meta.env.VITE_FIREBASE_RECAPTCHA_SITE_KEY;
-  if (recaptchaSiteKey) {
+  if (recaptchaSiteKey && !recaptchaSiteKey.includes('Dummy')) {
     try {
       appCheckInstance = initializeAppCheck(app, {
         provider: new ReCaptchaV3Provider(recaptchaSiteKey),

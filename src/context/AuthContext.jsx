@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth, signInWithGoogle as firebaseGoogleSignIn, signOut as firebaseSignOut } from '../lib/firebase';
+import { 
+  auth, 
+  signInWithGoogle as firebaseGoogleSignIn, 
+  signInWithGoogleCredential,
+  signOut as firebaseSignOut 
+} from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
 const AuthContext = createContext({
@@ -7,6 +12,7 @@ const AuthContext = createContext({
   loading: true,
   error: null,
   signInWithGoogle: async () => {},
+  handleGoogleCredentialResponse: async () => {},
   logout: async () => {},
   isAuthenticated: false
 });
@@ -49,6 +55,22 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const handleGoogleCredentialResponse = async (response) => {
+    if (!response?.credential) return;
+    try {
+      setLoading(true);
+      setError(null);
+      const loggedUser = await signInWithGoogleCredential(response.credential);
+      setUser(loggedUser);
+      return loggedUser;
+    } catch (err) {
+      console.error('[AuthContext] Google credential sign-in error:', err);
+      setError(err.message || 'Google credential sign-in failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const logout = async () => {
     try {
       setError(null);
@@ -67,6 +89,7 @@ export function AuthProvider({ children }) {
         loading,
         error,
         signInWithGoogle,
+        handleGoogleCredentialResponse,
         logout,
         isAuthenticated: !!user
       }}
