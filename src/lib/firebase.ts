@@ -3,6 +3,7 @@ import {
   getAuth, 
   signInWithPopup, 
   signInWithRedirect, 
+  getRedirectResult,
   signInWithCredential,
   signOut as firebaseSignOut, 
   GoogleAuthProvider, 
@@ -40,23 +41,34 @@ export const app: FirebaseApp = getApps().length === 0 ? initializeApp(firebaseC
 // 2. Client-side Auth
 export const auth: Auth = getAuth(app);
 
-// 3. Google Auth Provider (Configured to silently reuse active logged-in Google session)
+// 3. Google Auth Provider
 export const googleProvider = new GoogleAuthProvider();
-// NOTE: We deliberately DO NOT set prompt: 'select_account' so Google automatically reuses the user's active session!
 
 /**
- * Sign in with Google (reusing the user's current logged-in Google account)
+ * Sign in with Google with popup + redirect fallback
  */
 export async function signInWithGoogle(): Promise<User> {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     return result.user;
   } catch (error: any) {
-    if (error?.code === 'auth/popup-blocked' || error?.code === 'auth/popup-closed-by-user') {
-      console.warn('[Firebase Auth] Popup closed or blocked, attempting redirect...');
-      await signInWithRedirect(auth, googleProvider);
-    }
+    // If popup is blocked by COOP or closed on mobile, fallback to redirect
+    console.warn('[Firebase Auth] Popup error, falling back to redirect:', error?.message);
+    await signInWithRedirect(auth, googleProvider);
     throw error;
+  }
+}
+
+/**
+ * Check and resolve any redirect sign-in result on page load
+ */
+export async function checkRedirectAuth(): Promise<User | null> {
+  try {
+    const result = await getRedirectResult(auth);
+    return result ? result.user : null;
+  } catch (error) {
+    console.warn('[Firebase Auth] Redirect result error:', error);
+    return null;
   }
 }
 

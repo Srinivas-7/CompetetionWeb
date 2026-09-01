@@ -3,6 +3,7 @@ import {
   auth, 
   signInWithGoogle as firebaseGoogleSignIn, 
   signInWithGoogleCredential,
+  checkRedirectAuth,
   signOut as firebaseSignOut 
 } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -23,6 +24,17 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Check if user is returning from a Google redirect sign-in
+    checkRedirectAuth()
+      .then((redirectUser) => {
+        if (redirectUser) {
+          setUser(redirectUser);
+        }
+      })
+      .catch((err) => {
+        console.warn('[AuthContext] Redirect auth check:', err);
+      });
+
     const unsubscribe = onAuthStateChanged(
       auth,
       (currentUser) => {
@@ -44,12 +56,16 @@ export function AuthProvider({ children }) {
       setError(null);
       setLoading(true);
       const loggedUser = await firebaseGoogleSignIn();
-      setUser(loggedUser);
+      if (loggedUser) {
+        setUser(loggedUser);
+      }
       return loggedUser;
     } catch (err) {
-      console.error('[AuthContext] Google sign-in failed:', err);
-      setError(err.message || 'Google sign-in failed');
-      throw err;
+      console.warn('[AuthContext] Google sign-in note:', err);
+      // Don't set error if redirect is in progress
+      if (err?.code !== 'auth/popup-closed-by-user') {
+        setError(err.message || 'Google sign-in encountered an issue');
+      }
     } finally {
       setLoading(false);
     }
