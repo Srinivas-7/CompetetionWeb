@@ -1,151 +1,128 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export function PandhalGallery({ 
   pandhal, 
   onVoteClick, 
-  onShareClick, 
+  onShareClick,
   onClose 
 }) {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
-  const touchStartX = useRef(null);
-  const touchEndX = useRef(null);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
 
-  const photos = pandhal.photos || [];
-  const currentPhoto = photos[selectedPhotoIndex] || photos[0];
+  const photos = pandhal?.photos || [];
   const totalPhotos = photos.length;
+  const currentPhoto = photos[selectedPhotoIndex] || { src: '', title: pandhal?.name, alt: pandhal?.name };
 
-  const handlePrev = (e) => {
-    if (e) e.stopPropagation();
-    setSelectedPhotoIndex((prev) => (prev > 0 ? prev - 1 : totalPhotos - 1));
+  // Reset index when pandhal changes
+  useEffect(() => {
+    setSelectedPhotoIndex(0);
+  }, [pandhal?.id]);
+
+  const handlePrev = () => {
+    setSelectedPhotoIndex((prev) => (prev === 0 ? totalPhotos - 1 : prev - 1));
   };
 
-  const handleNext = (e) => {
-    if (e) e.stopPropagation();
-    setSelectedPhotoIndex((prev) => (prev < totalPhotos - 1 ? prev + 1 : 0));
+  const handleNext = () => {
+    setSelectedPhotoIndex((prev) => (prev === totalPhotos - 1 ? 0 : prev + 1));
   };
 
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') {
-        handlePrev();
-      } else if (e.key === 'ArrowRight') {
-        handleNext();
-      }
+      if (e.key === 'ArrowLeft') handlePrev();
+      if (e.key === 'ArrowRight') handleNext();
+      if (e.key === 'Escape' && onClose) onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [totalPhotos]);
 
-  // Touch Swipe support
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
+  // Touch swipe support for mobile
+  const minSwipeDistance = 45;
+
+  const onTouchStartHandler = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
   };
 
-  const handleTouchMove = (e) => {
-    touchEndX.current = e.touches[0].clientX;
+  const onTouchMoveHandler = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
   };
 
-  const handleTouchEnd = () => {
-    if (!touchStartX.current || !touchEndX.current) return;
-    const distance = touchStartX.current - touchEndX.current;
-    const minSwipeDistance = 45;
+  const onTouchEndHandler = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
 
-    if (distance > minSwipeDistance) {
+    if (isLeftSwipe) {
       handleNext();
-    } else if (distance < -minSwipeDistance) {
+    } else if (isRightSwipe) {
       handlePrev();
     }
-
-    touchStartX.current = null;
-    touchEndX.current = null;
   };
+
+  if (!pandhal) return null;
 
   return (
     <div 
       style={{
-        background: '#101322',
-        border: '2.5px solid #ffffff',
+        background: '#121522',
+        border: '1.5px solid rgba(255, 255, 255, 0.16)',
         borderRadius: '24px',
-        maxWidth: '540px',
-        width: '100%',
-        maxHeight: '92vh',
-        overflowY: 'auto',
-        padding: '22px 18px 26px',
+        padding: '24px 20px',
+        color: '#ffffff',
         position: 'relative',
-        boxSizing: 'border-box',
-        boxShadow: '8px 8px 0px var(--neon-pink)',
-        color: '#ffffff'
+        boxShadow: '0 12px 36px rgba(0, 0, 0, 0.6)',
+        maxWidth: '720px',
+        margin: '0 auto'
       }}
     >
-      {/* Close Button */}
-      <button 
-        onClick={onClose}
-        style={{
-          position: 'absolute',
-          right: '14px',
-          top: '14px',
-          width: '38px',
-          height: '38px',
-          borderRadius: '50%',
-          background: 'var(--neon-pink)',
-          border: '2px solid #ffffff',
-          color: '#ffffff',
-          fontSize: '22px',
-          fontWeight: 900,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          boxShadow: '2px 2px 0px #ffffff',
-          zIndex: 10
-        }}
-        aria-label="Close modal"
-      >
-        ×
-      </button>
-
-      {/* Header */}
-      <div style={{ paddingRight: '48px', marginBottom: '16px' }}>
-        <div 
+      {/* Header Info */}
+      <div style={{ marginBottom: '16px', textAlign: 'center', paddingRight: '24px', paddingLeft: '24px' }}>
+        <span 
           style={{
+            display: 'inline-block',
+            background: '#f59e0b',
+            color: '#000000',
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.76rem',
-            fontWeight: 800,
-            color: 'var(--neon-yellow)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            marginBottom: '2px'
+            fontWeight: 900,
+            fontSize: '0.74rem',
+            padding: '2px 8px',
+            borderRadius: '4px',
+            marginBottom: '6px'
           }}
         >
-          PANDHAL #{String(pandhal.number).padStart(2, '0')} • {pandhal.theme}
-        </div>
+          #{String(pandhal.number).padStart(2, '0')} OFFICIAL
+        </span>
+
         <h2 
           style={{ 
-            fontSize: '1.45rem', 
+            fontSize: 'clamp(1.3rem, 4vw, 1.8rem)', 
             fontFamily: 'var(--font-heading)',
             fontWeight: 800, 
-            color: '#ffffff', 
+            color: '#ffffff',
             margin: '0 0 4px',
-            lineHeight: 1.25,
-            letterSpacing: '-0.02em'
+            lineHeight: 1.2
           }}
         >
           {pandhal.name}
         </h2>
+        
         <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', margin: 0 }}>
-          📍 {pandhal.location} • {pandhal.organization} (Est. {pandhal.establishedYear})
+          📍 {pandhal.location} • <span style={{ color: '#f59e0b' }}>{pandhal.theme}</span>
         </p>
       </div>
 
-      {/* Main Selected Photo Stage with < and > Navigation Arrows */}
+      {/* Main 4K Photo Stage with Left/Right Arrows */}
       <div 
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        onTouchStart={onTouchStartHandler}
+        onTouchMove={onTouchMoveHandler}
+        onTouchEnd={onTouchEndHandler}
         style={{
           width: '100%',
-          height: '270px',
+          height: 'clamp(240px, 50vh, 380px)',
           borderRadius: '16px',
           overflow: 'hidden',
           backgroundColor: '#000000',
@@ -153,7 +130,7 @@ export function PandhalGallery({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          border: '2px solid rgba(255, 255, 255, 0.25)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
           position: 'relative',
           userSelect: 'none'
         }}
@@ -172,21 +149,22 @@ export function PandhalGallery({
             left: '10px',
             top: '50%',
             transform: 'translateY(-50%)',
-            width: '42px',
-            height: '42px',
+            width: '38px',
+            height: '38px',
             borderRadius: '50%',
-            background: '#000000',
-            border: '2px solid #ffffff',
-            boxShadow: '2px 2px 0px var(--neon-pink)',
+            background: 'rgba(0, 0, 0, 0.75)',
+            border: '1.5px solid #ffffff',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
             color: '#ffffff',
-            fontSize: '24px',
+            fontSize: '22px',
             fontWeight: 900,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
             zIndex: 5,
-            paddingBottom: '2px'
+            paddingBottom: '2px',
+            backdropFilter: 'blur(4px)'
           }}
           aria-label="Previous photo"
         >
@@ -201,39 +179,40 @@ export function PandhalGallery({
             right: '10px',
             top: '50%',
             transform: 'translateY(-50%)',
-            width: '42px',
-            height: '42px',
+            width: '38px',
+            height: '38px',
             borderRadius: '50%',
-            background: '#000000',
-            border: '2px solid #ffffff',
-            boxShadow: '2px 2px 0px var(--neon-pink)',
+            background: 'rgba(0, 0, 0, 0.75)',
+            border: '1.5px solid #ffffff',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
             color: '#ffffff',
-            fontSize: '24px',
+            fontSize: '22px',
             fontWeight: 900,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
             zIndex: 5,
-            paddingBottom: '2px'
+            paddingBottom: '2px',
+            backdropFilter: 'blur(4px)'
           }}
           aria-label="Next photo"
         >
           ›
         </button>
 
-        {/* Photo Counter Pill in Image Overlay */}
+        {/* Photo Counter Pill */}
         <div 
           style={{
             position: 'absolute',
             bottom: '10px',
             right: '12px',
             background: 'rgba(0, 0, 0, 0.8)',
-            border: '1.5px solid rgba(255, 255, 255, 0.25)',
+            border: '1px solid rgba(255, 255, 255, 0.25)',
             borderRadius: 'var(--radius-pill)',
-            padding: '3px 10px',
+            padding: '2px 8px',
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.74rem',
+            fontSize: '0.72rem',
             fontWeight: 800,
             color: '#ffffff',
             pointerEvents: 'none'
@@ -243,7 +222,8 @@ export function PandhalGallery({
         </div>
       </div>
 
-      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.84rem', fontWeight: 700, color: 'var(--neon-lime)', textAlign: 'center', marginBottom: '14px' }}>
+      {/* Photo Title */}
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', fontWeight: 700, color: '#f59e0b', textAlign: 'center', marginBottom: '14px' }}>
         {currentPhoto.title}
       </p>
 
@@ -253,7 +233,7 @@ export function PandhalGallery({
           display: 'grid',
           gridTemplateColumns: `repeat(${totalPhotos}, 1fr)`,
           gap: '8px',
-          marginBottom: '18px'
+          marginBottom: '20px'
         }}
       >
         {photos.map((photo, idx) => {
@@ -266,11 +246,11 @@ export function PandhalGallery({
                 cursor: 'pointer',
                 borderRadius: '8px',
                 overflow: 'hidden',
-                border: isSelected ? '2.5px solid var(--neon-pink)' : '1.5px solid rgba(255, 255, 255, 0.2)',
-                height: '56px',
+                border: isSelected ? '2px solid #f59e0b' : '1px solid rgba(255, 255, 255, 0.15)',
+                height: '52px',
                 background: '#000000',
-                opacity: isSelected ? 1 : 0.55,
-                boxShadow: isSelected ? '2px 2px 0px var(--neon-pink)' : 'none',
+                opacity: isSelected ? 1 : 0.5,
+                boxShadow: isSelected ? '0 2px 8px rgba(245, 158, 11, 0.35)' : 'none',
                 transition: 'all 0.15s ease'
               }}
             >
@@ -284,64 +264,38 @@ export function PandhalGallery({
         })}
       </div>
 
-      {/* Eco Verification Banner */}
-      <div 
-        style={{
-          background: 'rgba(204, 255, 0, 0.1)',
-          borderRadius: '12px',
-          padding: '10px 14px',
-          marginBottom: '18px',
-          fontSize: '0.84rem',
-          color: '#ffffff',
-          border: '1.5px solid var(--neon-lime)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}
-      >
-        <span style={{ fontSize: '1.1rem' }}>🌱</span>
-        <div>
-          <strong style={{ color: 'var(--neon-lime)' }}>100% Eco-Verified:</strong> Biodegradable Prasad &amp; Zero-Plastic Grounds.
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div style={{ display: 'flex', gap: '10px' }}>
+      {/* Sleek Full-Width Vote Button (Share button removed) */}
+      <div>
         <button
           onClick={() => onVoteClick(pandhal.id)}
           style={{
-            flex: 1,
+            width: '100%',
             background: 'var(--gradient-hyper)',
             color: '#000000',
-            border: '2px solid #ffffff',
-            boxShadow: '4px 4px 0px var(--neon-pink)',
+            border: '1px solid rgba(255, 255, 255, 0.35)',
+            boxShadow: '0 4px 16px rgba(245, 158, 11, 0.35)',
             borderRadius: 'var(--radius-pill)',
-            padding: '14px',
-            fontSize: '1rem',
-            fontFamily: 'var(--font-display)',
-            fontWeight: 900,
-            cursor: 'pointer'
-          }}
-        >
-          <span>VOTE FOR THIS BAPPA 🏆</span>
-        </button>
-
-        <button
-          onClick={() => onShareClick(pandhal)}
-          style={{
-            background: '#22c55e',
-            color: '#ffffff',
-            border: '2px solid #ffffff',
-            boxShadow: '3px 3px 0px #ffffff',
-            borderRadius: 'var(--radius-pill)',
-            padding: '14px 20px',
+            padding: '11px 20px',
             fontSize: '0.92rem',
             fontFamily: 'var(--font-display)',
             fontWeight: 900,
-            cursor: 'pointer'
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            transition: 'transform 0.12s ease, box-shadow 0.12s ease'
+          }}
+          onMouseDown={(e) => {
+            e.currentTarget.style.transform = 'translateY(2px)';
+            e.currentTarget.style.boxShadow = '0 2px 6px rgba(245, 158, 11, 0.25)';
+          }}
+          onMouseUp={(e) => {
+            e.currentTarget.style.transform = 'none';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(245, 158, 11, 0.35)';
           }}
         >
-          <span>SHARE 💬</span>
+          <span>VOTE FOR THIS BAPPA 🏆</span>
         </button>
       </div>
     </div>

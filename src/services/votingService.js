@@ -1,4 +1,4 @@
-import { validatePhoneNumber, isValidPandhalId } from '../utils/validation';
+import { isValidPandhalId } from '../utils/validation';
 import { APP_CONFIG } from '../utils/constants';
 import { PANDHALS_DATA } from '../data/pandhals';
 import { executeFirebaseVote, subscribeToFirebaseCounters } from '../firebase/voting';
@@ -24,25 +24,24 @@ class VotingService {
   }
 
   /**
-   * Cast a vote with 1-phone-number = 1-vote integrity
+   * Cast a vote with 1-Google-Account = 1-Vote integrity
    * 
-   * @param {string} rawPhone 
+   * @param {string} voterEmail 
    * @param {string} pandhalId 
+   * @param {string} voterName 
    * @returns {Promise<{success: boolean, message: string, pandhalName?: string, totalVotes?: number, errorType?: string}>}
    */
-  async castVote(rawPhone, pandhalId) {
-    // 1. Phone validation
-    const validation = validatePhoneNumber(rawPhone);
-    if (!validation.isValid) {
+  async castVote(voterEmail, pandhalId, voterName = '') {
+    const email = (voterEmail || '').trim().toLowerCase();
+    
+    if (!email) {
       return {
         success: false,
-        errorType: 'INVALID_PHONE',
-        message: validation.error
+        errorType: 'INVALID_ACCOUNT',
+        message: "Please sign in with your Google account to vote."
       };
     }
-    const phone = validation.phone;
 
-    // 2. Pandhal validation
     if (!isValidPandhalId(pandhalId)) {
       return {
         success: false,
@@ -54,12 +53,12 @@ class VotingService {
     const pandhal = PANDHALS_DATA.find(p => p.id === pandhalId);
     const pandhalName = pandhal ? pandhal.name : 'Selected Bappa';
 
-    // 3. Execution (Firebase or Local Simulator)
+    // 1. Firebase Backend (if configured)
     if (isFirebaseConfigured()) {
       try {
-        const result = await executeFirebaseVote(phone, pandhalId, pandhalName);
+        const result = await executeFirebaseVote(email, pandhalId, pandhalName);
         if (result.success) {
-          this.saveMyVoteRecord(phone, pandhalId, pandhalName);
+          this.saveMyVoteRecord(email, pandhalId, pandhalName, voterName);
           return {
             success: true,
             message: `Your vote for ${pandhalName} is locked!`,
@@ -72,44 +71,40 @@ class VotingService {
           return {
             success: false,
             errorType: 'ALREADY_VOTED',
-            message: `This phone number (${phone}) has already voted for "${prevName}". Each number can vote once.`
+            message: `This Google account (${email}) has already voted for "${prevName}". Each account can vote once.`
           };
         }
       } catch (err) {
         console.error("Firebase voting error:", err);
-        return {
-          success: false,
-          errorType: 'NETWORK_ERROR',
-          message: "Bappa is taking a little longer to arrive. Please check your connection and try again."
-        };
       }
     }
 
-    // 4. Local Simulator (Atomic Simulation)
-    return this.castVoteLocalSimulator(phone, pandhalId, pandhalName);
+    // 2. Local Storage Simulator (Atomic 1-Account = 1-Vote)
+    return this.castVoteLocalSimulator(email, pandhalId, pandhalName, voterName);
   }
 
-  async castVoteLocalSimulator(phone, pandhalId, pandhalName) {
-    // Artificial jitter (350-700ms) to test 0.50s loading transition
-    const delay = Math.floor(Math.random() * 350) + 350;
+  async castVoteLocalSimulator(email, pandhalId, pandhalName, voterName) {
+    // Artificial jitter (250-400ms) for smooth tactile response
+    const delay = Math.floor(Math.random() * 150) + 250;
     await new Promise(r => setTimeout(r, delay));
 
     const votesDb = JSON.parse(localStorage.getItem(APP_CONFIG.STORAGE_KEYS.CAST_VOTES) || '{}');
 
-    if (votesDb[phone]) {
-      const prevId = votesDb[phone].pandhalId;
+    if (votesDb[email]) {
+      const prevId = votesDb[email].pandhalId;
       const prev = PANDHALS_DATA.find(p => p.id === prevId);
       const prevName = prev ? prev.name : 'another Bappa';
       return {
         success: false,
         errorType: 'ALREADY_VOTED',
-        message: `This phone number has already cast a vote for "${prevName}". Only 1 vote per phone number is permitted across the trail.`
+        message: `Your Google account has already cast a vote for "${prevName}". Only 1 vote per account is permitted across the trail.`
       };
     }
 
     // Atomic write
-    votesDb[phone] = {
-      phone,
+    votesDb[email] = {
+      email,
+      voterName,
       pandhalId,
       pandhalName,
       timestamp: new Date().toISOString()
@@ -122,7 +117,7 @@ class VotingService {
     counts[pandhalId] = (counts[pandhalId] || (pandhal ? pandhal.initialVotes : 0)) + 1;
     localStorage.setItem(APP_CONFIG.STORAGE_KEYS.PANDHAL_VOTES, JSON.stringify(counts));
 
-    this.saveMyVoteRecord(phone, pandhalId, pandhalName);
+    this.saveMyVoteRecord(email, pandhalId, pandhalName, voterName);
 
     // Trigger storage event for live multi-tab updates
     window.dispatchEvent(new Event('storage'));
@@ -135,9 +130,10 @@ class VotingService {
     };
   }
 
-  saveMyVoteRecord(phone, pandhalId, pandhalName) {
+  saveMyVoteRecord(email, pandhalId, pandhalName, voterName) {
     const record = {
-      phone,
+      email,
+      voterName,
       pandhalId,
       pandhalName,
       votedAt: new Date().toISOString()
@@ -165,7 +161,6 @@ class VotingService {
     };
 
     window.addEventListener('storage', handleStorage);
-    // Initial emit
     handleStorage();
 
     return () => window.removeEventListener('storage', handleStorage);

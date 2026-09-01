@@ -69,101 +69,64 @@ export function Home({
             21 Pandhals to <span className="gradient-text-hyper">Explore &amp; Vote</span>
           </h2>
 
-          {/* Search Input */}
-          <div style={{ position: 'relative', width: '100%', marginBottom: '14px' }}>
-            <span 
-              style={{ 
-                position: 'absolute', 
-                left: '16px', 
-                top: '50%', 
-                transform: 'translateY(-50%)', 
-                fontSize: '16px',
-                color: 'var(--text-muted)'
-              }}
-            >
-              🔍
-            </span>
-            <input 
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by pandhal name, location, theme..."
-              style={{
-                width: '100%',
-                padding: '12px 16px 12px 44px',
-                borderRadius: 'var(--radius-pill)',
-                border: '1.5px solid rgba(255, 255, 255, 0.15)',
-                background: '#111420',
-                fontFamily: 'var(--font-sans)',
-                fontSize: '0.92rem',
-                fontWeight: 600,
-                color: '#ffffff',
-                outline: 'none',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-                transition: 'all 0.15s ease'
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = 'var(--neon-pink)';
-                e.target.style.boxShadow = '0 0 0 3px rgba(245, 158, 11, 0.2)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-                e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
-              }}
-              aria-label="Search pandhals"
-            />
-          </div>
-
-          {/* Category Filter Pills */}
-          <div 
-            style={{ 
-              display: 'flex', 
-              gap: '8px', 
-              overflowX: 'auto', 
-              paddingBottom: '8px', 
-              scrollbarWidth: 'none',
-              WebkitOverflowScrolling: 'touch'
-            }}
-          >
-            {CATEGORIES.map(cat => {
-              const isActive = activeCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  style={{
-                    whiteSpace: 'nowrap',
-                    background: isActive ? 'var(--gradient-hyper)' : '#141726',
-                    border: isActive ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid rgba(255, 255, 255, 0.12)',
-                    color: isActive ? '#000000' : '#ffffff',
-                    fontFamily: 'var(--font-mono)',
-                    fontWeight: 800,
-                    fontSize: '0.82rem',
-                    padding: '7px 15px',
-                    borderRadius: 'var(--radius-pill)',
-                    cursor: 'pointer',
-                    boxShadow: isActive ? '0 3px 12px rgba(245, 158, 11, 0.35)' : '0 2px 6px rgba(0, 0, 0, 0.25)',
-                    flexShrink: 0,
-                    transition: 'all 0.12s ease'
-                  }}
-                >
-                  {cat.label}
-                </button>
-              );
-            })}
+          {/* Search Bar with 1-Tap Shuffle */}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', width: '100%' }}>
+            <div style={{ position: 'relative', flex: 1 }}>
+              <span 
+                style={{ 
+                  position: 'absolute', 
+                  left: '16px', 
+                  top: '50%', 
+                  transform: 'translateY(-50%)', 
+                  fontSize: '16px',
+                  color: 'var(--text-muted)'
+                }}
+              >
+                🔍
+              </span>
+              <input 
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by pandhal name, location..."
+                style={{
+                  width: '100%',
+                  padding: '11px 16px 11px 42px',
+                  borderRadius: 'var(--radius-pill)',
+                  border: '1.5px solid rgba(255, 255, 255, 0.15)',
+                  background: '#111420',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  color: '#ffffff',
+                  outline: 'none',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                  transition: 'all 0.15s ease'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = 'var(--neon-pink)';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(245, 158, 11, 0.2)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                  e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+                }}
+                aria-label="Search pandhals"
+              />
+            </div>
 
             {onShuffle && (
               <button
                 onClick={onShuffle}
                 style={{
                   whiteSpace: 'nowrap',
-                  background: 'rgba(255, 255, 255, 0.06)',
+                  background: 'rgba(245, 158, 11, 0.12)',
                   border: '1px solid rgba(245, 158, 11, 0.4)',
                   color: '#f59e0b',
                   fontFamily: 'var(--font-mono)',
                   fontWeight: 800,
                   fontSize: '0.82rem',
-                  padding: '7px 14px',
+                  padding: '11px 16px',
                   borderRadius: 'var(--radius-pill)',
                   cursor: 'pointer',
                   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
@@ -173,7 +136,7 @@ export function Home({
                   gap: '4px',
                   transition: 'all 0.12s ease'
                 }}
-                title="Shuffle pandhals to give every pandhal fair top spot visibility"
+                title="Shuffle pandhals randomly"
               >
                 <span>🔀</span>
                 <span>Shuffle</span>

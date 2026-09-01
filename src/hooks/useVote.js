@@ -16,7 +16,7 @@ export function useVote(onSuccess) {
     setMyVote(votingService.getMyVote());
   };
 
-  const castVote = async (phone, pandhalId) => {
+  const castVote = async (email, pandhalId, voterName = '') => {
     setIsSubmitting(true);
     setIsDelayed(false);
     setErrorMessage('');
@@ -28,7 +28,7 @@ export function useVote(onSuccess) {
     }, 500);
 
     try {
-      const result = await votingService.castVote(phone, pandhalId);
+      const result = await votingService.castVote(email, pandhalId, voterName);
       clearTimeout(timer);
 
       if (result.success) {

@@ -16,7 +16,7 @@ export function PandhalGrid({
           textAlign: 'center', 
           padding: '48px 16px', 
           background: 'var(--bg-card)',
-          border: '1px solid var(--border-subtle)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: 'var(--radius-lg)',
           color: '#ffffff'
         }}
@@ -26,7 +26,7 @@ export function PandhalGrid({
           No Bappas match your search
         </h3>
         <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: 0 }}>
-          Try clearing your search or category filter.
+          Try clearing your search query.
         </p>
       </div>
     );
@@ -36,8 +36,8 @@ export function PandhalGrid({
     <div 
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-        gap: 'clamp(8px, 2vw, 16px)',
+        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+        gap: 'clamp(10px, 2.8vw, 20px)',
         width: '100%'
       }}
     >

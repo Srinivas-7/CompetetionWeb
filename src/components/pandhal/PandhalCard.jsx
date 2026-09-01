@@ -224,24 +224,24 @@ export const PandhalCard = memo(function PandhalCard({
           </span>
         </div>
 
-        {/* Tactile Action Buttons */}
-        <div style={{ display: 'flex', gap: '4px' }}>
+        {/* Full Width Compact Action Button */}
+        <div>
           <button
             onClick={(e) => {
               e.stopPropagation();
               onVoteClick(pandhal.id);
             }}
             style={{
-              flex: 1,
+              width: '100%',
               background: hasVoted ? '#10b981' : 'var(--gradient-hyper)',
               color: hasVoted ? '#ffffff' : '#000000',
               border: '1px solid rgba(255, 255, 255, 0.3)',
-              boxShadow: hasVoted ? '0 2px 8px rgba(16, 185, 129, 0.4)' : '0 3px 10px rgba(245, 158, 11, 0.35)',
+              boxShadow: hasVoted ? '0 2px 6px rgba(16, 185, 129, 0.4)' : '0 2px 8px rgba(245, 158, 11, 0.35)',
               borderRadius: 'var(--radius-pill)',
-              padding: 'clamp(6px, 1.4vw, 10px) 4px',
+              padding: 'clamp(5px, 1.2vw, 8px) 4px',
               fontFamily: 'var(--font-display)',
               fontWeight: 900,
-              fontSize: 'clamp(0.66rem, 1.8vw, 0.82rem)',
+              fontSize: 'clamp(0.64rem, 1.6vw, 0.78rem)',
               letterSpacing: '-0.01em',
               cursor: 'pointer',
               display: 'flex',
@@ -252,32 +252,6 @@ export const PandhalCard = memo(function PandhalCard({
             }}
           >
             <span>{hasVoted ? '✓ LOCKED' : 'VOTE 🏆'}</span>
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onShareClick(pandhal);
-            }}
-            style={{
-              width: 'clamp(28px, 6vw, 36px)',
-              height: 'clamp(28px, 6vw, 36px)',
-              background: '#10b981',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)',
-              color: '#ffffff',
-              borderRadius: 'var(--radius-pill)',
-              fontSize: 'clamp(12px, 3vw, 16px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              flexShrink: 0
-            }}
-            title="Share on WhatsApp"
-            aria-label="Share on WhatsApp"
-          >
-            💬
           </button>
         </div>
       </div>

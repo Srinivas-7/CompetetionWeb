@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Home } from './pages/Home';
+import { VotePage } from './pages/VotePage';
 import { PandhalDetails } from './components/pandhal/PandhalDetails';
-import { VoteModal } from './components/voting/VoteModal';
 import { AuthProvider } from './context/AuthContext';
 import { AuthGate } from './components/auth/AuthGate';
 import { useLiveVotes } from './hooks/useLiveVotes';
@@ -24,15 +24,32 @@ function MainDashboard() {
   const [selectedVoteId, setSelectedVoteId] = useState(null);
   const [myVote, setMyVote] = useState(() => votingService.getMyVote());
 
-  // Deep-link hash handler (#pandhal-XX)
+  // Deep-link hash handler (#pandhal-XX or #vote-pandhal-XX)
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '');
+      if (hash && hash.startsWith('vote-')) {
+        const id = hash.replace('vote-', '');
+        const target = pandhalService.getPandhalById(id);
+        if (target) {
+          setSelectedVoteId(target.id);
+          setSelectedGalleryId(null);
+          return;
+        }
+      }
+      
       if (hash && hash.startsWith('pandhal-')) {
         const target = pandhalService.getPandhalById(hash);
         if (target) {
           setSelectedGalleryId(target.id);
+          setSelectedVoteId(null);
+          return;
         }
+      }
+
+      if (!hash) {
+        setSelectedGalleryId(null);
+        setSelectedVoteId(null);
       }
     };
 
@@ -51,6 +68,7 @@ function MainDashboard() {
 
   const handleOpenGallery = (id) => {
     setSelectedGalleryId(id);
+    setSelectedVoteId(null);
     if (history.pushState) {
       history.pushState(null, null, `#${id}`);
     }
@@ -65,24 +83,33 @@ function MainDashboard() {
 
   const handleOpenVote = (id) => {
     setSelectedVoteId(id);
+    setSelectedGalleryId(null);
+    if (history.pushState) {
+      history.pushState(null, null, `#vote-${id}`);
+    }
   };
 
   const handleCloseVote = () => {
     setSelectedVoteId(null);
-  };
-
-  const handleShareOnWhatsApp = (pandhal) => {
-    const url = `${window.location.origin}/#${pandhal.id}`;
-    const text = encodeURIComponent(
-      `🐘 Bappa Trail: Check out ${pandhal.name} at ${pandhal.location}!\n\n` +
-      `Explore complete photos & cast your vote here: 🪔\n${url}`
-    );
-    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    if (history.pushState) {
+      history.pushState(null, null, ' ');
+    }
   };
 
   const handleVoteRecorded = () => {
     setMyVote(votingService.getMyVote());
   };
+
+  // If a user clicks Vote, navigate to the dedicated full-page Vote view
+  if (selectedVotePandhal) {
+    return (
+      <VotePage 
+        pandhal={selectedVotePandhal}
+        onBack={handleCloseVote}
+        onVoteRecorded={handleVoteRecorded}
+      />
+    );
+  }
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -99,7 +126,6 @@ function MainDashboard() {
           setActiveCategory={setActiveCategory}
           onCardClick={handleOpenGallery}
           onVoteClick={handleOpenVote}
-          onShareClick={handleShareOnWhatsApp}
           onShuffle={shuffle}
         />
       </main>
@@ -113,15 +139,6 @@ function MainDashboard() {
           handleCloseGallery();
           handleOpenVote(id);
         }}
-        onShareClick={handleShareOnWhatsApp}
-      />
-
-      {/* Direct Voting Modal */}
-      <VoteModal 
-        pandhal={selectedVotePandhal}
-        isOpen={Boolean(selectedVotePandhal)}
-        onClose={handleCloseVote}
-        onVoteRecorded={handleVoteRecorded}
       />
     </div>
   );
