@@ -30,26 +30,17 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           }}
         >
           {/* Logo Badge */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-            <div 
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            <img 
+              src="/favicon.svg" 
+              alt="Bappa Trail Logo" 
               style={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '6px',
-                background: 'var(--gradient-hyper)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#000000',
-                fontSize: '0.92rem',
-                fontWeight: 900,
-                border: '1.5px solid #ffffff',
-                boxShadow: '1.5px 1.5px 0px #ff007f',
+                width: '32px',
+                height: '32px',
+                display: 'block',
                 flexShrink: 0
               }}
-            >
-              ⚡
-            </div>
+            />
             <div>
               <span 
                 style={{

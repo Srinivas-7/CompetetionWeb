@@ -13,11 +13,12 @@ export function AuthGate({ children }) {
   
   const oneTapInitialized = useRef(false);
 
-  // Initialize Google One Tap when available to automatically surface the user's active Google account
+  // Initialize Google One Tap ONLY if a valid VITE_FIREBASE_GOOGLE_CLIENT_ID is provided
   useEffect(() => {
     if (isAuthenticated || loading || oneTapInitialized.current) return;
 
-    const clientId = import.meta.env.VITE_FIREBASE_GOOGLE_CLIENT_ID || '707993544116-web.apps.googleusercontent.com';
+    const clientId = import.meta.env.VITE_FIREBASE_GOOGLE_CLIENT_ID;
+    if (!clientId) return; // Do not initialize One Tap with a dummy or missing client ID
 
     const checkAndInitOneTap = () => {
       if (typeof window !== 'undefined' && window.google?.accounts?.id) {
@@ -25,7 +26,7 @@ export function AuthGate({ children }) {
           window.google.accounts.id.initialize({
             client_id: clientId,
             callback: handleGoogleCredentialResponse,
-            auto_select: true, // Automatically logs in if only one Google account is active
+            auto_select: true,
             cancel_on_tap_outside: false
           });
 
@@ -134,24 +135,19 @@ export function AuthGate({ children }) {
             </span>
           </div>
 
-          {/* Logo */}
-          <div 
-            style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '16px',
-              background: 'var(--gradient-hyper)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '2rem',
-              fontWeight: 900,
-              border: '2px solid #ffffff',
-              boxShadow: '4px 4px 0px var(--neon-pink)',
-              margin: '0 auto 18px'
-            }}
-          >
-            ⚡
+          {/* Logo Badge with Bright Yellow Bolt */}
+          <div style={{ marginBottom: '16px' }}>
+            <img 
+              src="/favicon.svg" 
+              alt="Bappa Trail" 
+              style={{
+                width: '78px',
+                height: '78px',
+                display: 'block',
+                margin: '0 auto',
+                filter: 'drop-shadow(0 0 20px rgba(255, 0, 127, 0.4))'
+              }}
+            />
           </div>
 
           {/* Title */}
@@ -201,7 +197,7 @@ export function AuthGate({ children }) {
 
           {/* 1-Tap Google Sign In Button */}
           <button
-            onClick={() => signInWithGoogle().catch(() => {})}
+            onClick={() => signInWithGoogle().catch((err) => console.error(err))}
             style={{
               width: '100%',
               background: '#ffffff',
