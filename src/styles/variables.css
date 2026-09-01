@@ -1,0 +1,53 @@
+:root {
+  /* Peak Creative Maximalism Color Tokens */
+  --bg-page: #08090e;
+  --bg-surface: #10121c;
+  --bg-card: #131624;
+  --bg-card-hover: #191d30;
+  --bg-input: #0c0e17;
+
+  /* Electric Neon Accents */
+  --neon-pink: #ff007f;
+  --neon-lime: #ccff00;
+  --neon-cyan: #00f0ff;
+  --neon-orange: #ff5500;
+  --neon-purple: #9d4edd;
+  --neon-yellow: #ffee00;
+  
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a3aabf;
+  --text-muted: #697187;
+  --text-dark: #000000;
+
+  /* Gradients */
+  --gradient-hyper: linear-gradient(135deg, #ff007f 0%, #ff5500 50%, #ccff00 100%);
+  --gradient-cyber: linear-gradient(135deg, #9d4edd 0%, #ff007f 50%, #00f0ff 100%);
+  --gradient-flame: linear-gradient(135deg, #ff0055 0%, #ff5500 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+
+  /* Chunky 3D Offset Shadows */
+  --border-thick: 2px solid #ffffff;
+  --border-neon-pink: 2px solid #ff007f;
+  --border-neon-lime: 2px solid #ccff00;
+  --border-neon-cyan: 2px solid #00f0ff;
+  --shadow-3d-pink: 6px 6px 0px #ff007f;
+  --shadow-3d-lime: 6px 6px 0px #ccff00;
+  --shadow-3d-cyan: 6px 6px 0px #00f0ff;
+  --shadow-3d-white: 6px 6px 0px #ffffff;
+
+  /* Distinctive Typography */
+  --font-display: 'Unbounded', system-ui, sans-serif;
+  --font-heading: 'Unbounded', system-ui, sans-serif;
+  --font-accent: 'Bricolage Grotesque', 'Unbounded', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+
+  /* Sizing */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+  --container-max: 640px;
+}
