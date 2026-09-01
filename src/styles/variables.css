@@ -1,42 +1,42 @@
 :root {
-  /* Peak Creative Maximalism Color Tokens */
-  --bg-page: #08090e;
-  --bg-surface: #10121c;
-  --bg-card: #131624;
-  --bg-card-hover: #191d30;
-  --bg-input: #0c0e17;
+  /* Standard Polished Theme Color Tokens */
+  --bg-page: #0b0d14;
+  --bg-surface: #111420;
+  --bg-card: #141726;
+  --bg-card-hover: #1b2033;
+  --bg-input: #0e111a;
 
-  /* Electric Neon Accents */
-  --neon-pink: #ff007f;
-  --neon-lime: #ccff00;
-  --neon-cyan: #00f0ff;
-  --neon-orange: #ff5500;
-  --neon-purple: #9d4edd;
-  --neon-yellow: #ffee00;
+  /* Standard Vibrant Accents (Festive Amber & Clean Primaries) */
+  --neon-pink: #f59e0b;       /* Mapped to prestigious Golden Amber */
+  --neon-lime: #10b981;       /* Mapped to clean Emerald Green */
+  --neon-cyan: #3b82f6;       /* Mapped to Royal Sapphire Blue */
+  --neon-orange: #ea580c;     /* Mapped to Saffron Orange */
+  --neon-purple: #8b5cf6;     /* Mapped to Regal Purple */
+  --neon-yellow: #f59e0b;     /* Mapped to Warm Gold */
   
   /* Text */
   --text-primary: #ffffff;
-  --text-secondary: #a3aabf;
-  --text-muted: #697187;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
   --text-dark: #000000;
 
-  /* Gradients */
-  --gradient-hyper: linear-gradient(135deg, #ff007f 0%, #ff5500 50%, #ccff00 100%);
-  --gradient-cyber: linear-gradient(135deg, #9d4edd 0%, #ff007f 50%, #00f0ff 100%);
-  --gradient-flame: linear-gradient(135deg, #ff0055 0%, #ff5500 100%);
+  /* Standard Refined Gradients */
+  --gradient-hyper: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+  --gradient-cyber: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  --gradient-flame: linear-gradient(135deg, #ea580c 0%, #f59e0b 100%);
   --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
 
-  /* Chunky 3D Offset Shadows */
-  --border-thick: 2px solid #ffffff;
-  --border-neon-pink: 2px solid #ff007f;
-  --border-neon-lime: 2px solid #ccff00;
-  --border-neon-cyan: 2px solid #00f0ff;
-  --shadow-3d-pink: 4px 4px 0px #ff007f;
-  --shadow-3d-lime: 4px 4px 0px #ccff00;
-  --shadow-3d-cyan: 4px 4px 0px #00f0ff;
-  --shadow-3d-white: 4px 4px 0px #ffffff;
+  /* Standard Clean Borders & Soft Elevation */
+  --border-thick: 1.5px solid rgba(255, 255, 255, 0.2);
+  --border-neon-pink: 1.5px solid #f59e0b;
+  --border-neon-lime: 1.5px solid #10b981;
+  --border-neon-cyan: 1.5px solid #3b82f6;
+  --shadow-3d-pink: 0 4px 14px rgba(245, 158, 11, 0.3);
+  --shadow-3d-lime: 0 4px 14px rgba(16, 185, 129, 0.3);
+  --shadow-3d-cyan: 0 4px 14px rgba(59, 130, 246, 0.3);
+  --shadow-3d-white: 0 4px 14px rgba(255, 255, 255, 0.15);
 
-  /* Distinctive Typography */
+  /* Typography */
   --font-display: 'Unbounded', system-ui, sans-serif;
   --font-heading: 'Unbounded', system-ui, sans-serif;
   --font-accent: 'Bricolage Grotesque', 'Unbounded', sans-serif;

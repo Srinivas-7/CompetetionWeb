@@ -197,7 +197,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           </button>
         </div>
 
-        {/* 3 Maximalist Sticker Chips (Clean Mobile Wrapping) */}
+        {/* Sticker Chips */}
         <div 
           style={{
             display: 'flex',
@@ -214,11 +214,11 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               fontSize: '0.74rem',
               fontWeight: 700,
               color: '#ffffff',
-              background: '#161928',
-              border: '1.5px solid var(--border-medium)',
+              background: '#141726',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
               padding: '5px 11px',
               borderRadius: 'var(--radius-pill)',
-              boxShadow: '2px 2px 0px rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
               whiteSpace: 'nowrap'
             }}
           >
@@ -230,12 +230,12 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               fontFamily: 'var(--font-mono)',
               fontSize: '0.74rem',
               fontWeight: 700,
-              color: 'var(--neon-lime)',
-              background: '#161928',
-              border: '1.5px solid var(--neon-lime)',
+              color: '#10b981',
+              background: '#141726',
+              border: '1px solid rgba(16, 185, 129, 0.4)',
               padding: '5px 11px',
               borderRadius: 'var(--radius-pill)',
-              boxShadow: '2px 2px 0px var(--neon-lime)',
+              boxShadow: '0 2px 6px rgba(16, 185, 129, 0.2)',
               whiteSpace: 'nowrap'
             }}
           >
@@ -247,40 +247,39 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               fontFamily: 'var(--font-mono)',
               fontSize: '0.74rem',
               fontWeight: 700,
-              color: 'var(--neon-pink)',
-              background: '#161928',
-              border: '1.5px solid var(--neon-pink)',
+              color: '#f59e0b',
+              background: '#141726',
+              border: '1px solid rgba(245, 158, 11, 0.4)',
               padding: '5px 11px',
               borderRadius: 'var(--radius-pill)',
-              boxShadow: '2px 2px 0px var(--neon-pink)',
+              boxShadow: '0 2px 6px rgba(245, 158, 11, 0.2)',
               whiteSpace: 'nowrap'
             }}
           >
-            🔒 1-PHONE = 1-VOTE
+            🔒 1-ACCOUNT = 1-VOTE
           </span>
         </div>
       </section>
 
-      {/* 3. Animated Infinite Marquee Ticker Ribbon */}
+      {/* 3. Animated Marquee Ribbon */}
       <div 
         style={{
-          background: 'var(--neon-pink)',
-          color: '#ffffff',
+          background: 'linear-gradient(90deg, #f59e0b 0%, #ea580c 50%, #f59e0b 100%)',
+          color: '#000000',
           overflow: 'hidden',
           padding: '8px 0',
-          borderTop: '2px solid #ffffff',
-          borderBottom: '2px solid #ffffff',
-          boxShadow: '0 4px 20px rgba(255, 0, 127, 0.4)',
-          transform: 'rotate(-0.5deg)',
-          margin: '8px -10px 18px'
+          borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 4px 16px rgba(245, 158, 11, 0.25)',
+          margin: '8px 0 18px'
         }}
       >
         <div className="animate-marquee">
-          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.86rem', letterSpacing: '0.06em', whiteSpace: 'nowrap', padding: '0 20px' }}>
-            ⚡ 21 GRAND PANDHALS ★ 1 UNIQUE PHONE VOTE ★ 4K PHOTO GALLERIES ★ REALTIME LEADERBOARD ★ 100% ZERO-WASTE ECO CHECK ★ GANPATI BAPPA MORYA ★ 
+          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 900, fontSize: '0.86rem', letterSpacing: '0.06em', whiteSpace: 'nowrap', padding: '0 20px' }}>
+            ⚡ 21 GRAND PANDHALS ★ 1 UNIQUE GOOGLE VOTE ★ 4K PHOTO GALLERIES ★ REALTIME LEADERBOARD ★ 100% ZERO-WASTE ECO CHECK ★ GANPATI BAPPA MORYA ★ 
           </span>
-          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '0.86rem', letterSpacing: '0.06em', whiteSpace: 'nowrap', padding: '0 20px' }}>
-            ⚡ 21 GRAND PANDHALS ★ 1 UNIQUE PHONE VOTE ★ 4K PHOTO GALLERIES ★ REALTIME LEADERBOARD ★ 100% ZERO-WASTE ECO CHECK ★ GANPATI BAPPA MORYA ★ 
+          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 900, fontSize: '0.86rem', letterSpacing: '0.06em', whiteSpace: 'nowrap', padding: '0 20px' }}>
+            ⚡ 21 GRAND PANDHALS ★ 1 UNIQUE GOOGLE VOTE ★ 4K PHOTO GALLERIES ★ REALTIME LEADERBOARD ★ 100% ZERO-WASTE ECO CHECK ★ GANPATI BAPPA MORYA ★ 
           </span>
         </div>
       </div>

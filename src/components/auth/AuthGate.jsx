@@ -105,10 +105,10 @@ export function AuthGate({ children }) {
             width: '100%',
             padding: '36px 24px',
             textAlign: 'center',
-            background: '#101322',
-            border: '2.5px solid #ffffff',
-            borderRadius: '28px',
-            boxShadow: '8px 8px 0px var(--neon-pink)',
+            background: '#141726',
+            border: '1px solid rgba(255, 255, 255, 0.14)',
+            borderRadius: '24px',
+            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.5)',
             position: 'relative'
           }}
         >
@@ -118,17 +118,16 @@ export function AuthGate({ children }) {
               className="animate-wiggle"
               style={{
                 display: 'inline-block',
-                background: 'var(--neon-yellow)',
+                background: '#f59e0b',
                 color: '#000000',
-                border: '2px solid #000000',
-                boxShadow: '3px 3px 0px var(--neon-pink)',
+                border: '1px solid rgba(255, 255, 255, 0.4)',
+                boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)',
                 fontFamily: 'var(--font-mono)',
                 fontWeight: 800,
                 fontSize: '0.74rem',
-                letterSpacing: '0.08em',
+                letterSpacing: '0.06em',
                 padding: '5px 12px',
-                borderRadius: '6px',
-                transform: 'rotate(-2deg)'
+                borderRadius: '6px'
               }}
             >
               ★ CHATURTHI 2026 OFFICIAL TRAIL ★
@@ -145,7 +144,7 @@ export function AuthGate({ children }) {
                 height: '78px',
                 display: 'block',
                 margin: '0 auto',
-                filter: 'drop-shadow(0 0 20px rgba(255, 0, 127, 0.4))'
+                filter: 'drop-shadow(0 4px 16px rgba(245, 158, 11, 0.35))'
               }}
             />
           </div>
@@ -162,7 +161,7 @@ export function AuthGate({ children }) {
               textTransform: 'uppercase'
             }}
           >
-            BAPPA<span style={{ color: 'var(--neon-lime)' }}>TRAIL</span>
+            BAPPA<span style={{ color: 'var(--neon-pink)' }}>TRAIL</span>
           </h1>
 
           <p 
@@ -181,9 +180,9 @@ export function AuthGate({ children }) {
           {error && (
             <div 
               style={{
-                background: 'rgba(255, 0, 85, 0.15)',
-                border: '1.5px solid var(--neon-pink)',
-                color: '#ffcce0',
+                background: 'rgba(239, 68, 68, 0.12)',
+                border: '1px solid #ef4444',
+                color: '#fca5a5',
                 borderRadius: '12px',
                 padding: '10px 14px',
                 fontSize: '0.84rem',
@@ -203,8 +202,8 @@ export function AuthGate({ children }) {
               width: '100%',
               background: '#ffffff',
               color: '#000000',
-              border: '2.5px solid #000000',
-              boxShadow: '5px 5px 0px var(--neon-pink), 9px 9px 0px var(--neon-lime)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)',
               borderRadius: 'var(--radius-pill)',
               padding: '15px 20px',
               fontFamily: 'var(--font-display)',
@@ -219,12 +218,12 @@ export function AuthGate({ children }) {
               transition: 'transform 0.12s ease, box-shadow 0.12s ease'
             }}
             onMouseDown={(e) => {
-              e.currentTarget.style.transform = 'translate(3px, 3px)';
-              e.currentTarget.style.boxShadow = '2px 2px 0px var(--neon-pink)';
+              e.currentTarget.style.transform = 'translateY(2px)';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
             }}
             onMouseUp={(e) => {
               e.currentTarget.style.transform = 'none';
-              e.currentTarget.style.boxShadow = '5px 5px 0px var(--neon-pink), 9px 9px 0px var(--neon-lime)';
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.25)';
             }}
           >
             {/* Google G Logo SVG */}

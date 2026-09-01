@@ -68,7 +68,7 @@ export function Home({
             21 Pandhals to <span className="gradient-text-hyper">Explore &amp; Vote</span>
           </h2>
 
-          {/* Search Input with Neon Outline */}
+          {/* Search Input */}
           <div style={{ position: 'relative', width: '100%', marginBottom: '14px' }}>
             <span 
               style={{ 
@@ -89,31 +89,31 @@ export function Home({
               placeholder="Search by pandhal name, location, theme..."
               style={{
                 width: '100%',
-                padding: '14px 16px 14px 44px',
+                padding: '12px 16px 12px 44px',
                 borderRadius: 'var(--radius-pill)',
-                border: '2px solid rgba(255, 255, 255, 0.2)',
-                background: '#0c0e17',
+                border: '1.5px solid rgba(255, 255, 255, 0.15)',
+                background: '#111420',
                 fontFamily: 'var(--font-sans)',
-                fontSize: '0.94rem',
+                fontSize: '0.92rem',
                 fontWeight: 600,
                 color: '#ffffff',
                 outline: 'none',
-                boxShadow: '4px 4px 0px rgba(255, 0, 127, 0.35)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                 transition: 'all 0.15s ease'
               }}
               onFocus={(e) => {
                 e.target.style.borderColor = 'var(--neon-pink)';
-                e.target.style.boxShadow = '4px 4px 0px var(--neon-pink)';
+                e.target.style.boxShadow = '0 0 0 3px rgba(245, 158, 11, 0.2)';
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                e.target.style.boxShadow = '4px 4px 0px rgba(255, 0, 127, 0.35)';
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
               }}
               aria-label="Search pandhals"
             />
           </div>
 
-          {/* Category Filter Pills (3D Buttons) */}
+          {/* Category Filter Pills */}
           <div 
             style={{ 
               display: 'flex', 
@@ -132,16 +132,16 @@ export function Home({
                   onClick={() => setActiveCategory(cat.id)}
                   style={{
                     whiteSpace: 'nowrap',
-                    background: isActive ? 'var(--neon-yellow)' : '#131624',
-                    border: isActive ? '2px solid #000000' : '1.5px solid rgba(255, 255, 255, 0.15)',
+                    background: isActive ? 'var(--gradient-hyper)' : '#141726',
+                    border: isActive ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid rgba(255, 255, 255, 0.12)',
                     color: isActive ? '#000000' : '#ffffff',
                     fontFamily: 'var(--font-mono)',
                     fontWeight: 800,
                     fontSize: '0.82rem',
-                    padding: '8px 16px',
+                    padding: '7px 15px',
                     borderRadius: 'var(--radius-pill)',
                     cursor: 'pointer',
-                    boxShadow: isActive ? '3px 3px 0px var(--neon-pink)' : '2px 2px 0px rgba(0, 0, 0, 0.5)',
+                    boxShadow: isActive ? '0 3px 12px rgba(245, 158, 11, 0.35)' : '0 2px 6px rgba(0, 0, 0, 0.25)',
                     flexShrink: 0,
                     transition: 'all 0.12s ease'
                   }}

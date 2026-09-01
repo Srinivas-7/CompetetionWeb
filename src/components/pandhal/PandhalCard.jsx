@@ -71,15 +71,15 @@ export const PandhalCard = memo(function PandhalCard({
         >
           <span 
             style={{
-              background: 'var(--neon-yellow)',
-              border: '1.5px solid #000000',
+              background: '#f59e0b',
+              border: '1px solid rgba(255, 255, 255, 0.4)',
               color: '#000000',
               fontFamily: 'var(--font-mono)',
               fontWeight: 900,
               fontSize: 'clamp(0.65rem, 1.8vw, 0.78rem)',
               padding: '2px 6px',
               borderRadius: '4px',
-              boxShadow: '1px 1px 0px #000000'
+              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.4)'
             }}
           >
             #{String(pandhal.number).padStart(2, '0')}
@@ -87,18 +87,19 @@ export const PandhalCard = memo(function PandhalCard({
 
           <span 
             style={{
-              background: 'var(--neon-cyan)',
-              border: '1.5px solid #000000',
-              color: '#000000',
+              background: 'rgba(15, 23, 42, 0.85)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#ffffff',
               fontFamily: 'var(--font-mono)',
-              fontWeight: 900,
+              fontWeight: 800,
               fontSize: 'clamp(0.6rem, 1.6vw, 0.72rem)',
               padding: '2px 6px',
               borderRadius: 'var(--radius-pill)',
-              boxShadow: '1px 1px 0px #000000',
+              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.4)',
               display: 'flex',
               alignItems: 'center',
-              gap: '2px'
+              gap: '2px',
+              backdropFilter: 'blur(4px)'
             }}
           >
             <span>📸</span> {pandhal.photos?.length || 1}
@@ -182,11 +183,21 @@ export const PandhalCard = memo(function PandhalCard({
             alignItems: 'center',
             background: '#0a0c14',
             border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: 'var(--radius-xs)',
-            padding: '4px 6px'
+            borderRadius: '6px',
+            padding: '4px 6px',
+            gap: '4px'
           }}
         >
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(0.58rem, 1.4vw, 0.72rem)', color: 'var(--text-secondary)', fontWeight: 700 }}>
+          <span 
+            style={{ 
+              fontFamily: 'var(--font-mono)', 
+              fontSize: 'clamp(0.56rem, 1.4vw, 0.68rem)', 
+              color: 'var(--text-secondary)', 
+              fontWeight: 700,
+              whiteSpace: 'nowrap',
+              flexShrink: 0
+            }}
+          >
             VOTES
           </span>
           <span 
@@ -195,20 +206,25 @@ export const PandhalCard = memo(function PandhalCard({
               background: 'var(--gradient-flame)',
               color: '#ffffff',
               fontWeight: 900,
-              fontSize: 'clamp(0.66rem, 1.6vw, 0.8rem)',
+              fontSize: 'clamp(0.62rem, 1.5vw, 0.74rem)',
               padding: '2px 6px',
               borderRadius: 'var(--radius-pill)',
               boxShadow: '0 2px 8px rgba(255, 85, 0, 0.3)',
-              display: 'flex',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '2px'
+              justifyContent: 'center',
+              gap: '3px',
+              whiteSpace: 'nowrap',
+              lineHeight: 1,
+              flexShrink: 0
             }}
           >
-            🔥 {voteCount.toLocaleString('en-IN')}
+            <span style={{ fontSize: '0.72rem', lineHeight: 1 }}>🔥</span>
+            <span>{voteCount.toLocaleString('en-IN')}</span>
           </span>
         </div>
 
-        {/* Tactile 3D Action Buttons */}
+        {/* Tactile Action Buttons */}
         <div style={{ display: 'flex', gap: '4px' }}>
           <button
             onClick={(e) => {
@@ -217,10 +233,10 @@ export const PandhalCard = memo(function PandhalCard({
             }}
             style={{
               flex: 1,
-              background: hasVoted ? '#16a34a' : 'var(--gradient-hyper)',
+              background: hasVoted ? '#10b981' : 'var(--gradient-hyper)',
               color: hasVoted ? '#ffffff' : '#000000',
-              border: '1.5px solid #ffffff',
-              boxShadow: hasVoted ? '2px 2px 0px #ffffff' : '2.5px 2.5px 0px var(--neon-pink)',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              boxShadow: hasVoted ? '0 2px 8px rgba(16, 185, 129, 0.4)' : '0 3px 10px rgba(245, 158, 11, 0.35)',
               borderRadius: 'var(--radius-pill)',
               padding: 'clamp(6px, 1.4vw, 10px) 4px',
               fontFamily: 'var(--font-display)',
@@ -246,9 +262,9 @@ export const PandhalCard = memo(function PandhalCard({
             style={{
               width: 'clamp(28px, 6vw, 36px)',
               height: 'clamp(28px, 6vw, 36px)',
-              background: '#22c55e',
-              border: '1.5px solid #ffffff',
-              boxShadow: '2px 2px 0px #ffffff',
+              background: '#10b981',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)',
               color: '#ffffff',
               borderRadius: 'var(--radius-pill)',
               fontSize: 'clamp(12px, 3vw, 16px)',
