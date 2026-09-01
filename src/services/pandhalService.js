@@ -1,11 +1,30 @@
 import { PANDHALS_DATA } from '../data/pandhals';
 
+/**
+ * Robust Fisher-Yates shuffle for fair, unbiased randomization
+ */
+export function shufflePandhals(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 export const pandhalService = {
   /**
    * Retrieves all 21 pandhal entries
    */
   getAllPandhals: () => {
     return [...PANDHALS_DATA];
+  },
+
+  /**
+   * Retrieves all 21 pandhals in a randomized order
+   */
+  getRandomizedPandhals: () => {
+    return shufflePandhals(PANDHALS_DATA);
   },
 
   /**
@@ -17,14 +36,15 @@ export const pandhalService = {
   },
 
   /**
-   * Filter and search pandhals
+   * Filter and search pandhals with randomized fair exposure
+   * @param {Array} baseList 
    * @param {string} query 
    * @param {string} category 
    * @param {Object} liveCounts 
    */
-  filterPandhals: (query = '', category = 'all', liveCounts = {}) => {
+  filterPandhals: (baseList = PANDHALS_DATA, query = '', category = 'all', liveCounts = {}) => {
     const q = query.toLowerCase().trim();
-    let list = PANDHALS_DATA.filter(p => {
+    let list = (baseList || PANDHALS_DATA).filter(p => {
       const matchSearch = !q || 
         p.name.toLowerCase().includes(q) ||
         p.organization.toLowerCase().includes(q) ||

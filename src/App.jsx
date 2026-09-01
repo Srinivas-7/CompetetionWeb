@@ -16,7 +16,8 @@ function MainDashboard() {
     searchQuery, 
     setSearchQuery, 
     activeCategory, 
-    setActiveCategory 
+    setActiveCategory,
+    shuffle
   } = usePandhal(liveCounts);
 
   const [selectedGalleryId, setSelectedGalleryId] = useState(null);
@@ -99,6 +100,7 @@ function MainDashboard() {
           onCardClick={handleOpenGallery}
           onVoteClick={handleOpenVote}
           onShareClick={handleShareOnWhatsApp}
+          onShuffle={shuffle}
         />
       </main>
 

@@ -14,7 +14,8 @@ export function Home({
   setActiveCategory,
   onCardClick,
   onVoteClick,
-  onShareClick
+  onShareClick,
+  onShuffle
 }) {
   const scrollToPandhals = () => {
     document.getElementById('pandhals')?.scrollIntoView({ behavior: 'smooth' });
@@ -150,6 +151,34 @@ export function Home({
                 </button>
               );
             })}
+
+            {onShuffle && (
+              <button
+                onClick={onShuffle}
+                style={{
+                  whiteSpace: 'nowrap',
+                  background: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(245, 158, 11, 0.4)',
+                  color: '#f59e0b',
+                  fontFamily: 'var(--font-mono)',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  padding: '7px 14px',
+                  borderRadius: 'var(--radius-pill)',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+                  flexShrink: 0,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  transition: 'all 0.12s ease'
+                }}
+                title="Shuffle pandhals to give every pandhal fair top spot visibility"
+              >
+                <span>🔀</span>
+                <span>Shuffle</span>
+              </button>
+            )}
           </div>
         </div>
 
