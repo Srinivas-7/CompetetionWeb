@@ -167,13 +167,14 @@ export function AuthGate({ children }) {
 
           <p 
             style={{
-              fontSize: '0.94rem',
+              fontSize: '0.96rem',
               lineHeight: 1.5,
               color: 'var(--text-secondary)',
-              margin: '0 0 28px'
+              margin: '0 0 28px',
+              fontWeight: 600
             }}
           >
-            Sign in with your Google account to unlock full 4K pandhal photo collections and cast your verified community vote.
+            Enjoy, vote for your beloved Bappa, and visit them across the grand trail 🪔✨
           </p>
 
           {/* Error Message */}
@@ -248,24 +249,55 @@ export function AuthGate({ children }) {
             <span>Continue with Google</span>
           </button>
 
-          {/* Micro Value Chips */}
+          {/* Creative Micro Badges */}
           <div 
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '8px',
+              gap: '10px',
               fontFamily: 'var(--font-mono)',
               fontSize: '0.78rem',
               color: 'var(--text-secondary)'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-              <span>🔒</span>
-              <span>1 Google Account = 1 Verified Community Vote</span>
+            <div 
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: 'var(--radius-pill)',
+                padding: '6px 14px',
+                margin: '0 auto'
+              }}
+            >
+              <span>🪔</span>
+              <span style={{ color: 'var(--neon-yellow)', fontWeight: 700 }}>1 Devotee</span>
+              <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>•</span>
+              <span style={{ color: '#ffffff', fontWeight: 600 }}>1 Sacred Vote</span>
+              <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>•</span>
+              <span style={{ color: 'var(--neon-lime)', fontWeight: 700 }}>Zero Spam</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+
+            <div 
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                background: 'rgba(255, 0, 127, 0.08)',
+                border: '1px solid rgba(255, 0, 127, 0.25)',
+                borderRadius: 'var(--radius-pill)',
+                padding: '6px 14px',
+                margin: '0 auto'
+              }}
+            >
               <span>⚡</span>
-              <span>Uses your active device Gmail session seamlessly</span>
+              <span style={{ color: '#ffffff', fontWeight: 600 }}>1-Tap Instant Entry</span>
+              <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>•</span>
+              <span style={{ color: 'var(--neon-pink)', fontWeight: 700 }}>Pure Festive Energy</span>
             </div>
           </div>
         </div>
