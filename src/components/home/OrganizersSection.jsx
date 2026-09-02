@@ -5,13 +5,15 @@ const ORGANIZERS = [
     id: 'organizer-2',
     image: '/assets/organizers/organizer-2.jpg',
     role: 'Event Organiser',
-    title: 'Honourable MLA -\nH R Gaviyappa',
+    name: 'H R Gaviyappa',
+    subtitle: '(MLA, Vijayanagara – Hosapete)',
   },
   {
     id: 'organizer-1',
     image: '/assets/organizers/organizer-1.jpg',
     role: 'Event Organiser',
-    title: 'Chief Organiser & Youth Lead',
+    name: 'H G Virupaksha',
+    subtitle: '(Samaja Sevakaru, Hosapete)',
   }
 ];
 
@@ -148,7 +150,7 @@ export function OrganizersSection() {
             >
               <img
                 src={org.image}
-                alt={org.title}
+                alt={org.name || org.title}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -186,14 +188,30 @@ export function OrganizersSection() {
               <h3
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontSize: '1.15rem',
+                  fontSize: '1.2rem',
                   fontWeight: 800,
                   color: '#ffffff',
-                  margin: '0 0 4px',
-                  letterSpacing: '-0.01em'
+                  margin: '0 0 2px',
+                  letterSpacing: '-0.01em',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                  alignItems: 'center'
                 }}
               >
-                {org.title}
+                <span>{org.name || org.title}</span>
+                {org.subtitle && (
+                  <span
+                    style={{
+                      fontSize: '0.86rem',
+                      fontWeight: 600,
+                      color: '#f59e0b',
+                      letterSpacing: '0.01em'
+                    }}
+                  >
+                    {org.subtitle}
+                  </span>
+                )}
               </h3>
 
               <div
