@@ -44,3 +44,18 @@
 .animate-wiggle {
   animation: badgeWiggle 3s ease-in-out infinite;
 }
+
+@keyframes emblemGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.45));
+    transform: translateY(0);
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(245, 158, 11, 0.75));
+    transform: translateY(-5px);
+  }
+}
+
+.animate-emblem {
+  animation: emblemGlow 4s ease-in-out infinite;
+}

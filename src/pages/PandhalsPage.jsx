@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { PandhalGrid } from '../components/pandhal/PandhalGrid';
 import { useAuth } from '../context/AuthContext';
+import { Footer } from '../components/common/Footer';
 
 export function PandhalsPage({
   pandhals = [],
@@ -261,6 +262,9 @@ export function PandhalsPage({
           onVoteClick={onVoteClick}
         />
       </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

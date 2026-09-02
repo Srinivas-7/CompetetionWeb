@@ -128,7 +128,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         style={{
           maxWidth: 'var(--container-max)',
           margin: '0 auto',
-          padding: '32px 16px 20px',
+          padding: '24px 16px 20px',
           textAlign: 'center',
           position: 'relative'
         }}
@@ -154,6 +154,48 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           >
             ★ CHATURTHI 2026 OFFICIAL TRAIL ★
           </span>
+        </div>
+
+        {/* Regal Gajotsava Logo Emblem Card */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+          <div 
+            className="animate-emblem"
+            style={{
+              position: 'relative',
+              background: '#fefefe',
+              borderRadius: '20px',
+              padding: '8px',
+              border: '2px solid #f59e0b',
+              boxShadow: '0 12px 35px rgba(0, 0, 0, 0.6), 0 0 28px rgba(245, 158, 11, 0.3)',
+              maxWidth: 'clamp(170px, 45vw, 220px)',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          >
+            {/* Inner Gold Inset Border */}
+            <div 
+              style={{
+                borderRadius: '14px',
+                overflow: 'hidden',
+                border: '1px solid rgba(180, 83, 9, 0.3)',
+                background: '#faf7f2',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <img 
+                src="/assets/gajotsava-logo.jpg" 
+                alt="ಗಜೋತ್ಸವ - Gajotsava Logo" 
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  display: 'block',
+                  borderRadius: '13px'
+                }}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Massive Maximalist Display Typography */}
