@@ -4,27 +4,22 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // =========================================================================
-    // GANAPATHI TRAIL 2026 - CLIENT-AUTHENTICATED SECURITY RULES
+    // GANAPATHI TRAIL 2026 - PRODUCTION SECURITY RULES
     // 
-    // - NO service account keys required.
-    // - Uses cryptographic Firebase Google Auth (request.auth.uid).
-    // - Guarantees exactly 1 vote per authenticated Google user.
+    // - Authenticated Google Identity (request.auth.uid)
+    // - Exactly 1 vote per UID per event
+    // - 10-shard distributed counters per Pandhal (210 shards total)
     // =========================================================================
 
-    // 1. Live Aggregate Counter & Shards
-    match /counters/{counterId} {
+    // 1. Sharded Counters (21 Pandhals × 10 Shards = 210 Shards)
+    match /counters/{pandhalId}/shards/{shardId} {
       allow read: if true;
       allow write: if request.auth != null;
-
-      match /shards/{shardId} {
-        allow read: if true;
-        allow write: if request.auth != null;
-      }
     }
 
-    // 2. Voter Ballot Lock (Strictly 1 vote per request.auth.uid)
+    // 2. Voter Ballot Lock (Strictly 1 vote per authenticated Google user)
     match /voters/{voterDocId} {
-      // User can read their own voter record
+      // User can read their own ballot status
       allow read: if request.auth != null;
       
       // User can create their ballot ONLY ONCE if the document ID matches their UID
@@ -32,13 +27,7 @@ service cloud.firestore {
                     && (voterDocId == "ganapathi_chaturthi_2026_" + request.auth.uid || voterDocId == request.auth.uid)
                     && request.resource.data.uid == request.auth.uid;
                     
-      // Disallow tampering or changing the ballot after creation
-      allow update, delete: if false;
-    }
-
-    match /votes/{voteDocId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null && voteDocId == request.auth.uid;
+      // Disallow user modification or user deletion after creation (Admin-only in Console)
       allow update, delete: if false;
     }
 

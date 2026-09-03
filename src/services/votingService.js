@@ -1,9 +1,8 @@
 import { isValidPandhalId } from '../utils/validation';
 import { PANDHALS_DATA } from '../data/pandhals';
-import { auth } from '../lib/firebase';
+import { auth, appCheck } from '../lib/firebase';
 import { getFirestoreDb } from '../firebase/firestore';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { executeFirebaseVote, subscribeToFirebaseCounters } from '../firebase/voting';
+import { doc, getDoc } from 'firebase/firestore';
 
 const EVENT_ID = 'ganapathi_chaturthi_2026';
 
@@ -19,12 +18,12 @@ class VotingService {
   }
 
   /**
-   * Subscribes in real-time to the current authenticated user's vote record in Firebase.
-   * If the user is deleted or has not voted, returns null.
+   * Checks the user's vote record directly from Firestore or cache.
+   * If an administrator deletes the voter document, returns null.
    * 
    * @param {string} uid - Firebase Auth User UID
    * @param {function} callback - Receives { pandhalId, pandhalName, votedAt } or null
-   * @returns {function} Unsubscribe function
+   * @returns {function} Cleanup function
    */
   subscribeUserVote(uid, callback) {
     if (!uid) {
@@ -32,43 +31,53 @@ class VotingService {
       return () => {};
     }
 
-    const db = getFirestoreDb();
-    if (!db) {
-      callback(null);
-      return () => {};
-    }
+    let isActive = true;
 
-    try {
-      const voterDocRef = doc(db, 'voters', `${EVENT_ID}_${uid}`);
+    const checkVote = async () => {
+      const db = getFirestoreDb();
+      if (!db || !isActive) return;
 
-      const unsubscribe = onSnapshot(voterDocRef, (docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          callback({
-            pandhalId: data.pandhalId,
-            pandhalName: data.pandhalName || data.pandhalId,
-            votedAt: data.votedAt,
-          });
-        } else {
-          // Document does not exist in Firebase -> User has 0 recorded votes
-          callback(null);
+      try {
+        const voterDocRef = doc(db, 'voters', `${EVENT_ID}_${uid}`);
+        const docSnap = await getDoc(voterDocRef);
+
+        if (isActive) {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            callback({
+              pandhalId: data.pandhalId,
+              pandhalName: data.pandhalName || data.pandhalId,
+              votedAt: data.votedAt,
+            });
+          } else {
+            callback(null);
+          }
         }
-      }, (err) => {
-        console.warn('[VotingService] Live user vote listener info:', err);
-        callback(null);
-      });
+      } catch (err) {
+        if (isActive) callback(null);
+      }
+    };
 
-      return unsubscribe;
-    } catch (err) {
-      console.warn('[VotingService] Error subscribing to user vote:', err);
-      callback(null);
-      return () => {};
-    }
+    checkVote();
+
+    // Check again on tab focus / visibility change
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible' && isActive) {
+        checkVote();
+      }
+    };
+
+    document.addEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      isActive = false;
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }
 
   /**
-   * Cast a vote with atomic Firestore transaction directly using the user's Google Auth session.
-   * Zero private keys or service accounts required.
+   * Cast a vote through the secure /api/vote serverless endpoint.
+   * Enforces server-side ID token verification, deterministic sharding, and atomic idempotency.
    * 
    * @param {string} voterEmail 
    * @param {string} pandhalId 
@@ -99,58 +108,158 @@ class VotingService {
     const pandhalName = pandhal ? pandhal.name : 'Selected Bappa';
 
     try {
-      // Execute direct atomic Firestore transaction via authenticated Client SDK
-      const result = await executeFirebaseVote(email, pandhalId, pandhalName, voterName || currentUser.displayName || '');
+      const idToken = await currentUser.getIdToken(true);
+      
+      const headers = {
+        'Content-Type': 'application/json',
+      };
 
-      if (result.success) {
+      if (appCheck && typeof window !== 'undefined') {
+        try {
+          const { getToken } = await import('firebase/app-check');
+          const appCheckResult = await getToken(appCheck, false);
+          if (appCheckResult?.token) {
+            headers['X-Firebase-AppCheck'] = appCheckResult.token;
+          }
+        } catch {}
+      }
+
+      const response = await this.fetchWithRetry('/api/vote', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          idToken,
+          pandhalId,
+          pandhalName,
+          voterName: voterName || currentUser.displayName || '',
+        }),
+      }, 2);
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data.success) {
         return {
           success: true,
-          message: result.message || `Your vote for ${pandhalName} is locked!`,
+          message: data.message || `Your vote for ${pandhalName} is locked!`,
           pandhalName,
-          totalVotes: result.totalVotes,
+          totalVotes: data.totalVotes,
+          idempotent: data.idempotent,
         };
       }
 
-      if (result.error === 'ALREADY_VOTED') {
+      if (response.status === 409) {
         return {
           success: false,
           errorType: 'ALREADY_VOTED',
-          message: result.message || 'You have already voted for a different Bappa. Only 1 vote per Google account is allowed.',
+          message: data.message || 'You have already voted for a different Bappa. Only 1 vote per Google account is allowed.',
+        };
+      }
+
+      if (response.status === 429) {
+        return {
+          success: false,
+          errorType: 'RATE_LIMIT',
+          message: data.message || 'Too many requests. Please wait a few moments and try again.',
+        };
+      }
+
+      if (response.status === 401) {
+        return {
+          success: false,
+          errorType: 'AUTH_EXPIRED',
+          message: 'Your Google sign-in has expired. Please sign in again.',
         };
       }
 
       return {
         success: false,
-        errorType: result.error || 'VOTE_FAILED',
-        message: result.message || 'Unable to record vote. Please try again.',
+        errorType: data.error || 'SERVER_ERROR',
+        message: data.message || 'Failed to submit vote to server. Please try again.',
       };
-    } catch (err) {
-      console.error('[VotingService] Error during vote submission:', err);
-
-      if (err.message && err.message.includes('permission')) {
-        return {
-          success: false,
-          errorType: 'PERMISSION_DENIED',
-          message: 'Firestore permission error. Please make sure the Firestore Security Rules are published in Firebase Console.',
-        };
-      }
+    } catch (networkError) {
+      console.error('[VotingService] Network error during vote submission:', networkError);
 
       return {
         success: false,
         errorType: 'NETWORK_ERROR',
-        message: 'Connection issue while saving vote. Please check your internet connection and try again.',
+        message: 'Network connection lost while recording vote. Please check your internet connection and try again.',
       };
     }
   }
 
+  async fetchWithRetry(url, options, maxRetries = 2) {
+    let lastError;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const res = await fetch(url, options);
+        if (res.status < 500 && res.status !== 429) {
+          return res;
+        }
+        if (attempt < maxRetries) {
+          const delay = Math.pow(2, attempt) * 300 + Math.random() * 200;
+          await new Promise((r) => setTimeout(r, delay));
+          continue;
+        }
+        return res;
+      } catch (err) {
+        lastError = err;
+        if (attempt < maxRetries) {
+          const delay = Math.pow(2, attempt) * 300 + Math.random() * 200;
+          await new Promise((r) => setTimeout(r, delay));
+          continue;
+        }
+      }
+    }
+    throw lastError || new Error('Network request failed');
+  }
+
   /**
-   * Subscribes to live counts via direct Firestore live snapshot listener.
+   * Subscribes to live counts via /api/counters endpoint with smart 20s polling.
+   * Pauses automatically when tab is hidden (document.visibilityState === 'hidden').
    * 
    * @param {function} callback - Receives { [pandhalId]: number }
-   * @returns {function} Unsubscribe function
+   * @returns {function} Cleanup function
    */
   subscribeLiveCounts(callback) {
-    return subscribeToFirebaseCounters(callback);
+    let isActive = true;
+
+    const fetchCounts = async () => {
+      try {
+        const res = await fetch('/api/counters');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.counts && isActive) {
+            callback(data.counts);
+          }
+        }
+      } catch (err) {
+        // Polling error silently handled
+      }
+    };
+
+    // Initial fetch
+    fetchCounts();
+
+    // Smart polling: every 20 seconds, only when tab is visible
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible' && isActive) {
+        fetchCounts();
+      }
+    }, 20000);
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && isActive) {
+        fetchCounts();
+      }
+    };
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      isActive = false;
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
   }
 }
 
