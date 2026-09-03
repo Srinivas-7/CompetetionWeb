@@ -88,6 +88,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const verifiedVoterName = tokenName || voterName || email?.split('@')[0] || 'Devotee';
   const voterDocId = `${EVENT_ID}_${uid}`;
 
+  // 5b. Authenticated UID-based Abuse Rate Limiter
+  const uidRateLimit = checkRateLimit(`uid:${uid}`, 6, 60000); // 6 attempts/min per user
+  if (!uidRateLimit.allowed) {
+    res.setHeader('Retry-After', String(uidRateLimit.retryAfterSec || 15));
+    return res.status(429).json({
+      success: false,
+      error: 'RATE_LIMIT_EXCEEDED',
+      message: 'Too many rapid vote requests on this account. Please wait a few seconds.',
+      retryAfter: uidRateLimit.retryAfterSec,
+    });
+  }
+
+  // 5c. Configurable Daily Safety Budget Check (Optional, disabled by default in Blaze)
+  const safetyBudget = process.env.DAILY_VOTE_BUDGET ? parseInt(process.env.DAILY_VOTE_BUDGET, 10) : 0;
+  if (safetyBudget > 0 && process.env.BUDGET_PAUSED === 'true') {
+    return res.status(503).json({
+      success: false,
+      error: 'SERVICE_TEMPORARILY_PAUSED',
+      message: 'Voting is temporarily paused for scheduled daily maintenance. Please check back shortly.',
+    });
+  }
+
   // 6. Atomic Firestore Transaction (Uniqueness Guarantee & Sharded Counter Increment)
   try {
     const voterRef = adminDb.doc(`voters/${voterDocId}`);
