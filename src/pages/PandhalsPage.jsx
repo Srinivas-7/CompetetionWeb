@@ -113,7 +113,9 @@ export function PandhalsPage({
                     style={{ width: '20px', height: '20px', borderRadius: '50%', border: '1px solid #f59e0b' }}
                   />
                 ) : (
-                  <span style={{ fontSize: '12px' }}>👤</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8 }}>
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
                 )}
                 <span 
                   style={{ 
@@ -160,7 +162,7 @@ export function PandhalsPage({
               marginBottom: '3px'
             }}
           >
-            ⚡ 2026 OFFICIAL COMMUNITY BALLOT
+            2026 OFFICIAL COMMUNITY BALLOT
           </div>
 
           <h1 
@@ -186,11 +188,15 @@ export function PandhalsPage({
                   left: '14px', 
                   top: '50%', 
                   transform: 'translateY(-50%)', 
-                  fontSize: '15px',
+                  display: 'flex',
+                  alignItems: 'center',
                   color: 'var(--text-muted)'
                 }}
               >
-                🔍
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
               </span>
               <input 
                 type="text"
@@ -246,7 +252,6 @@ export function PandhalsPage({
                 }}
                 title="Shuffle pandhals randomly"
               >
-                <span>🔀</span>
                 <span>Shuffle</span>
               </button>
             )}

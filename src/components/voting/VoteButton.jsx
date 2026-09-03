@@ -12,7 +12,6 @@ export function VoteButton({
       variant="primary"
       onClick={onClick}
       disabled={disabled}
-      icon="🏆"
       style={{
         width: '100%',
         padding: '14px 20px',

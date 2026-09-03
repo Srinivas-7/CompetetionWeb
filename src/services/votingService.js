@@ -56,7 +56,7 @@ class VotingService {
     // 1. Firebase Backend (if configured)
     if (isFirebaseConfigured()) {
       try {
-        const result = await executeFirebaseVote(email, pandhalId, pandhalName);
+        const result = await executeFirebaseVote(email, pandhalId, pandhalName, voterName);
         if (result.success) {
           this.saveMyVoteRecord(email, pandhalId, pandhalName, voterName);
           return {

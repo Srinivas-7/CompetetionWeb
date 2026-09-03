@@ -12,16 +12,16 @@ export const APP_CONFIG = {
 
 export const CATEGORIES = [
   { id: 'all', label: 'All 21 Pandhals' },
-  { id: 'top', label: '🔥 Top Voted' },
-  { id: 'eco', label: '🌱 Eco & Clay' },
-  { id: 'heritage', label: '🛡️ Heritage Mandals' },
-  { id: 'darbar', label: '👑 Royal Darbars' }
+  { id: 'top', label: 'Top Voted' },
+  { id: 'eco', label: 'Eco & Clay' },
+  { id: 'heritage', label: 'Heritage Mandals' },
+  { id: 'darbar', label: 'Royal Darbars' }
 ];
 
 export const GALLERY_CATEGORIES = [
   { id: 'all', label: 'All Photos' },
-  { id: 'bappa', label: '🕉️ Main Idol' },
-  { id: 'decoration', label: '✨ Decoration' },
-  { id: 'pandhal', label: '🏛️ Architecture' },
-  { id: 'cleanliness', label: '🌿 Eco & Clean' }
+  { id: 'bappa', label: 'Main Idol' },
+  { id: 'decoration', label: 'Decoration' },
+  { id: 'pandhal', label: 'Architecture' },
+  { id: 'cleanliness', label: 'Eco & Clean' }
 ];

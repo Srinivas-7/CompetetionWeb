@@ -40,14 +40,13 @@ export function VoteSuccess({
       </h3>
 
       <p style={{ fontSize: '0.95rem', color: 'var(--ivory-cream)', lineHeight: 1.4, marginBottom: '18px' }}>
-        Your sacred community vote for <strong style={{ color: 'var(--gold-light)' }}>{pandhalName}</strong> is officially recorded! 🐘✨
+        Your sacred community vote for <strong style={{ color: 'var(--gold-light)' }}>{pandhalName}</strong> is officially recorded!
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <Button 
           variant="whatsapp" 
           onClick={onShareClick}
-          icon="💬"
           style={{ width: '100%' }}
         >
           Share My Vote on WhatsApp

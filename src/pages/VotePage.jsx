@@ -178,7 +178,7 @@ export function VotePage({
           </h1>
 
           <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: '0 0 20px' }}>
-            📍 {pandhal.location} • <span style={{ color: '#f59e0b' }}>{pandhal.theme}</span>
+            {pandhal.location} • <span style={{ color: '#f59e0b' }}>{pandhal.theme}</span>
           </p>
 
           {/* Verified Google User Badge */}
@@ -203,7 +203,9 @@ export function VotePage({
                   style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #f59e0b' }}
                 />
               ) : (
-                <span style={{ fontSize: '20px' }}>👤</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8 }}>
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
               )}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>
@@ -233,7 +235,7 @@ export function VotePage({
                     textAlign: 'left'
                   }}
                 >
-                  ⚠️ {errorMessage}
+                  {errorMessage}
                 </div>
               )}
 
@@ -267,7 +269,7 @@ export function VotePage({
                     textAlign: 'left'
                   }}
                 >
-                  🔒 Your Google account has already cast its 1 unique vote for <strong>{myVote.pandhalName}</strong>.
+                  Your Google account has already cast its 1 unique vote for <strong>{myVote.pandhalName}</strong>.
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                     Each Google account is permitted 1 vote across the trail.
                   </div>
@@ -303,7 +305,7 @@ export function VotePage({
                       e.currentTarget.style.transform = 'none';
                     }}
                   >
-                    <span>{isSubmitting ? 'LOCKING BALLOT…' : 'CONFIRM MY SACRED VOTE 🏆'}</span>
+                    <span>{isSubmitting ? 'LOCKING BALLOT…' : 'CONFIRM MY SACRED VOTE'}</span>
                   </button>
                 </div>
               )}
@@ -369,7 +371,7 @@ export function VotePage({
                 VOTE LOCKED!
               </h3>
               <p style={{ fontSize: '0.94rem', color: 'var(--text-secondary)', margin: '0 0 24px', lineHeight: 1.5 }}>
-                Your sacred vote for <strong style={{ color: '#f59e0b' }}>{pandhal.name}</strong> is officially counted! Ganpati Bappa Morya! 🐘✨
+                Your sacred vote for <strong style={{ color: '#f59e0b' }}>{pandhal.name}</strong> is officially counted! Ganpati Bappa Morya!
               </p>
 
               <button

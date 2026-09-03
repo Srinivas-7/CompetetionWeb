@@ -115,7 +115,6 @@ export function AuthGate({ children }) {
           {/* Top Badge */}
           <div style={{ marginBottom: '16px' }}>
             <span 
-              className="animate-wiggle"
               style={{
                 display: 'inline-block',
                 background: '#f59e0b',
@@ -173,7 +172,7 @@ export function AuthGate({ children }) {
               fontWeight: 600
             }}
           >
-            Enjoy, vote for your beloved Bappa, and visit them across the grand trail 🪔✨
+            Enjoy, vote for your beloved Bappa, and visit them across the grand trail.
           </p>
 
           {/* Error Message */}
@@ -191,7 +190,7 @@ export function AuthGate({ children }) {
                 textAlign: 'left'
               }}
             >
-              ⚠️ {error}
+              {error}
             </div>
           )}
 
@@ -272,7 +271,6 @@ export function AuthGate({ children }) {
                 margin: '0 auto'
               }}
             >
-              <span>🪔</span>
               <span style={{ color: 'var(--neon-yellow)', fontWeight: 700 }}>1 Devotee</span>
               <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>•</span>
               <span style={{ color: '#ffffff', fontWeight: 600 }}>1 Sacred Vote</span>
@@ -293,7 +291,6 @@ export function AuthGate({ children }) {
                 margin: '0 auto'
               }}
             >
-              <span>⚡</span>
               <span style={{ color: '#ffffff', fontWeight: 600 }}>1-Tap Instant Entry</span>
               <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>•</span>
               <span style={{ color: 'var(--neon-pink)', fontWeight: 700 }}>Pure Festive Energy</span>

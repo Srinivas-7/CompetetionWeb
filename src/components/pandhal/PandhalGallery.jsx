@@ -111,7 +111,7 @@ export function PandhalGallery({
         </h2>
         
         <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', margin: 0 }}>
-          📍 {pandhal.location} • <span style={{ color: '#f59e0b' }}>{pandhal.theme}</span>
+          {pandhal.location} • <span style={{ color: '#f59e0b' }}>{pandhal.theme}</span>
         </p>
       </div>
 
@@ -295,7 +295,7 @@ export function PandhalGallery({
             e.currentTarget.style.boxShadow = '0 4px 16px rgba(245, 158, 11, 0.35)';
           }}
         >
-          <span>VOTE FOR THIS BAPPA 🏆</span>
+          <span>VOTE FOR THIS BAPPA</span>
         </button>
       </div>
     </div>

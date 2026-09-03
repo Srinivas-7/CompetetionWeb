@@ -18,7 +18,6 @@ export function ExploreButton({ onExploreClick, onVoteClick }) {
       <Button 
         variant="primary" 
         onClick={onExploreClick}
-        icon="👀"
         style={{ width: '100%', fontSize: '1.05rem', padding: '14px 20px' }}
       >
         EXPLORE GANAPATHIS
@@ -27,7 +26,6 @@ export function ExploreButton({ onExploreClick, onVoteClick }) {
       <Button 
         variant="secondary" 
         onClick={onVoteClick}
-        icon="🏆"
         style={{ width: '100%', fontSize: '1.05rem', padding: '14px 20px' }}
       >
         VOTE FOR BAPPA

@@ -3,23 +3,23 @@ import { PANDHALS_DATA } from '../../data/pandhals';
 
 export function Leaderboard({ liveCounts = {}, onPandhalClick }) {
   const sorted = [...PANDHALS_DATA].sort((a, b) => {
-    const cA = liveCounts[a.id] || a.initialVotes;
-    const cB = liveCounts[b.id] || b.initialVotes;
+    const cA = liveCounts[a.id] || 0;
+    const cB = liveCounts[b.id] || 0;
     return cB - cA;
   }).slice(0, 5); // Top 5
 
-  const highestVote = (sorted[0] && (liveCounts[sorted[0].id] || sorted[0].initialVotes)) || 1;
+  const highestVote = (sorted[0] && (liveCounts[sorted[0].id] || 0)) || 1;
 
   const getRankBadge = (idx) => {
     switch (idx) {
       case 0:
-        return { label: '1', color: '#111318', bg: '#fef08a', border: '#111318', icon: '👑' };
+        return { label: '1', color: '#111318', bg: '#fef08a', border: '#111318', icon: '1' };
       case 1:
-        return { label: '2', color: '#111318', bg: '#e2e8f0', border: '#111318', icon: '🥈' };
+        return { label: '2', color: '#111318', bg: '#e2e8f0', border: '#111318', icon: '2' };
       case 2:
-        return { label: '3', color: '#111318', bg: '#fed7aa', border: '#111318', icon: '🥉' };
+        return { label: '3', color: '#111318', bg: '#fed7aa', border: '#111318', icon: '3' };
       default:
-        return { label: `${idx + 1}`, color: '#111318', bg: '#f3f4f6', border: '#111318', icon: '#' };
+        return { label: `${idx + 1}`, color: '#111318', bg: '#f3f4f6', border: '#111318', icon: `${idx + 1}` };
     }
   };
 
@@ -78,7 +78,7 @@ export function Leaderboard({ liveCounts = {}, onPandhalClick }) {
       {/* Rows */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {sorted.map((p, idx) => {
-          const votes = liveCounts[p.id] || p.initialVotes;
+          const votes = liveCounts[p.id] || 0;
           const badge = getRankBadge(idx);
           const percent = Math.min(100, Math.round((votes / highestVote) * 100));
 
@@ -157,7 +157,7 @@ export function Leaderboard({ liveCounts = {}, onPandhalClick }) {
                     {p.name}
                   </div>
                   <div style={{ fontSize: '0.82rem', color: '#4b5563' }}>
-                    📍 {p.location} • {p.theme}
+                    {p.location} • {p.theme}
                   </div>
                 </div>
               </div>

@@ -100,10 +100,9 @@ export function VoteModal({
               margin: '0 auto 10px',
               boxShadow: '0 4px 16px rgba(245, 158, 11, 0.35)'
             }}
-          />
-          <h2 
+          />          <h2 
             style={{ 
-              fontSize: '1.3rem', 
+              fontSize: '1.25rem', 
               fontFamily: 'var(--font-heading)',
               fontWeight: 800, 
               color: '#ffffff', 
@@ -113,7 +112,7 @@ export function VoteModal({
             {pandhal.name}
           </h2>
           <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0 }}>
-            📍 {pandhal.location}
+            {pandhal.location}
           </p>
         </div>
 
@@ -139,7 +138,9 @@ export function VoteModal({
                 style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid #f59e0b' }}
               />
             ) : (
-              <span style={{ fontSize: '18px' }}>👤</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8 }}>
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
             )}
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>
@@ -169,7 +170,7 @@ export function VoteModal({
                   textAlign: 'left'
                 }}
               >
-                ⚠️ {errorMessage}
+                {errorMessage}
               </div>
             )}
 
@@ -203,7 +204,7 @@ export function VoteModal({
                   textAlign: 'left'
                 }}
               >
-                🔒 Your Google account has already voted for <strong>{myVote.pandhalName}</strong>. 
+                Your Google account has already voted for <strong>{myVote.pandhalName}</strong>. 
                 <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                   Each Google account can cast exactly 1 vote across the trail.
                 </div>
@@ -239,7 +240,7 @@ export function VoteModal({
                     e.currentTarget.style.transform = 'none';
                   }}
                 >
-                  <span>{isSubmitting ? 'LOCKING BALLOT…' : 'CONFIRM MY VOTE 🏆'}</span>
+                  <span>{isSubmitting ? 'LOCKING BALLOT…' : 'CONFIRM MY VOTE'}</span>
                 </button>
               </div>
             )}
@@ -305,7 +306,7 @@ export function VoteModal({
               VOTE LOCKED!
             </h3>
             <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: '0 0 20px', lineHeight: 1.45 }}>
-              Your sacred vote for <strong style={{ color: '#f59e0b' }}>{pandhal.name}</strong> is officially counted! Ganpati Bappa Morya! 🐘✨
+              Your sacred vote for <strong style={{ color: '#f59e0b' }}>{pandhal.name}</strong> is officially counted! Ganpati Bappa Morya!
             </p>
 
             <button

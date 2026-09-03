@@ -1,8 +1,7 @@
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
-import { firebaseConfig, isFirebaseConfigured } from './config';
+import { getFirestore } from 'firebase/firestore';
+import { app } from '../lib/firebase';
+import { isFirebaseConfigured } from './config';
 
-let app = null;
 let db = null;
 
 export function getFirestoreDb() {
@@ -10,13 +9,14 @@ export function getFirestoreDb() {
     return null;
   }
 
-  if (!app) {
-    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  }
-
   if (!db) {
-    db = getFirestore(app);
+    try {
+      db = getFirestore(app);
+    } catch (err) {
+      console.warn('[Firestore] Initialization warning:', err);
+    }
   }
 
   return db;
 }
+

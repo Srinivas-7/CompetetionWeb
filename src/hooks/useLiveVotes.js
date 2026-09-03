@@ -6,7 +6,7 @@ export function useLiveVotes() {
   const [counts, setCounts] = useState(() => {
     const initial = {};
     PANDHALS_DATA.forEach(p => {
-      initial[p.id] = p.initialVotes;
+      initial[p.id] = p.initialVotes || 0;
     });
     return initial;
   });
@@ -16,11 +16,19 @@ export function useLiveVotes() {
   useEffect(() => {
     const unsubscribe = votingService.subscribeLiveCounts((updatedCounts) => {
       if (updatedCounts) {
-        setCounts(prev => ({ ...prev, ...updatedCounts }));
+        setCounts(prev => {
+          const next = { ...prev };
+          PANDHALS_DATA.forEach(p => {
+            if (updatedCounts[p.id] !== undefined) {
+              next[p.id] = updatedCounts[p.id];
+            }
+          });
+          return next;
+        });
         
         let sum = 0;
         PANDHALS_DATA.forEach(p => {
-          sum += (updatedCounts[p.id] !== undefined ? updatedCounts[p.id] : p.initialVotes);
+          sum += (updatedCounts[p.id] !== undefined ? updatedCounts[p.id] : (p.initialVotes || 0));
         });
         setTotalVotes(sum);
       }

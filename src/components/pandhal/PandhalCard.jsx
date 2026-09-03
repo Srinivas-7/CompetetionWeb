@@ -85,24 +85,28 @@ export const PandhalCard = memo(function PandhalCard({
             #{String(pandhal.number).padStart(2, '0')}
           </span>
 
-          <span 
+          <span
             style={{
-              background: 'rgba(15, 23, 42, 0.85)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              position: 'absolute',
+              top: '6px',
+              right: '6px',
+              background: 'rgba(0, 0, 0, 0.7)',
               color: '#ffffff',
               fontFamily: 'var(--font-mono)',
-              fontWeight: 800,
-              fontSize: 'clamp(0.6rem, 1.6vw, 0.72rem)',
-              padding: '2px 6px',
+              fontSize: 'clamp(0.6rem, 1.5vw, 0.72rem)',
+              fontWeight: 700,
+              padding: '2px 7px',
               borderRadius: 'var(--radius-pill)',
-              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.4)',
               display: 'flex',
               alignItems: 'center',
-              gap: '2px',
+              gap: '4px',
               backdropFilter: 'blur(4px)'
             }}
           >
-            <span>📸</span> {pandhal.photos?.length || 1}
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.85 }}>
+              <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+            </svg>
+            <span>{pandhal.photos?.length || 1}</span>
           </span>
         </div>
 
@@ -121,7 +125,7 @@ export const PandhalCard = memo(function PandhalCard({
             gap: '3px'
           }}
         >
-          <span>👁️ GALLERY</span>
+          <span>GALLERY</span>
         </div>
       </div>
 
@@ -164,13 +168,15 @@ export const PandhalCard = memo(function PandhalCard({
               margin: 0,
               display: 'flex',
               alignItems: 'center',
-              gap: '3px',
+              gap: '4px',
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis'
             }}
           >
-            <span style={{ color: 'var(--neon-orange)' }}>📍</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style={{ color: 'var(--neon-orange)', flexShrink: 0 }}>
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{pandhal.location}</span>
           </p>
         </div>
@@ -193,8 +199,8 @@ export const PandhalCard = memo(function PandhalCard({
               fontFamily: 'var(--font-mono)', 
               fontSize: 'clamp(0.56rem, 1.4vw, 0.68rem)', 
               color: 'var(--text-secondary)', 
-              fontWeight: 700,
-              whiteSpace: 'nowrap',
+              fontWeight: 700, 
+              whiteSpace: 'nowrap', 
               flexShrink: 0
             }}
           >
@@ -207,19 +213,17 @@ export const PandhalCard = memo(function PandhalCard({
               color: '#ffffff',
               fontWeight: 900,
               fontSize: 'clamp(0.62rem, 1.5vw, 0.74rem)',
-              padding: '2px 6px',
+              padding: '2px 8px',
               borderRadius: 'var(--radius-pill)',
               boxShadow: '0 2px 8px rgba(255, 85, 0, 0.3)',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '3px',
               whiteSpace: 'nowrap',
               lineHeight: 1,
               flexShrink: 0
             }}
           >
-            <span style={{ fontSize: '0.72rem', lineHeight: 1 }}>🔥</span>
             <span>{voteCount.toLocaleString('en-IN')}</span>
           </span>
         </div>
@@ -251,7 +255,7 @@ export const PandhalCard = memo(function PandhalCard({
               whiteSpace: 'nowrap'
             }}
           >
-            <span>{hasVoted ? '✓ LOCKED' : 'VOTE 🏆'}</span>
+            <span>{hasVoted ? '✓ LOCKED' : 'VOTE'}</span>
           </button>
         </div>
       </div>

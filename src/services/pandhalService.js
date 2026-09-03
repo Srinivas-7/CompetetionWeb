@@ -62,8 +62,8 @@ export const pandhalService = {
 
     if (category === 'top') {
       list = [...list].sort((a, b) => {
-        const countA = liveCounts[a.id] || a.initialVotes;
-        const countB = liveCounts[b.id] || b.initialVotes;
+        const countA = liveCounts[a.id] || 0;
+        const countB = liveCounts[b.id] || 0;
         return countB - countA;
       });
     }

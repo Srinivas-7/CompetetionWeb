@@ -40,7 +40,7 @@ export function PhoneInput({ value, onChange, onKeyDown, autoFocus = false, disa
             userSelect: 'none'
           }}
         >
-          🇮🇳 +91
+          +91
         </span>
 
         <input
@@ -71,7 +71,6 @@ export function PhoneInput({ value, onChange, onKeyDown, autoFocus = false, disa
       </div>
 
       <p style={{ fontSize: '0.78rem', color: 'var(--ivory-muted)', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-        <span>🔒</span>
         <span>1 unique phone number = 1 community vote across the trail.</span>
       </p>
     </div>

@@ -82,7 +82,9 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                     style={{ width: '22px', height: '22px', borderRadius: '50%', border: '1px solid var(--neon-lime)' }}
                   />
                 ) : (
-                  <span style={{ fontSize: '13px' }}>👤</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8 }}>
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
                 )}
                 <span 
                   style={{ 
@@ -106,7 +108,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               onClick={onExploreClick}
               className="btn-3d-pink"
               style={{
-                padding: '5px 12px',
+                padding: '6px 14px',
                 fontSize: '0.74rem',
                 fontFamily: 'var(--font-display)',
                 whiteSpace: 'nowrap',
@@ -117,7 +119,6 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               }}
             >
               <span>VOTE</span>
-              <span>🏆</span>
             </button>
           </div>
         </div>
@@ -133,10 +134,9 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           position: 'relative'
         }}
       >
-        {/* Floating Angled Sticker */}
+        {/* Angled Sticker */}
         <div style={{ marginBottom: '16px' }}>
           <span 
-            className="animate-wiggle"
             style={{
               display: 'inline-block',
               background: 'var(--neon-yellow)',
@@ -159,7 +159,6 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         {/* Regal Gajotsava Logo Emblem Card */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
           <div 
-            className="animate-emblem"
             style={{
               position: 'relative',
               background: '#fefefe',
@@ -230,101 +229,15 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         </p>
 
         {/* THE GIANT MAXIMALIST 3D VOTE BUTTON */}
-        <div style={{ maxWidth: '420px', margin: '0 auto 24px' }}>
+        <div style={{ maxWidth: '420px', margin: '0 auto 12px' }}>
           <button
             onClick={onExploreClick}
             className="btn-3d-giant"
           >
-            <span>🔥 EXPLORE PANDHALS &amp; VOTE NOW ↓</span>
+            <span>EXPLORE PANDHALS &amp; VOTE NOW ↓</span>
           </button>
         </div>
-
-        {/* Sticker Chips */}
-        <div 
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '8px',
-            flexWrap: 'wrap',
-            marginBottom: '10px'
-          }}
-        >
-          <span 
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.74rem',
-              fontWeight: 700,
-              color: '#ffffff',
-              background: '#141726',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              padding: '5px 11px',
-              borderRadius: 'var(--radius-pill)',
-              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            🏛️ 21 PANDHALS
-          </span>
-
-          <span 
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.74rem',
-              fontWeight: 700,
-              color: '#10b981',
-              background: '#141726',
-              border: '1px solid rgba(16, 185, 129, 0.4)',
-              padding: '5px 11px',
-              borderRadius: 'var(--radius-pill)',
-              boxShadow: '0 2px 6px rgba(16, 185, 129, 0.2)',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            🌱 100% ECO-VERIFIED
-          </span>
-
-          <span 
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.74rem',
-              fontWeight: 700,
-              color: '#f59e0b',
-              background: '#141726',
-              border: '1px solid rgba(245, 158, 11, 0.4)',
-              padding: '5px 11px',
-              borderRadius: 'var(--radius-pill)',
-              boxShadow: '0 2px 6px rgba(245, 158, 11, 0.2)',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            🔒 1-ACCOUNT = 1-VOTE
-          </span>
-        </div>
       </section>
-
-      {/* 3. Animated Marquee Ribbon */}
-      <div 
-        style={{
-          background: 'linear-gradient(90deg, #f59e0b 0%, #ea580c 50%, #f59e0b 100%)',
-          color: '#000000',
-          overflow: 'hidden',
-          padding: '8px 0',
-          borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 4px 16px rgba(245, 158, 11, 0.25)',
-          margin: '8px 0 18px'
-        }}
-      >
-        <div className="animate-marquee">
-          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 900, fontSize: '0.86rem', letterSpacing: '0.06em', whiteSpace: 'nowrap', padding: '0 20px' }}>
-            ⚡ 21 GRAND PANDHALS ★ 1 UNIQUE GOOGLE VOTE ★ 4K PHOTO GALLERIES ★ REALTIME LEADERBOARD ★ 100% ZERO-WASTE ECO CHECK ★ GANPATI BAPPA MORYA ★ 
-          </span>
-          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 900, fontSize: '0.86rem', letterSpacing: '0.06em', whiteSpace: 'nowrap', padding: '0 20px' }}>
-            ⚡ 21 GRAND PANDHALS ★ 1 UNIQUE GOOGLE VOTE ★ 4K PHOTO GALLERIES ★ REALTIME LEADERBOARD ★ 100% ZERO-WASTE ECO CHECK ★ GANPATI BAPPA MORYA ★ 
-          </span>
-        </div>
-      </div>
     </div>
   );
 }

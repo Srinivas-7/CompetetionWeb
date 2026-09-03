@@ -21,7 +21,12 @@ export function PandhalGrid({
           color: '#ffffff'
         }}
       >
-        <p style={{ fontSize: '2.5rem', marginBottom: '8px' }}>🐘</p>
+        <div style={{ marginBottom: '12px', opacity: 0.5 }}>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
         <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', marginBottom: '6px' }}>
           No Bappas match your search
         </h3>
@@ -42,7 +47,7 @@ export function PandhalGrid({
       }}
     >
       {pandhals.map(pandhal => {
-        const votes = liveCounts[pandhal.id] !== undefined ? liveCounts[pandhal.id] : pandhal.initialVotes;
+        const votes = liveCounts[pandhal.id] !== undefined ? liveCounts[pandhal.id] : 0;
         const hasVoted = myVote && myVote.pandhalId === pandhal.id;
 
         return (
