@@ -4,49 +4,38 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // =========================================================================
-    // ARCHITECTURAL & SECURITY NOTICE:
+    // GANAPATHI TRAIL 2026 - PRODUCTION SECURITY RULES
+    //
+    // ALL voting writes and counter increments are mediated exclusively 
+    // through the Vercel serverless API (/api/vote) using the Firebase Admin SDK.
     // 
-    // 1. ALL production writes (casting votes, incrementing sharded counters)
-    //    and reads (fetching aggregated vote totals) are mediated exclusively 
-    //    through Vercel Serverless API routes using the Firebase Admin SDK.
-    // 
-    // 2. The Firebase Admin SDK BYPASSES these Firestore security rules entirely.
-    //    Therefore, actual validation (10-digit phone verification, SHA-256 phone 
-    //    hashing, App Check token validation, rate-limiting, and 1-phone-1-vote)
-    //    is strictly enforced server-side inside /api/vote.
-    // 
-    // 3. These rules act as a strict DEFENSE-IN-DEPTH backstop against any direct 
-    //    client-side SDK tampering or unexpected client connections.
+    // The Firebase Admin SDK bypasses these rules entirely on the server.
+    // Direct client SDK browser connections are strictly locked down to 
+    // prevent vote tampering, counter spoofing, or bot manipulation.
     // =========================================================================
 
-    // Deny all direct client access across the entire database by default
+    // 1. Lockdown all collections by default
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // Defense-in-depth fallback for /votes/{voteId} collection:
-    // If a client attempts direct creation, strictly require authenticated UID matching
-    // the document key pattern and prevent updates or deletions.
-    match /votes/{voteId} {
-      allow read: if false;
-      allow update, delete: if false;
-      allow create: if request.auth != null 
-                    && request.auth.uid != null
-                    && voteId.matches('^' + request.auth.uid + '_[a-zA-Z0-9_-]+$');
+    // 2. Lock down /voters/ collection (Admin SDK only)
+    match /voters/{voterId} {
+      allow read, write: if false;
     }
 
-    // Sharded counters and aggregated results are strictly internal (Admin SDK only)
+    // 3. Lock down /votes/ collection (Admin SDK only)
+    match /votes/{voteId} {
+      allow read, write: if false;
+    }
+
+    // 4. Lock down /counters/ and all shards (Admin SDK only)
     match /counters/{counterId} {
       allow read, write: if false;
-      
+
       match /shards/{shardId} {
         allow read, write: if false;
       }
-    }
-
-    // Voter tracking records (hashed phone numbers) are strictly internal (Admin SDK only)
-    match /voters/{voterId} {
-      allow read, write: if false;
     }
   }
 }
