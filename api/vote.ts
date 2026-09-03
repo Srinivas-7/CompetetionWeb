@@ -166,8 +166,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error('[Firestore Tx Error]', dbError);
     return res.status(500).json({
       success: false,
-      error: 'TRANSACTION_FAILED',
-      message: 'Failed to record vote due to high server traffic. Please retry in a moment.',
+      error: dbError?.code || 'TRANSACTION_FAILED',
+      message: dbError?.message || 'Failed to record vote due to high server traffic. Please retry in a moment.',
     });
   }
 }

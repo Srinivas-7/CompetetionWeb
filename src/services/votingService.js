@@ -1,18 +1,19 @@
 import { isValidPandhalId } from '../utils/validation';
 import { PANDHALS_DATA } from '../data/pandhals';
-import { auth, appCheck } from '../lib/firebase';
+import { auth } from '../lib/firebase';
 import { getFirestoreDb } from '../firebase/firestore';
-import { doc, onSnapshot, getDoc, collectionGroup, getDocs } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { executeFirebaseVote, subscribeToFirebaseCounters } from '../firebase/voting';
 
 const EVENT_ID = 'ganapathi_chaturthi_2026';
 
 class VotingService {
   constructor() {
-    // Clear any legacy mock votes from local storage on startup
     if (typeof window !== 'undefined') {
       try {
         localStorage.removeItem('bappatrail_cast_votes');
         localStorage.removeItem('bappatrail_pandhal_votes');
+        localStorage.removeItem('bappatrail_my_vote');
       } catch {}
     }
   }
@@ -66,7 +67,8 @@ class VotingService {
   }
 
   /**
-   * Cast a vote with secure serverless token verification and distributed sharding.
+   * Cast a vote with atomic Firestore transaction directly using the user's Google Auth session.
+   * Zero private keys or service accounts required.
    * 
    * @param {string} voterEmail 
    * @param {string} pandhalId 
@@ -96,195 +98,59 @@ class VotingService {
     const pandhal = PANDHALS_DATA.find((p) => p.id === pandhalId);
     const pandhalName = pandhal ? pandhal.name : 'Selected Bappa';
 
-    // 1. Primary Path: POST to Serverless /api/vote with cryptographic Firebase ID token
     try {
-      const idToken = await currentUser.getIdToken(true);
-      
-      const headers = {
-        'Content-Type': 'application/json',
-      };
+      // Execute direct atomic Firestore transaction via authenticated Client SDK
+      const result = await executeFirebaseVote(email, pandhalId, pandhalName, voterName || currentUser.displayName || '');
 
-      // Optional App Check Token header
-      if (appCheck && typeof window !== 'undefined') {
-        try {
-          const { getToken } = await import('firebase/app-check');
-          const appCheckResult = await getToken(appCheck, false);
-          if (appCheckResult?.token) {
-            headers['X-Firebase-AppCheck'] = appCheckResult.token;
-          }
-        } catch {
-          // App check token fetch failure is non-blocking
-        }
-      }
-
-      // Execute request with retry mechanism (exponential backoff)
-      const response = await this.fetchWithRetry('/api/vote', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          idToken,
-          pandhalId,
-          pandhalName,
-          voterName: voterName || currentUser.displayName || '',
-        }),
-      }, 2);
-
-      const data = await response.json().catch(() => ({}));
-
-      if (response.ok && data.success) {
+      if (result.success) {
         return {
           success: true,
-          message: data.message || `Your vote for ${pandhalName} is locked!`,
+          message: result.message || `Your vote for ${pandhalName} is locked!`,
           pandhalName,
-          totalVotes: data.totalVotes,
-          idempotent: data.idempotent,
+          totalVotes: result.totalVotes,
         };
       }
 
-      // Server rejected vote with specific status code
-      if (response.status === 409) {
+      if (result.error === 'ALREADY_VOTED') {
         return {
           success: false,
           errorType: 'ALREADY_VOTED',
-          message: data.message || 'You have already voted for a different Bappa. Only 1 vote per Google account is allowed.',
-        };
-      }
-
-      if (response.status === 429) {
-        return {
-          success: false,
-          errorType: 'RATE_LIMIT',
-          message: data.message || 'Too many requests. Please wait a few moments and try again.',
-        };
-      }
-
-      if (response.status === 401) {
-        return {
-          success: false,
-          errorType: 'AUTH_EXPIRED',
-          message: 'Your Google sign-in has expired. Please sign in again.',
+          message: result.message || 'You have already voted for a different Bappa. Only 1 vote per Google account is allowed.',
         };
       }
 
       return {
         success: false,
-        errorType: data.error || 'SERVER_ERROR',
-        message: data.message || 'Failed to submit vote to server. Please try again.',
+        errorType: result.error || 'VOTE_FAILED',
+        message: result.message || 'Unable to record vote. Please try again.',
       };
-    } catch (networkError) {
-      console.error('[VotingService] Network error during vote submission:', networkError);
+    } catch (err) {
+      console.error('[VotingService] Error during vote submission:', err);
+
+      if (err.message && err.message.includes('permission')) {
+        return {
+          success: false,
+          errorType: 'PERMISSION_DENIED',
+          message: 'Firestore permission error. Please make sure the Firestore Security Rules are published in Firebase Console.',
+        };
+      }
 
       return {
         success: false,
         errorType: 'NETWORK_ERROR',
-        message: 'Network connection lost while recording vote. Please check your internet connection and try again.',
+        message: 'Connection issue while saving vote. Please check your internet connection and try again.',
       };
     }
   }
 
   /**
-   * Helper for robust network requests with exponential backoff & jitter
-   */
-  async fetchWithRetry(url, options, maxRetries = 2) {
-    let lastError;
-    for (let attempt = 0; attempt <= maxRetries; attempt++) {
-      try {
-        const res = await fetch(url, options);
-        // Do not retry 4xx client errors (bad request, conflict, auth)
-        if (res.status < 500 && res.status !== 429) {
-          return res;
-        }
-        // If 5xx server error and we have retries left, backoff
-        if (attempt < maxRetries) {
-          const delay = Math.pow(2, attempt) * 300 + Math.random() * 200;
-          await new Promise((r) => setTimeout(r, delay));
-          continue;
-        }
-        return res;
-      } catch (err) {
-        lastError = err;
-        if (attempt < maxRetries) {
-          const delay = Math.pow(2, attempt) * 300 + Math.random() * 200;
-          await new Promise((r) => setTimeout(r, delay));
-          continue;
-        }
-      }
-    }
-    throw lastError || new Error('Network request failed');
-  }
-
-  /**
-   * Subscribes to live counts via /api/counters and direct Firestore fallback.
+   * Subscribes to live counts via direct Firestore live snapshot listener.
    * 
    * @param {function} callback - Receives { [pandhalId]: number }
    * @returns {function} Unsubscribe function
    */
   subscribeLiveCounts(callback) {
-    let isActive = true;
-
-    const fetchCounts = async () => {
-      try {
-        const res = await fetch('/api/counters');
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.counts && isActive) {
-            callback(data.counts);
-            return;
-          }
-        }
-      } catch {
-        // Fallback to direct Firestore read if /api/counters is unavailable
-      }
-
-      // Direct Firestore fallback
-      if (isActive) {
-        const db = getFirestoreDb();
-        if (db) {
-          try {
-            const shardsSnap = await getDocs(collectionGroup(db, 'shards'));
-            if (!shardsSnap.empty && isActive) {
-              const counts = {};
-              PANDHALS_DATA.forEach(p => counts[p.id] = 0);
-              shardsSnap.forEach(docSnap => {
-                const count = docSnap.data().count || 0;
-                const pathParts = docSnap.ref.path.split('/');
-                const pId = pathParts[1];
-                if (pId && counts[pId] !== undefined) {
-                  counts[pId] += count;
-                }
-              });
-              callback(counts);
-            }
-          } catch (err) {
-            console.warn('[VotingService] Direct Firestore counters fetch info:', err);
-          }
-        }
-      }
-    };
-
-    // Initial fetch
-    fetchCounts();
-
-    // Smart polling: poll every 15s when active, pause when hidden
-    const interval = setInterval(() => {
-      if (document.visibilityState === 'visible') {
-        fetchCounts();
-      }
-    }, 15000);
-
-    const onVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        fetchCounts();
-      }
-    };
-
-    document.addEventListener('visibilitychange', onVisibilityChange);
-
-    return () => {
-      isActive = false;
-      clearInterval(interval);
-      document.removeEventListener('visibilitychange', onVisibilityChange);
-    };
+    return subscribeToFirebaseCounters(callback);
   }
 }
 

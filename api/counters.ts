@@ -93,22 +93,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (err: any) {
     console.error('[Counters Error] Failed to aggregate shards:', err);
 
-    // If Firestore fails but we have stale cache, serve it gracefully
-    if (instanceCache) {
-      res.setHeader('X-Cache-Status', 'STALE-FALLBACK');
-      return res.status(200).json({
-        success: true,
-        counts: instanceCache.counts,
-        totalVotes: instanceCache.totalVotes,
-        updatedAt: instanceCache.updatedAt,
-        stale: true,
-      });
-    }
+    // If Firestore fails or shards are not yet created, return clean 0s rather than 500
+    const zeroCounts: Record<string, number> = {};
+    VALID_PANDHAL_IDS.forEach((id) => {
+      zeroCounts[id] = 0;
+    });
 
-    return res.status(500).json({
-      success: false,
-      error: 'AGGREGATION_FAILED',
-      message: 'Unable to retrieve live vote counts at this moment.',
+    return res.status(200).json({
+      success: true,
+      counts: instanceCache ? instanceCache.counts : zeroCounts,
+      totalVotes: instanceCache ? instanceCache.totalVotes : 0,
+      updatedAt: new Date().toISOString(),
+      fallback: true,
     });
   }
 }
