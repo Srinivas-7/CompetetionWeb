@@ -58,7 +58,7 @@ export function AuthGate({ children }) {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '20px',
-          color: '#ffffff',
+          color: 'var(--text-primary)',
           textAlign: 'center'
         }}
       >
@@ -67,16 +67,16 @@ export function AuthGate({ children }) {
             width: '52px',
             height: '52px',
             borderRadius: '50%',
-            border: '4px solid rgba(255, 0, 127, 0.2)',
-            borderTopColor: 'var(--neon-pink)',
+            border: '4px solid #EADECB',
+            borderTopColor: 'var(--maroon-primary)',
             animation: 'spinSlow 0.8s linear infinite',
             marginBottom: '18px'
           }}
         />
-        <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.2rem', marginBottom: '4px' }}>
+        <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.2rem', marginBottom: '4px', color: 'var(--maroon-primary)' }}>
           CONNECTING TO BAPPA TRAIL
         </div>
-        <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--neon-lime)' }}>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
           Verifying your Google session…
         </p>
       </div>
@@ -90,7 +90,7 @@ export function AuthGate({ children }) {
         style={{
           minHeight: '100vh',
           background: 'var(--bg-page)',
-          color: '#ffffff',
+          color: 'var(--text-primary)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -105,10 +105,10 @@ export function AuthGate({ children }) {
             width: '100%',
             padding: '36px 24px',
             textAlign: 'center',
-            background: '#141726',
-            border: '1px solid rgba(255, 255, 255, 0.14)',
+            background: '#FFFFFF',
+            border: '1.5px solid #EADECB',
             borderRadius: '24px',
-            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.5)',
+            boxShadow: '0 12px 36px rgba(91, 20, 20, 0.08)',
             position: 'relative'
           }}
         >
@@ -117,23 +117,24 @@ export function AuthGate({ children }) {
             <span 
               style={{
                 display: 'inline-block',
-                background: '#f59e0b',
-                color: '#000000',
-                border: '1px solid rgba(255, 255, 255, 0.4)',
-                boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)',
+                background: '#FDF6E2',
+                color: 'var(--maroon-primary)',
+                border: '1.5px solid var(--gold-primary)',
+                boxShadow: '0 2px 8px rgba(200, 157, 71, 0.25)',
                 fontFamily: 'var(--font-mono)',
                 fontWeight: 800,
                 fontSize: '0.74rem',
                 letterSpacing: '0.06em',
                 padding: '5px 12px',
-                borderRadius: '6px'
+                borderRadius: 'var(--radius-pill)',
+                textTransform: 'uppercase'
               }}
             >
               ★ CHATURTHI 2026 OFFICIAL TRAIL ★
             </span>
           </div>
 
-          {/* Logo Badge with Bright Yellow Bolt */}
+          {/* Logo Badge */}
           <div style={{ marginBottom: '16px' }}>
             <img 
               src="/favicon.svg" 
@@ -143,7 +144,7 @@ export function AuthGate({ children }) {
                 height: '78px',
                 display: 'block',
                 margin: '0 auto',
-                filter: 'drop-shadow(0 4px 16px rgba(245, 158, 11, 0.35))'
+                filter: 'drop-shadow(0 4px 16px rgba(107, 20, 20, 0.15))'
               }}
             />
           </div>
@@ -157,10 +158,11 @@ export function AuthGate({ children }) {
               lineHeight: 1.1,
               letterSpacing: '-0.03em',
               margin: '0 0 8px',
-              textTransform: 'uppercase'
+              textTransform: 'uppercase',
+              color: 'var(--maroon-primary)'
             }}
           >
-            BAPPA<span style={{ color: 'var(--neon-pink)' }}>TRAIL</span>
+            BAPPA<span style={{ color: 'var(--gold-primary)' }}>TRAIL</span>
           </h1>
 
           <p 
@@ -179,9 +181,9 @@ export function AuthGate({ children }) {
           {error && (
             <div 
               style={{
-                background: 'rgba(239, 68, 68, 0.12)',
-                border: '1px solid #ef4444',
-                color: '#fca5a5',
+                background: '#FEE2E2',
+                border: '1px solid #EF4444',
+                color: '#991B1B',
                 borderRadius: '12px',
                 padding: '10px 14px',
                 fontSize: '0.84rem',
@@ -199,10 +201,10 @@ export function AuthGate({ children }) {
             onClick={() => signInWithGoogle().catch((err) => console.error(err))}
             style={{
               width: '100%',
-              background: '#ffffff',
-              color: '#000000',
-              border: '1px solid rgba(0, 0, 0, 0.12)',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)',
+              background: '#FFFFFF',
+              color: '#1A1A1A',
+              border: '1.5px solid #EADECB',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
               borderRadius: 'var(--radius-pill)',
               padding: '15px 20px',
               fontFamily: 'var(--font-display)',
@@ -216,13 +218,19 @@ export function AuthGate({ children }) {
               marginBottom: '20px',
               transition: 'transform 0.12s ease, box-shadow 0.12s ease'
             }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--maroon-primary)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(107, 20, 20, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = '#EADECB';
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.08)';
+            }}
             onMouseDown={(e) => {
               e.currentTarget.style.transform = 'translateY(2px)';
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
             }}
             onMouseUp={(e) => {
               e.currentTarget.style.transform = 'none';
-              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.25)';
             }}
           >
             {/* Google G Logo SVG */}
@@ -244,63 +252,18 @@ export function AuthGate({ children }) {
                 d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.27 2.64 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
               />
             </svg>
-            <span>Continue with Google</span>
+            <span>SIGN IN WITH GOOGLE</span>
           </button>
 
-          {/* Creative Micro Badges */}
-          <div 
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '10px',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.78rem',
-              color: 'var(--text-secondary)'
-            }}
-          >
-            <div 
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                borderRadius: 'var(--radius-pill)',
-                padding: '6px 14px',
-                margin: '0 auto'
-              }}
-            >
-              <span style={{ color: 'var(--neon-yellow)', fontWeight: 700 }}>1 Devotee</span>
-              <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>•</span>
-              <span style={{ color: '#ffffff', fontWeight: 600 }}>1 Sacred Vote</span>
-              <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>•</span>
-              <span style={{ color: 'var(--neon-lime)', fontWeight: 700 }}>Zero Spam</span>
-            </div>
-
-            <div 
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                background: 'rgba(255, 0, 127, 0.08)',
-                border: '1px solid rgba(255, 0, 127, 0.25)',
-                borderRadius: 'var(--radius-pill)',
-                padding: '6px 14px',
-                margin: '0 auto'
-              }}
-            >
-              <span style={{ color: '#ffffff', fontWeight: 600 }}>1-Tap Instant Entry</span>
-              <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>•</span>
-              <span style={{ color: 'var(--neon-pink)', fontWeight: 700 }}>Pure Festive Energy</span>
-            </div>
-          </div>
+          {/* Privacy Note */}
+          <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+            One-tap Google verification guarantees 1 verified vote per devotee.
+          </p>
         </div>
       </div>
     );
   }
 
-  // 3. User is authenticated -> Render the entire dashboard/website
+  // 3. User is Authenticated -> Render App
   return <>{children}</>;
 }

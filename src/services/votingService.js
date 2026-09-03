@@ -1,30 +1,72 @@
 import { isValidPandhalId } from '../utils/validation';
-import { APP_CONFIG } from '../utils/constants';
 import { PANDHALS_DATA } from '../data/pandhals';
 import { auth, appCheck } from '../lib/firebase';
-import { isFirebaseConfigured } from '../firebase/config';
+import { getFirestoreDb } from '../firebase/firestore';
+import { doc, onSnapshot, getDoc, collectionGroup, getDocs } from 'firebase/firestore';
+
+const EVENT_ID = 'ganapathi_chaturthi_2026';
 
 class VotingService {
   constructor() {
-    this.initLocalStore();
-  }
-
-  initLocalStore() {
-    if (!localStorage.getItem(APP_CONFIG.STORAGE_KEYS.PANDHAL_VOTES)) {
-      const counts = {};
-      PANDHALS_DATA.forEach((p) => {
-        counts[p.id] = 0;
-      });
-      localStorage.setItem(APP_CONFIG.STORAGE_KEYS.PANDHAL_VOTES, JSON.stringify(counts));
-    }
-
-    if (!localStorage.getItem(APP_CONFIG.STORAGE_KEYS.CAST_VOTES)) {
-      localStorage.setItem(APP_CONFIG.STORAGE_KEYS.CAST_VOTES, JSON.stringify({}));
+    // Clear any legacy mock votes from local storage on startup
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem('bappatrail_cast_votes');
+        localStorage.removeItem('bappatrail_pandhal_votes');
+      } catch {}
     }
   }
 
   /**
-   * Cast a vote with secure serverless token verification, distributed sharding, and atomic idempotency.
+   * Subscribes in real-time to the current authenticated user's vote record in Firebase.
+   * If the user is deleted or has not voted, returns null.
+   * 
+   * @param {string} uid - Firebase Auth User UID
+   * @param {function} callback - Receives { pandhalId, pandhalName, votedAt } or null
+   * @returns {function} Unsubscribe function
+   */
+  subscribeUserVote(uid, callback) {
+    if (!uid) {
+      callback(null);
+      return () => {};
+    }
+
+    const db = getFirestoreDb();
+    if (!db) {
+      callback(null);
+      return () => {};
+    }
+
+    try {
+      const voterDocRef = doc(db, 'voters', `${EVENT_ID}_${uid}`);
+
+      const unsubscribe = onSnapshot(voterDocRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          callback({
+            pandhalId: data.pandhalId,
+            pandhalName: data.pandhalName || data.pandhalId,
+            votedAt: data.votedAt,
+          });
+        } else {
+          // Document does not exist in Firebase -> User has 0 recorded votes
+          callback(null);
+        }
+      }, (err) => {
+        console.warn('[VotingService] Live user vote listener info:', err);
+        callback(null);
+      });
+
+      return unsubscribe;
+    } catch (err) {
+      console.warn('[VotingService] Error subscribing to user vote:', err);
+      callback(null);
+      return () => {};
+    }
+  }
+
+  /**
+   * Cast a vote with secure serverless token verification and distributed sharding.
    * 
    * @param {string} voterEmail 
    * @param {string} pandhalId 
@@ -54,7 +96,7 @@ class VotingService {
     const pandhal = PANDHALS_DATA.find((p) => p.id === pandhalId);
     const pandhalName = pandhal ? pandhal.name : 'Selected Bappa';
 
-    // 1. Production Path: POST to Serverless /api/vote with cryptographic Firebase ID token
+    // 1. Primary Path: POST to Serverless /api/vote with cryptographic Firebase ID token
     try {
       const idToken = await currentUser.getIdToken(true);
       
@@ -75,7 +117,7 @@ class VotingService {
         }
       }
 
-      // Execute request with retry mechanism (exponential backoff) for transient network hiccups
+      // Execute request with retry mechanism (exponential backoff)
       const response = await this.fetchWithRetry('/api/vote', {
         method: 'POST',
         headers,
@@ -90,12 +132,6 @@ class VotingService {
       const data = await response.json().catch(() => ({}));
 
       if (response.ok && data.success) {
-        // CONFIRMED BY SERVER: Save voter record locally for instant UI state
-        this.saveMyVoteRecord(email, pandhalId, pandhalName, voterName || currentUser.displayName);
-        
-        // Notify any active local storage listeners
-        window.dispatchEvent(new Event('storage'));
-
         return {
           success: true,
           message: data.message || `Your vote for ${pandhalName} is locked!`,
@@ -107,10 +143,6 @@ class VotingService {
 
       // Server rejected vote with specific status code
       if (response.status === 409) {
-        // Already voted for another pandhal
-        if (data.previousPandhalId) {
-          this.saveMyVoteRecord(email, data.previousPandhalId, data.previousPandhalName || 'Another Bappa', voterName);
-        }
         return {
           success: false,
           errorType: 'ALREADY_VOTED',
@@ -134,12 +166,6 @@ class VotingService {
         };
       }
 
-      // If the API endpoint is not found (404, e.g., local standalone vite preview), fallback gracefully
-      if (response.status === 404 && !isFirebaseConfigured()) {
-        console.warn('[VotingService] /api/vote returned 404. Falling back to local simulator.');
-        return this.castVoteLocalSimulator(email, pandhalId, pandhalName, voterName);
-      }
-
       return {
         success: false,
         errorType: data.error || 'SERVER_ERROR',
@@ -147,11 +173,6 @@ class VotingService {
       };
     } catch (networkError) {
       console.error('[VotingService] Network error during vote submission:', networkError);
-
-      // In local dev without backend, fallback if Firebase is not fully active
-      if (!isFirebaseConfigured()) {
-        return this.castVoteLocalSimulator(email, pandhalId, pandhalName, voterName);
-      }
 
       return {
         success: false,
@@ -192,68 +213,11 @@ class VotingService {
     throw lastError || new Error('Network request failed');
   }
 
-  async castVoteLocalSimulator(email, pandhalId, pandhalName, voterName) {
-    const delay = Math.floor(Math.random() * 150) + 200;
-    await new Promise((r) => setTimeout(r, delay));
-
-    const votesDb = JSON.parse(localStorage.getItem(APP_CONFIG.STORAGE_KEYS.CAST_VOTES) || '{}');
-
-    if (votesDb[email]) {
-      const prevId = votesDb[email].pandhalId;
-      const prev = PANDHALS_DATA.find((p) => p.id === prevId);
-      const prevName = prev ? prev.name : 'another Bappa';
-      return {
-        success: false,
-        errorType: 'ALREADY_VOTED',
-        message: `Your Google account has already cast a vote for "${prevName}". Only 1 vote per account is permitted.`,
-      };
-    }
-
-    votesDb[email] = {
-      email,
-      voterName,
-      pandhalId,
-      pandhalName,
-      timestamp: new Date().toISOString(),
-    };
-    localStorage.setItem(APP_CONFIG.STORAGE_KEYS.CAST_VOTES, JSON.stringify(votesDb));
-
-    const counts = JSON.parse(localStorage.getItem(APP_CONFIG.STORAGE_KEYS.PANDHAL_VOTES) || '{}');
-    counts[pandhalId] = (counts[pandhalId] || 0) + 1;
-    localStorage.setItem(APP_CONFIG.STORAGE_KEYS.PANDHAL_VOTES, JSON.stringify(counts));
-
-    this.saveMyVoteRecord(email, pandhalId, pandhalName, voterName);
-    window.dispatchEvent(new Event('storage'));
-
-    return {
-      success: true,
-      message: `Your vote for ${pandhalName} is locked!`,
-      pandhalName,
-      totalVotes: counts[pandhalId],
-    };
-  }
-
-  saveMyVoteRecord(email, pandhalId, pandhalName, voterName) {
-    const record = {
-      email,
-      voterName,
-      pandhalId,
-      pandhalName,
-      votedAt: new Date().toISOString(),
-    };
-    localStorage.setItem(APP_CONFIG.STORAGE_KEYS.MY_VOTE, JSON.stringify(record));
-  }
-
-  getMyVote() {
-    try {
-      return JSON.parse(localStorage.getItem(APP_CONFIG.STORAGE_KEYS.MY_VOTE) || 'null');
-    } catch {
-      return null;
-    }
-  }
-
   /**
-   * Subscribes to live counts via cached /api/counters aggregation with smart polling.
+   * Subscribes to live counts via /api/counters and direct Firestore fallback.
+   * 
+   * @param {function} callback - Receives { [pandhalId]: number }
+   * @returns {function} Unsubscribe function
    */
   subscribeLiveCounts(callback) {
     let isActive = true;
@@ -269,25 +233,44 @@ class VotingService {
           }
         }
       } catch {
-        // Ignore background polling errors
+        // Fallback to direct Firestore read if /api/counters is unavailable
       }
 
-      // Local storage fallback
+      // Direct Firestore fallback
       if (isActive) {
-        const localCounts = JSON.parse(localStorage.getItem(APP_CONFIG.STORAGE_KEYS.PANDHAL_VOTES) || '{}');
-        callback(localCounts);
+        const db = getFirestoreDb();
+        if (db) {
+          try {
+            const shardsSnap = await getDocs(collectionGroup(db, 'shards'));
+            if (!shardsSnap.empty && isActive) {
+              const counts = {};
+              PANDHALS_DATA.forEach(p => counts[p.id] = 0);
+              shardsSnap.forEach(docSnap => {
+                const count = docSnap.data().count || 0;
+                const pathParts = docSnap.ref.path.split('/');
+                const pId = pathParts[1];
+                if (pId && counts[pId] !== undefined) {
+                  counts[pId] += count;
+                }
+              });
+              callback(counts);
+            }
+          } catch (err) {
+            console.warn('[VotingService] Direct Firestore counters fetch info:', err);
+          }
+        }
       }
     };
 
     // Initial fetch
     fetchCounts();
 
-    // Smart polling: poll every 20s when active, pause when hidden
+    // Smart polling: poll every 15s when active, pause when hidden
     const interval = setInterval(() => {
       if (document.visibilityState === 'visible') {
         fetchCounts();
       }
-    }, 20000);
+    }, 15000);
 
     const onVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
@@ -295,18 +278,12 @@ class VotingService {
       }
     };
 
-    const handleStorage = () => {
-      if (isActive) fetchCounts();
-    };
-
     document.addEventListener('visibilitychange', onVisibilityChange);
-    window.addEventListener('storage', handleStorage);
 
     return () => {
       isActive = false;
       clearInterval(interval);
       document.removeEventListener('visibilitychange', onVisibilityChange);
-      window.removeEventListener('storage', handleStorage);
     };
   }
 }

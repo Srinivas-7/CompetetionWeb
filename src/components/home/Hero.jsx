@@ -5,17 +5,17 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
   const { user, logout } = useAuth();
 
   return (
-    <div style={{ background: 'var(--bg-page)', color: '#ffffff', overflow: 'hidden' }}>
-      {/* 1. Sticky High-Energy Header (Mobile-Optimized Spacing) */}
+    <div style={{ background: 'var(--bg-page)', color: 'var(--text-primary)', overflow: 'hidden' }}>
+      {/* 1. Sticky Header */}
       <header 
         style={{
           position: 'sticky',
           top: 0,
           zIndex: 80,
-          background: 'rgba(8, 9, 14, 0.94)',
+          background: 'rgba(251, 247, 240, 0.94)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          borderBottom: '2px solid rgba(255, 255, 255, 0.12)',
+          borderBottom: '1.5px solid #EADECB',
           padding: '10px 14px'
         }}
       >
@@ -48,11 +48,11 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                   fontWeight: 800,
                   fontSize: '0.94rem',
                   letterSpacing: '-0.02em',
-                  color: '#ffffff',
+                  color: 'var(--maroon-primary)',
                   whiteSpace: 'nowrap'
                 }}
               >
-                BAPPA<span style={{ color: 'var(--neon-lime)' }}>TRAIL</span>
+                BAPPA<span style={{ color: 'var(--gold-primary)' }}>TRAIL</span>
               </span>
             </div>
           </div>
@@ -66,8 +66,8 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '5px',
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  background: 'rgba(107, 20, 20, 0.08)',
+                  border: '1px solid rgba(107, 20, 20, 0.2)',
                   borderRadius: 'var(--radius-pill)',
                   padding: '2px 8px 2px 2px',
                   cursor: 'pointer'
@@ -79,10 +79,10 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                   <img 
                     src={user.photoURL} 
                     alt={user.displayName || 'User'} 
-                    style={{ width: '22px', height: '22px', borderRadius: '50%', border: '1px solid var(--neon-lime)' }}
+                    style={{ width: '22px', height: '22px', borderRadius: '50%', border: '1px solid var(--gold-primary)' }}
                   />
                 ) : (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8 }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8, color: 'var(--maroon-primary)' }}>
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                   </svg>
                 )}
@@ -91,7 +91,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                     fontFamily: 'var(--font-sans)', 
                     fontSize: '0.68rem', 
                     fontWeight: 700, 
-                    color: '#ffffff', 
+                    color: 'var(--maroon-primary)', 
                     maxWidth: '80px', 
                     overflow: 'hidden', 
                     textOverflow: 'ellipsis', 
@@ -124,32 +124,32 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         </div>
       </header>
 
-      {/* 2. Hero Section (Peak Creative Maximalism) */}
+      {/* 2. Hero Section */}
       <section 
         style={{
           maxWidth: 'var(--container-max)',
           margin: '0 auto',
-          padding: '24px 16px 20px',
+          padding: '28px 16px 24px',
           textAlign: 'center',
           position: 'relative'
         }}
       >
-        {/* Angled Sticker */}
-        <div style={{ marginBottom: '16px' }}>
+        {/* Official Trail Sticker */}
+        <div style={{ marginBottom: '18px' }}>
           <span 
             style={{
               display: 'inline-block',
-              background: 'var(--neon-yellow)',
-              color: '#000000',
-              border: '2px solid #000000',
-              boxShadow: '3px 3px 0px var(--neon-pink)',
+              background: '#FDF6E2',
+              color: 'var(--maroon-primary)',
+              border: '1.5px solid var(--gold-primary)',
+              boxShadow: '0 2px 8px rgba(200, 157, 71, 0.25)',
               fontFamily: 'var(--font-mono)',
               fontWeight: 800,
               fontSize: '0.76rem',
               letterSpacing: '0.06em',
-              padding: '6px 12px',
-              borderRadius: '6px',
-              transform: 'rotate(-2deg)'
+              padding: '6px 14px',
+              borderRadius: 'var(--radius-pill)',
+              textTransform: 'uppercase'
             }}
           >
             ★ CHATURTHI 2026 OFFICIAL TRAIL ★
@@ -157,15 +157,15 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         </div>
 
         {/* Regal Gajotsava Logo Emblem Card */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '22px' }}>
           <div 
             style={{
               position: 'relative',
-              background: '#fefefe',
+              background: '#FFFFFF',
               borderRadius: '20px',
               padding: '8px',
-              border: '2px solid #f59e0b',
-              boxShadow: '0 12px 35px rgba(0, 0, 0, 0.6), 0 0 28px rgba(245, 158, 11, 0.3)',
+              border: '2px solid var(--gold-primary)',
+              boxShadow: '0 8px 24px rgba(107, 20, 20, 0.12), 0 0 16px rgba(200, 157, 71, 0.25)',
               maxWidth: 'clamp(170px, 45vw, 220px)',
               width: '100%',
               boxSizing: 'border-box'
@@ -176,8 +176,8 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               style={{
                 borderRadius: '14px',
                 overflow: 'hidden',
-                border: '1px solid rgba(180, 83, 9, 0.3)',
-                background: '#faf7f2',
+                border: '1px solid rgba(200, 157, 71, 0.4)',
+                background: '#FAF7F2',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -197,38 +197,39 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           </div>
         </div>
 
-        {/* Massive Maximalist Display Typography */}
+        {/* Massive Display Typography */}
         <h1 
           style={{
             fontSize: 'clamp(2rem, 7.5vw, 3.1rem)',
-            lineHeight: 1.08,
+            lineHeight: 1.1,
             fontFamily: 'var(--font-display)',
             fontWeight: 800,
             letterSpacing: '-0.035em',
             margin: '0 0 14px',
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
+            color: 'var(--text-primary)'
           }}
         >
           <div>ONE CITY.</div>
           <div className="gradient-text-hyper">21 BAPPAS.</div>
-          <div className="stroke-text">ONE VOTE.</div>
+          <div style={{ color: 'var(--maroon-primary)' }}>ONE VOTE.</div>
         </h1>
 
         {/* Subtext */}
         <p 
           style={{
             fontSize: '0.96rem',
-            lineHeight: 1.5,
+            lineHeight: 1.55,
             color: 'var(--text-secondary)',
-            maxWidth: '440px',
-            margin: '0 auto 24px',
+            maxWidth: '460px',
+            margin: '0 auto 26px',
             fontWeight: 500
           }}
         >
           Explore full 4K photo collections, artisan stories, eco-cleanliness checks, and cast your verified community vote in real-time.
         </p>
 
-        {/* THE GIANT MAXIMALIST 3D VOTE BUTTON */}
+        {/* The Giant 3D Vote Button */}
         <div style={{ maxWidth: '420px', margin: '0 auto 12px' }}>
           <button
             onClick={onExploreClick}

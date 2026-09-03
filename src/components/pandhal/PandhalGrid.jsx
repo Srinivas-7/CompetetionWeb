@@ -16,18 +16,18 @@ export function PandhalGrid({
           textAlign: 'center', 
           padding: '48px 16px', 
           background: 'var(--bg-card)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1.5px solid #EADECB',
           borderRadius: 'var(--radius-lg)',
-          color: '#ffffff'
+          color: 'var(--text-primary)'
         }}
       >
-        <div style={{ marginBottom: '12px', opacity: 0.5 }}>
+        <div style={{ marginBottom: '12px', opacity: 0.5, color: 'var(--maroon-primary)' }}>
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </div>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', marginBottom: '6px' }}>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--maroon-primary)', marginBottom: '6px' }}>
           No Bappas match your search
         </h3>
         <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: 0 }}>

@@ -3,10 +3,11 @@ import { votingService } from '../services/votingService';
 import { PANDHALS_DATA } from '../data/pandhals';
 
 export function useLiveVotes() {
+  // Pure zero baseline - all counts are fetched live from Firebase
   const [counts, setCounts] = useState(() => {
     const initial = {};
     PANDHALS_DATA.forEach(p => {
-      initial[p.id] = p.initialVotes || 0;
+      initial[p.id] = 0;
     });
     return initial;
   });
@@ -14,21 +15,19 @@ export function useLiveVotes() {
   const [totalVotes, setTotalVotes] = useState(0);
 
   useEffect(() => {
-    const unsubscribe = votingService.subscribeLiveCounts((updatedCounts) => {
-      if (updatedCounts) {
+    const unsubscribe = votingService.subscribeLiveCounts((firebaseCounts) => {
+      if (firebaseCounts) {
         setCounts(prev => {
           const next = { ...prev };
           PANDHALS_DATA.forEach(p => {
-            if (updatedCounts[p.id] !== undefined) {
-              next[p.id] = updatedCounts[p.id];
-            }
+            next[p.id] = typeof firebaseCounts[p.id] === 'number' ? firebaseCounts[p.id] : 0;
           });
           return next;
         });
         
         let sum = 0;
         PANDHALS_DATA.forEach(p => {
-          sum += (updatedCounts[p.id] !== undefined ? updatedCounts[p.id] : (p.initialVotes || 0));
+          sum += (typeof firebaseCounts[p.id] === 'number' ? firebaseCounts[p.id] : 0);
         });
         setTotalVotes(sum);
       }

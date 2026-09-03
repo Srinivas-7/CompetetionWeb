@@ -41,17 +41,17 @@ export function VotePage({
   const coverPhoto = pandhal.photos[0] || { src: '', alt: pandhal.name };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-page)', color: '#ffffff', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg-page)', color: 'var(--text-primary)', display: 'flex', flexDirection: 'column' }}>
       {/* Sticky Top Navigation Header */}
       <header 
         style={{
           position: 'sticky',
           top: 0,
           zIndex: 80,
-          background: 'rgba(11, 13, 20, 0.94)',
+          background: 'rgba(251, 247, 240, 0.94)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+          borderBottom: '1.5px solid #EADECB',
           padding: '12px 16px'
         }}
       >
@@ -68,9 +68,9 @@ export function VotePage({
           <button
             onClick={onBack}
             style={{
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              color: '#ffffff',
+              background: '#FFFFFF',
+              border: '1px solid #EADECB',
+              color: 'var(--maroon-primary)',
               borderRadius: 'var(--radius-pill)',
               padding: '6px 14px',
               fontFamily: 'var(--font-mono)',
@@ -80,7 +80,8 @@ export function VotePage({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              transition: 'all 0.12s ease'
+              transition: 'all 0.12s ease',
+              boxShadow: '0 1px 4px rgba(0, 0, 0, 0.05)'
             }}
           >
             <span>←</span>
@@ -93,8 +94,8 @@ export function VotePage({
               alt="Bappa Trail" 
               style={{ width: '26px', height: '26px', display: 'block' }}
             />
-            <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.92rem', color: '#ffffff' }}>
-              BAPPA<span style={{ color: 'var(--neon-pink)' }}>TRAIL</span>
+            <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.92rem', color: 'var(--maroon-primary)' }}>
+              BAPPA<span style={{ color: 'var(--gold-primary)' }}>TRAIL</span>
             </span>
           </div>
         </div>
@@ -116,10 +117,10 @@ export function VotePage({
           style={{
             padding: '28px 20px',
             textAlign: 'center',
-            background: '#141726',
-            border: '1px solid rgba(255, 255, 255, 0.14)',
+            background: '#FFFFFF',
+            border: '1.5px solid #EADECB',
             borderRadius: '24px',
-            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.5)'
+            boxShadow: '0 12px 36px rgba(91, 20, 20, 0.08)'
           }}
         >
           {/* Pandhal Number Badge */}
@@ -127,33 +128,33 @@ export function VotePage({
             <span 
               style={{
                 display: 'inline-block',
-                background: '#f59e0b',
-                color: '#000000',
+                background: 'var(--maroon-primary)',
+                color: '#FFFFFF',
                 fontFamily: 'var(--font-mono)',
-                fontWeight: 900,
+                fontWeight: 800,
                 fontSize: '0.78rem',
                 letterSpacing: '0.06em',
-                padding: '4px 10px',
+                padding: '4px 12px',
                 borderRadius: '6px',
-                boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
+                boxShadow: '0 2px 8px rgba(107, 20, 20, 0.3)'
               }}
             >
               #{String(pandhal.number).padStart(2, '0')} OFFICIAL CANDIDATE
             </span>
           </div>
 
-          {/* Grand Hero Image Stage */}
+          {/* Hero Image Stage */}
           <div 
             style={{
               width: '100%',
               aspectRatio: '16 / 11',
               borderRadius: '16px',
               overflow: 'hidden',
-              backgroundColor: '#090a0f',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
+              backgroundColor: '#F5EFEB',
+              border: '1.5px solid #EADECB',
               margin: '0 auto 16px',
               position: 'relative',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)'
             }}
           >
             <img 
@@ -169,7 +170,7 @@ export function VotePage({
               fontSize: 'clamp(1.4rem, 5vw, 1.85rem)',
               fontFamily: 'var(--font-heading)',
               fontWeight: 800,
-              color: '#ffffff',
+              color: 'var(--text-primary)',
               margin: '0 0 6px',
               lineHeight: 1.2
             }}
@@ -178,15 +179,15 @@ export function VotePage({
           </h1>
 
           <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: '0 0 20px' }}>
-            {pandhal.location} • <span style={{ color: '#f59e0b' }}>{pandhal.theme}</span>
+            {pandhal.location} • <span style={{ color: 'var(--maroon-primary)', fontWeight: 700 }}>{pandhal.theme}</span>
           </p>
 
           {/* Verified Google User Badge */}
           {user && (
             <div 
               style={{
-                background: 'rgba(245, 158, 11, 0.08)',
-                border: '1px solid rgba(245, 158, 11, 0.3)',
+                background: '#FDFBF7',
+                border: '1px solid #EADECB',
                 borderRadius: '14px',
                 padding: '10px 14px',
                 marginBottom: '22px',
@@ -200,18 +201,18 @@ export function VotePage({
                 <img 
                   src={user.photoURL} 
                   alt={user.displayName || 'Voter'} 
-                  style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #f59e0b' }}
+                  style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid var(--gold-primary)' }}
                 />
               ) : (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8 }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8, color: 'var(--maroon-primary)' }}>
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
               )}
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--gold-dark)', fontWeight: 800, textTransform: 'uppercase' }}>
                   ✓ VERIFIED GOOGLE VOTER
                 </div>
-                <div style={{ fontSize: '0.84rem', fontWeight: 700, color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ fontSize: '0.84rem', fontWeight: 700, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {user.displayName || user.email}
                 </div>
               </div>
@@ -224,9 +225,9 @@ export function VotePage({
               {errorMessage && (
                 <div 
                   style={{
-                    background: 'rgba(239, 68, 68, 0.12)',
-                    border: '1px solid #ef4444',
-                    color: '#fca5a5',
+                    background: '#FEE2E2',
+                    border: '1px solid #EF4444',
+                    color: '#991B1B',
                     borderRadius: '10px',
                     padding: '10px 14px',
                     fontSize: '0.86rem',
@@ -242,11 +243,11 @@ export function VotePage({
               {isAlreadyVotedForThis ? (
                 <div 
                   style={{
-                    background: 'rgba(16, 185, 129, 0.12)',
-                    border: '1px solid #10b981',
+                    background: '#DCFCE7',
+                    border: '1px solid #16A34A',
                     borderRadius: '14px',
                     padding: '16px',
-                    color: '#10b981',
+                    color: '#166534',
                     fontFamily: 'var(--font-display)',
                     fontWeight: 800,
                     fontSize: '0.98rem',
@@ -258,11 +259,11 @@ export function VotePage({
               ) : isAlreadyVotedForOther ? (
                 <div 
                   style={{
-                    background: 'rgba(245, 158, 11, 0.12)',
-                    border: '1px solid #f59e0b',
+                    background: '#FEF3C7',
+                    border: '1px solid #D97706',
                     borderRadius: '14px',
                     padding: '16px',
-                    color: '#ffffff',
+                    color: '#92400E',
                     fontSize: '0.88rem',
                     lineHeight: 1.45,
                     marginBottom: '16px',
@@ -277,7 +278,7 @@ export function VotePage({
               ) : (
                 <div>
                   <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', margin: '0 0 18px', lineHeight: 1.5 }}>
-                    Click below to lock your verified community ballot for <strong style={{ color: '#ffffff' }}>{pandhal.name}</strong>.
+                    Click below to lock your verified community ballot for <strong style={{ color: 'var(--maroon-primary)' }}>{pandhal.name}</strong>.
                   </p>
 
                   <button
@@ -285,24 +286,18 @@ export function VotePage({
                     disabled={isSubmitting}
                     style={{
                       width: '100%',
-                      background: 'var(--gradient-hyper)',
-                      color: '#000000',
-                      border: '1px solid rgba(255, 255, 255, 0.35)',
+                      background: 'var(--maroon-primary)',
+                      color: '#FFFFFF',
+                      border: '1px solid var(--maroon-dark)',
                       borderRadius: 'var(--radius-pill)',
                       padding: '14px 20px',
                       fontSize: '1.02rem',
                       fontFamily: 'var(--font-display)',
                       fontWeight: 900,
                       cursor: 'pointer',
-                      boxShadow: '0 4px 16px rgba(245, 158, 11, 0.35)',
+                      boxShadow: '0 4px 16px rgba(107, 20, 20, 0.35)',
                       opacity: isSubmitting ? 0.6 : 1,
                       transition: 'transform 0.12s ease'
-                    }}
-                    onMouseDown={(e) => {
-                      e.currentTarget.style.transform = 'translateY(2px)';
-                    }}
-                    onMouseUp={(e) => {
-                      e.currentTarget.style.transform = 'none';
                     }}
                   >
                     <span>{isSubmitting ? 'LOCKING BALLOT…' : 'CONFIRM MY SACRED VOTE'}</span>
@@ -319,14 +314,14 @@ export function VotePage({
                 style={{
                   width: '46px',
                   height: '46px',
-                  border: '3px solid rgba(245, 158, 11, 0.2)',
-                  borderTopColor: '#f59e0b',
+                  border: '3px solid #EADECB',
+                  borderTopColor: 'var(--maroon-primary)',
                   borderRadius: '50%',
                   margin: '0 auto 16px',
                   animation: 'spinSlow 0.8s linear infinite'
                 }}
               />
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 900, color: '#ffffff', margin: '0 0 4px', textTransform: 'uppercase' }}>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 900, color: 'var(--maroon-primary)', margin: '0 0 4px', textTransform: 'uppercase' }}>
                 Recording your vote…
               </h3>
               <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0 }}>
@@ -342,9 +337,9 @@ export function VotePage({
                 style={{
                   width: '68px',
                   height: '68px',
-                  background: '#10b981',
-                  border: '2px solid #ffffff',
-                  color: '#ffffff',
+                  background: 'var(--green-emerald)',
+                  border: '2px solid #FFFFFF',
+                  color: '#FFFFFF',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
@@ -352,7 +347,7 @@ export function VotePage({
                   fontSize: '34px',
                   fontWeight: 900,
                   margin: '0 auto 14px',
-                  boxShadow: '0 4px 18px rgba(16, 185, 129, 0.45)'
+                  boxShadow: '0 4px 18px rgba(22, 163, 74, 0.45)'
                 }}
               >
                 ✓
@@ -363,7 +358,7 @@ export function VotePage({
                   fontSize: '1.5rem', 
                   fontFamily: 'var(--font-display)',
                   fontWeight: 900, 
-                  color: '#ffffff', 
+                  color: 'var(--maroon-primary)', 
                   margin: '0 0 8px',
                   textTransform: 'uppercase'
                 }}
@@ -371,16 +366,16 @@ export function VotePage({
                 VOTE LOCKED!
               </h3>
               <p style={{ fontSize: '0.94rem', color: 'var(--text-secondary)', margin: '0 0 24px', lineHeight: 1.5 }}>
-                Your sacred vote for <strong style={{ color: '#f59e0b' }}>{pandhal.name}</strong> is officially counted! Ganpati Bappa Morya!
+                Your sacred vote for <strong style={{ color: 'var(--maroon-primary)' }}>{pandhal.name}</strong> is officially counted! Ganpati Bappa Morya!
               </p>
 
               <button
                 onClick={onBack}
                 style={{
                   width: '100%',
-                  border: '1px solid rgba(255, 255, 255, 0.25)',
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  color: '#ffffff',
+                  border: '1px solid #EADECB',
+                  background: '#FDFBF7',
+                  color: 'var(--maroon-primary)',
                   borderRadius: 'var(--radius-pill)',
                   padding: '13px',
                   fontSize: '0.92rem',
@@ -389,7 +384,7 @@ export function VotePage({
                   cursor: 'pointer'
                 }}
               >
-                <span>RETURN TO TRAIL FEED</span>
+                ← Back to All Pandhals
               </button>
             </div>
           )}

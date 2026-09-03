@@ -8,7 +8,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1954,
     theme: "Royal Peshwa Darbar",
     description: "Known for its majestic 18-foot idol seated on a golden lion throne, adorned with a traditional gold crown and royal marigold decorations.",
-    initialVotes: 0,
     badge: "Iconic Legend",
     photos: [
       { id: "p1-1", type: "bappa", title: "Main Bappa Idol (18ft Raja)", src: "/pandhals/pandhal-01/cover.webp", alt: "Raja of Grand Chowk Main Idol" },
@@ -27,7 +26,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1978,
     theme: "Vedic Temple of Kailash",
     description: "Sculpted in natural shadu clay with intricate trishul engravings, blessed with sacred Chandan aarti and traditional Dhol-Tasha energy.",
-    initialVotes: 0,
     badge: "Most Peaceful Aarti",
     photos: [
       { id: "p2-1", type: "bappa", title: "Siddhi Vinayaka Shadu Clay Idol", src: "/pandhals/pandhal-02/cover.webp", alt: "Siddhi Vinayaka Main Idol" },
@@ -46,7 +44,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1968,
     theme: "Navaratna Gemstone Palace",
     description: "Magnificent craftsmanship featuring 9 divine gemstone motifs, silk dhoti draping, and sparkling evening sound-and-light presentation.",
-    initialVotes: 0,
     badge: "Grand Artistry",
     photos: [
       { id: "p3-1", type: "bappa", title: "Navaratna Bappa with Kundan Jewelry", src: "/pandhals/pandhal-03/cover.webp", alt: "Navaratna Bappa Idol" },
@@ -65,7 +62,6 @@ export const PANDHALS_DATA = [
     establishedYear: 2012,
     theme: "Living Botanical Garden",
     description: "100% plant-seeded clay idol embedded with Tulsi and Neem seeds. The entire pandhal is crafted from bamboo, jute, and living orchid plants.",
-    initialVotes: 0,
     badge: "100% Eco Pioneer",
     photos: [
       { id: "p4-1", type: "bappa", title: "Living Seed-Clay Ganapathi with Tulsi Seedling", src: "/pandhals/pandhal-04/cover.webp", alt: "Eco Clay Idol" },
@@ -84,7 +80,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1982,
     theme: "Fort Raigad Historic Replica",
     description: "Bappa portrayed in a royal warrior-blessing pose with saffron flag drapes, surrounded by miniature historical stone gates of Fort Raigad.",
-    initialVotes: 0,
     badge: "Historic Pride",
     photos: [
       { id: "p5-1", type: "bappa", title: "Vighnaharta in Royal Angarakha", src: "/pandhals/pandhal-05/cover.webp", alt: "Warrior Bappa Idol" },
@@ -103,7 +98,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1991,
     theme: "Golden Surya Ratha (Sun Chariot)",
     description: "Idol seated on a 7-horse radiant sun chariot with fiber-optic sunrise illumination that shifts colors dynamically during twilight aarti.",
-    initialVotes: 0,
     badge: "Surya Tejas",
     photos: [
       { id: "p6-1", type: "bappa", title: "Mahaganapathi on Surya Chariot", src: "/pandhals/pandhal-06/cover.webp", alt: "Sun Chariot Bappa" },
@@ -122,7 +116,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1999,
     theme: "Floating Pink Lotus Sanctuary",
     description: "An awe-inspiring sight: Bappa gently floating on a 24-foot mechanical blooming pink lotus with misty water fountains and classical flute melodies.",
-    initialVotes: 0,
     badge: "Grand Spectacle",
     photos: [
       { id: "p7-1", type: "bappa", title: "Mayureshwar on Giant Blooming Lotus", src: "/pandhals/pandhal-07/cover.webp", alt: "Lotus Bappa Main Idol" },
@@ -141,7 +134,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1986,
     theme: "Ancient Konark Sun Temple Stone Carvings",
     description: "Handcrafted terracotta stone replica featuring intricate wheel carvings, bronze lamps, and pure Vedic chantings led by young Sanskrit students.",
-    initialVotes: 0,
     badge: "Ancient Heritage",
     photos: [
       { id: "p8-1", type: "bappa", title: "Chintamani Idol in Traditional Shringar", src: "/pandhals/pandhal-08/cover.webp", alt: "Chintamani Idol" },
@@ -160,7 +152,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1974,
     theme: "Golden Harvest & Annapurna Kshethra",
     description: "Decorated with 21 quintals of fresh grains, organic fruits, and sugarcanes which are distributed to orphanages and old-age homes post festival.",
-    initialVotes: 0,
     badge: "Anna Daan Seva",
     photos: [
       { id: "p9-1", type: "bappa", title: "Lambodara Adorned with Paddy Garlands", src: "/pandhals/pandhal-09/cover.webp", alt: "Lambodara Harvest Idol" },
@@ -179,7 +170,6 @@ export const PANDHALS_DATA = [
     establishedYear: 2003,
     theme: "Dravidian Gopuram & Temple Gold",
     description: "Depicting the rare 5-faced Heramba Ganapathi riding a lion, with classical Carnatic Nadaswaram performances throughout the 10 days.",
-    initialVotes: 0,
     badge: "Pancha Mukha Bappa",
     photos: [
       { id: "p10-1", type: "bappa", title: "5-Headed Heramba Ganapathi Idol", src: "/pandhals/pandhal-10/cover.webp", alt: "Heramba Ganapathi Idol" },
@@ -198,7 +188,6 @@ export const PANDHALS_DATA = [
     establishedYear: 2008,
     theme: "Enchanted Krishna Forest & Peacock Glade",
     description: "Beloved by families and kids! Features sweet Bal Ganapathi holding a giant laddu with an interactive puppet show illustrating moral stories.",
-    initialVotes: 0,
     badge: "Children's Favorite",
     photos: [
       { id: "p11-1", type: "bappa", title: "Sweet Bal Ganapathi Idol with Giant Modak", src: "/pandhals/pandhal-11/cover.webp", alt: "Bal Ganapathi" },
@@ -217,7 +206,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1962,
     theme: "Bharat Gaurav Indian Railways Engine Heritage",
     description: "Creative mechanical model with Bappa blessing travelers alongside vintage steam engines and illuminated railway bridge replicas.",
-    initialVotes: 0,
     badge: "Heritage Tribute",
     photos: [
       { id: "p12-1", type: "bappa", title: "Siddhadatha Ganapathi in Royal Pose", src: "/pandhals/pandhal-12/cover.webp", alt: "Railway Colony Bappa" },
@@ -236,7 +224,6 @@ export const PANDHALS_DATA = [
     establishedYear: 2015,
     theme: "Cloud City & Starry Constellation Sky",
     description: "Perched atop the scenic hill, with panoramic night views of the city, fiber-optic star ceilings, and serene acoustic ambient sounds.",
-    initialVotes: 0,
     badge: "Celestial Ambience",
     photos: [
       { id: "p13-1", type: "bappa", title: "Gajanana Seated on Cloud Base", src: "/pandhals/pandhal-13/cover.webp", alt: "Hill View Bappa" },
@@ -255,7 +242,6 @@ export const PANDHALS_DATA = [
     establishedYear: 2010,
     theme: "Knowledge, Books & Digital Sanskrit Vedas",
     description: "Idol holding a palm-leaf scripture and feather pen. Highlights include free book donation drives and educational scholarship stalls.",
-    initialVotes: 0,
     badge: "Vidya Ganapathi",
     photos: [
       { id: "p14-1", type: "bappa", title: "Kshipra Prasada Ganapathi Holding Saraswati Veena", src: "/pandhals/pandhal-14/cover.webp", alt: "Vidya Bappa" },
@@ -274,7 +260,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1948,
     theme: "Ancient Maratha Battle Shields & Torches",
     description: "One of the oldest heritage pandhals in the region with 75+ years of tradition. Authentic oil mashal torches and traditional nagara beats.",
-    initialVotes: 0,
     badge: "75+ Years Heritage",
     photos: [
       { id: "p15-1", type: "bappa", title: "Traditional Historic Red Clay Ganapathi", src: "/pandhals/pandhal-15/cover.webp", alt: "Heritage Bappa" },
@@ -293,7 +278,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1984,
     theme: "Handwoven Pure Paithani & Zari Tapestries",
     description: "Every backdrop and canopy is handwoven by master weavers over 6 months using pure silk, gold zari threads, and natural vegetable dyes.",
-    initialVotes: 0,
     badge: "Handloom Splendor",
     photos: [
       { id: "p16-1", type: "bappa", title: "Bappa Draped in 24k Gold Zari Paithani", src: "/pandhals/pandhal-16/cover.webp", alt: "Silk Draped Bappa" },
@@ -312,7 +296,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1995,
     theme: "Metallic Sculptures & Make In India Pride",
     description: "Artistic eco-sculpture crafted from recycled industrial brass and copper machinery parts, polished to a sparkling golden mirror finish.",
-    initialVotes: 0,
     badge: "Recycled Metal Art",
     photos: [
       { id: "p17-1", type: "bappa", title: "Recycled Brass & Copper Mirror Finish Bappa", src: "/pandhals/pandhal-17/cover.webp", alt: "Metallic Bappa" },
@@ -331,7 +314,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1989,
     theme: "Varanasi Ganga Aarti Ghat Glow",
     description: "Over 5,000 clay lamps floating on the riverbank during the grand evening Maha Aarti with synchronized brass bells and shankh sound waves.",
-    initialVotes: 0,
     badge: "Maha River Aarti",
     photos: [
       { id: "p18-1", type: "bappa", title: "Bhakti Ganapathi overlooking Holy River", src: "/pandhals/pandhal-18/cover.webp", alt: "Riverside Bappa" },
@@ -350,7 +332,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1970,
     theme: "Indian Sports & Olympic Champions Tribute",
     description: "Celebrates India's youth and athletic spirit with dynamic sports dioramas, athletic equipment floral arrangements, and youth sports medals.",
-    initialVotes: 0,
     badge: "Youth & Sports Spirit",
     photos: [
       { id: "p19-1", type: "bappa", title: "Ekadanta Holding Olympic Torch & Lotus", src: "/pandhals/pandhal-19/cover.webp", alt: "Sports Bappa" },
@@ -369,7 +350,6 @@ export const PANDHALS_DATA = [
     establishedYear: 2005,
     theme: "Sitar, Veena & Indian Classical Raagas",
     description: "Idol portrayed holding a golden Tanpura. Every evening features live concerts by renowned classical musicians, bhajans, and flute players.",
-    initialVotes: 0,
     badge: "Raaga & Sangeet",
     photos: [
       { id: "p20-1", type: "bappa", title: "Mohana Ganapathi with Golden Tanpura", src: "/pandhals/pandhal-20/cover.webp", alt: "Musical Bappa" },
@@ -388,7 +368,6 @@ export const PANDHALS_DATA = [
     establishedYear: 1935,
     theme: "The Grand Royal Throne of Maharashtra",
     description: "The crowning glory of Ganapathi Trail! The oldest, grandest 25-foot idol seated on an emperor's simhasan with 108 golden kalash towers.",
-    initialVotes: 0,
     badge: "Crown of the City",
     photos: [
       { id: "p21-1", type: "bappa", title: "25-Foot Maha Raja Supreme Idol", src: "/pandhals/pandhal-21/cover.webp", alt: "Maha Raja Central Idol" },

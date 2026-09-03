@@ -43,11 +43,9 @@ export async function executeFirebaseVote(email, pandhalId, pandhalName, voterNa
 
       // 2. Read live counter document
       const counterDoc = await transaction.get(counterDocRef);
-      const pandhalBaseline = PANDHALS_DATA.find(p => p.id === pandhalId)?.initialVotes || 0;
-      
       const currentCount = counterDoc.exists() && counterDoc.data()[pandhalId] !== undefined
         ? counterDoc.data()[pandhalId] 
-        : pandhalBaseline;
+        : 0;
 
       const newCount = currentCount + 1;
 

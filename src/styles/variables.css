@@ -1,40 +1,70 @@
 :root {
-  /* Standard Polished Theme Color Tokens */
-  --bg-page: #0b0d14;
-  --bg-surface: #111420;
-  --bg-card: #141726;
-  --bg-card-hover: #1b2033;
-  --bg-input: #0e111a;
+  /* Warm Ivory & Royal Maroon Color Tokens (Gajotsava Theme) */
+  --bg-page: #FBF7F0;          /* Warm Ivory / Cream Background */
+  --bg-surface: #FFFFFF;       /* Crisp Pure White */
+  --bg-card: #FFFFFF;          /* Card Background */
+  --bg-card-hover: #FDFBF7;    /* Subtle Warm Card Hover */
+  --bg-input: #FFFFFF;         /* White Input Field */
+  --bg-maroon-dark: #4A0E17;   /* Deep Royal Maroon Banner / Header */
+  --bg-maroon-card: #5B1414;   /* Rich Maroon Card Container */
+  --bg-cream-accent: #F7F2E9;  /* Creamy Accent Container */
 
-  /* Standard Vibrant Accents (Festive Amber & Clean Primaries) */
-  --neon-pink: #f59e0b;       /* Mapped to prestigious Golden Amber */
-  --neon-lime: #10b981;       /* Mapped to clean Emerald Green */
-  --neon-cyan: #3b82f6;       /* Mapped to Royal Sapphire Blue */
-  --neon-orange: #ea580c;     /* Mapped to Saffron Orange */
-  --neon-purple: #8b5cf6;     /* Mapped to Regal Purple */
-  --neon-yellow: #f59e0b;     /* Mapped to Warm Gold */
+  /* Festive Royal Accents */
+  --maroon-primary: #6B1414;   /* Core Royal Maroon */
+  --maroon-dark: #4A0E17;      /* Deep Dark Burgundy */
+  --maroon-light: #8C2222;     /* Bright Crimson */
+  --maroon-hover: #541219;     /* Deep Hover Maroon */
   
-  /* Text */
-  --text-primary: #ffffff;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-dark: #000000;
+  --gold-primary: #C89D47;     /* Antique Rich Gold */
+  --gold-light: #DFBF7A;      /* Light Shimmer Gold */
+  --gold-dark: #996F26;       /* Deep Bronze Gold */
+  
+  --green-emerald: #16A34A;    /* Success / Locked Vote Green */
+  --green-dark: #15803D;
 
-  /* Standard Refined Gradients */
-  --gradient-hyper: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
-  --gradient-cyber: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-  --gradient-flame: linear-gradient(135deg, #ea580c 0%, #f59e0b 100%);
-  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  /* Legacy Neon Variable Mappings for Maximum Compatibility */
+  --neon-pink: #6B1414;        /* Mapped to Royal Maroon */
+  --neon-lime: #C89D47;        /* Mapped to Antique Gold */
+  --neon-cyan: #6B1414;        /* Mapped to Royal Maroon */
+  --neon-orange: #8C2222;      /* Mapped to Crimson Maroon */
+  --neon-purple: #4A0E17;      /* Mapped to Deep Burgundy */
+  --neon-yellow: #C89D47;      /* Mapped to Antique Gold */
+  
+  /* Text Tokens */
+  --text-primary: #1A1A1A;     /* Deep Charcoal / Warm Black */
+  --text-secondary: #66554B;   /* Warm Espresso Taupe */
+  --text-muted: #9C8B80;       /* Muted Warm Gray */
+  --text-dark: #1A1A1A;
+  --text-light: #FFFFFF;
+  --text-gold: #C89D47;
+  --text-maroon: #6B1414;
 
-  /* Standard Clean Borders & Soft Elevation */
-  --border-thick: 1.5px solid rgba(255, 255, 255, 0.2);
-  --border-neon-pink: 1.5px solid #f59e0b;
-  --border-neon-lime: 1.5px solid #10b981;
-  --border-neon-cyan: 1.5px solid #3b82f6;
-  --shadow-3d-pink: 0 4px 14px rgba(245, 158, 11, 0.3);
-  --shadow-3d-lime: 0 4px 14px rgba(16, 185, 129, 0.3);
-  --shadow-3d-cyan: 0 4px 14px rgba(59, 130, 246, 0.3);
-  --shadow-3d-white: 0 4px 14px rgba(255, 255, 255, 0.15);
+  /* Royal Gradients */
+  --gradient-hyper: linear-gradient(135deg, #6B1414 0%, #4A0E17 100%);   /* Solid Royal Maroon */
+  --gradient-maroon: linear-gradient(135deg, #6B1414 0%, #3B0B11 100%);  /* Rich Dark Maroon */
+  --gradient-gold: linear-gradient(135deg, #DFBF7A 0%, #C89D47 100%);    /* Shimmering Gold */
+  --gradient-flame: linear-gradient(135deg, #6B1414 0%, #8C2222 100%);   /* Crimson Flame */
+  --gradient-cyber: linear-gradient(135deg, #6B1414 0%, #4A0E17 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(253, 251, 247, 0.7) 100%);
+
+  /* Warm Borders & Elegant Shadows */
+  --border-subtle: 1px solid #EADECB;
+  --border-thick: 1.5px solid #EADECB;
+  --border-gold: 1.5px solid #C89D47;
+  --border-maroon: 1.5px solid #6B1414;
+  --border-neon-pink: 1.5px solid #6B1414;
+  --border-neon-lime: 1.5px solid #C89D47;
+  --border-neon-cyan: 1.5px solid #6B1414;
+
+  --shadow-card: 0 4px 16px rgba(91, 20, 20, 0.07);
+  --shadow-card-hover: 0 8px 24px rgba(91, 20, 20, 0.14);
+  --shadow-button: 0 4px 14px rgba(107, 20, 20, 0.35);
+  --shadow-gold: 0 4px 14px rgba(200, 157, 71, 0.3);
+  
+  --shadow-3d-pink: 0 4px 14px rgba(107, 20, 20, 0.35);
+  --shadow-3d-lime: 0 4px 14px rgba(22, 163, 74, 0.3);
+  --shadow-3d-cyan: 0 4px 14px rgba(107, 20, 20, 0.35);
+  --shadow-3d-white: 0 4px 14px rgba(0, 0, 0, 0.08);
 
   /* Typography */
   --font-display: 'Unbounded', system-ui, sans-serif;
@@ -45,9 +75,9 @@
 
   /* Sizing */
   --radius-xs: 6px;
-  --radius-sm: 10px;
+  --radius-sm: 8px;
   --radius-md: 14px;
-  --radius-lg: 18px;
+  --radius-lg: 20px;
   --radius-pill: 9999px;
-  --container-max: 1240px; /* 3-column wide container */
+  --container-max: 1240px;
 }

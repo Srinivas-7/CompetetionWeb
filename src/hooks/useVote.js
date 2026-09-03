@@ -1,19 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { votingService } from '../services/votingService';
+import { useAuth } from '../context/AuthContext';
 
 export function useVote(onSuccess) {
+  const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDelayed, setIsDelayed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successData, setSuccessData] = useState(null);
-  const [myVote, setMyVote] = useState(() => votingService.getMyVote());
+  const [myVote, setMyVote] = useState(null);
+
+  // Live real-time Firestore sync with active Google user
+  useEffect(() => {
+    if (!user?.uid) {
+      setMyVote(null);
+      return;
+    }
+
+    const unsubscribe = votingService.subscribeUserVote(user.uid, (voteRecord) => {
+      setMyVote(voteRecord);
+    });
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, [user?.uid]);
 
   const resetState = () => {
     setIsSubmitting(false);
     setIsDelayed(false);
     setErrorMessage('');
     setSuccessData(null);
-    setMyVote(votingService.getMyVote());
   };
 
   const castVote = async (email, pandhalId, voterName = '') => {
@@ -33,7 +50,6 @@ export function useVote(onSuccess) {
 
       if (result.success) {
         setSuccessData(result);
-        setMyVote(votingService.getMyVote());
         if (onSuccess) onSuccess(result);
       } else {
         setErrorMessage(result.message || 'Voting failed. Please try again.');

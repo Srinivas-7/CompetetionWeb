@@ -68,13 +68,13 @@ export function PandhalGallery({
   return (
     <div 
       style={{
-        background: '#121522',
-        border: '1.5px solid rgba(255, 255, 255, 0.16)',
+        background: '#FFFFFF',
+        border: '1.5px solid #EADECB',
         borderRadius: '24px',
         padding: '24px 20px',
-        color: '#ffffff',
+        color: 'var(--text-primary)',
         position: 'relative',
-        boxShadow: '0 12px 36px rgba(0, 0, 0, 0.6)',
+        boxShadow: '0 12px 36px rgba(91, 20, 20, 0.12)',
         maxWidth: '720px',
         margin: '0 auto'
       }}
@@ -84,10 +84,10 @@ export function PandhalGallery({
         <span 
           style={{
             display: 'inline-block',
-            background: '#f59e0b',
-            color: '#000000',
+            background: 'var(--maroon-primary)',
+            color: '#FFFFFF',
             fontFamily: 'var(--font-mono)',
-            fontWeight: 900,
+            fontWeight: 800,
             fontSize: '0.74rem',
             padding: '2px 8px',
             borderRadius: '4px',
@@ -98,205 +98,214 @@ export function PandhalGallery({
         </span>
 
         <h2 
-          style={{ 
-            fontSize: 'clamp(1.3rem, 4vw, 1.8rem)', 
+          style={{
             fontFamily: 'var(--font-heading)',
-            fontWeight: 800, 
-            color: '#ffffff',
+            fontSize: 'clamp(1.25rem, 4vw, 1.6rem)',
+            fontWeight: 800,
+            color: 'var(--text-primary)',
             margin: '0 0 4px',
             lineHeight: 1.2
           }}
         >
           {pandhal.name}
         </h2>
-        
-        <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', margin: 0 }}>
-          {pandhal.location} • <span style={{ color: '#f59e0b' }}>{pandhal.theme}</span>
+
+        <p style={{ margin: 0, fontSize: '0.86rem', color: 'var(--text-secondary)' }}>
+          {pandhal.location} • <span style={{ color: 'var(--maroon-primary)', fontWeight: 700 }}>{pandhal.theme}</span>
         </p>
       </div>
 
-      {/* Main 4K Photo Stage with Left/Right Arrows */}
+      {/* Main Image Stage */}
       <div 
         onTouchStart={onTouchStartHandler}
         onTouchMove={onTouchMoveHandler}
         onTouchEnd={onTouchEndHandler}
         style={{
+          position: 'relative',
           width: '100%',
-          height: 'clamp(240px, 50vh, 380px)',
+          aspectRatio: '16 / 11',
           borderRadius: '16px',
           overflow: 'hidden',
-          backgroundColor: '#000000',
-          marginBottom: '10px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          position: 'relative',
-          userSelect: 'none'
+          backgroundColor: '#F5EFEB',
+          border: '1px solid #EADECB',
+          margin: '0 auto 16px',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)'
         }}
       >
         <img 
           src={currentPhoto.src} 
-          alt={currentPhoto.alt} 
-          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+          alt={currentPhoto.alt || pandhal.name} 
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            display: 'block'
+          }}
         />
 
-        {/* Previous < Arrow Button */}
-        <button
-          onClick={handlePrev}
-          style={{
-            position: 'absolute',
-            left: '10px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: '38px',
-            height: '38px',
-            borderRadius: '50%',
-            background: 'rgba(0, 0, 0, 0.75)',
-            border: '1.5px solid #ffffff',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
-            color: '#ffffff',
-            fontSize: '22px',
-            fontWeight: 900,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            zIndex: 5,
-            paddingBottom: '2px',
-            backdropFilter: 'blur(4px)'
-          }}
-          aria-label="Previous photo"
-        >
-          ‹
-        </button>
+        {/* Carousel Navigation Arrows */}
+        {totalPhotos > 1 && (
+          <>
+            <button
+              onClick={handlePrev}
+              style={{
+                position: 'absolute',
+                left: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'rgba(255, 255, 255, 0.85)',
+                color: 'var(--maroon-primary)',
+                border: '1px solid #EADECB',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.1rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+              }}
+              aria-label="Previous photo"
+            >
+              ‹
+            </button>
 
-        {/* Next > Arrow Button */}
-        <button
-          onClick={handleNext}
-          style={{
-            position: 'absolute',
-            right: '10px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: '38px',
-            height: '38px',
-            borderRadius: '50%',
-            background: 'rgba(0, 0, 0, 0.75)',
-            border: '1.5px solid #ffffff',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
-            color: '#ffffff',
-            fontSize: '22px',
-            fontWeight: 900,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            zIndex: 5,
-            paddingBottom: '2px',
-            backdropFilter: 'blur(4px)'
-          }}
-          aria-label="Next photo"
-        >
-          ›
-        </button>
+            <button
+              onClick={handleNext}
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'rgba(255, 255, 255, 0.85)',
+                color: 'var(--maroon-primary)',
+                border: '1px solid #EADECB',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.1rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+              }}
+              aria-label="Next photo"
+            >
+              ›
+            </button>
+          </>
+        )}
 
         {/* Photo Counter Pill */}
+        {totalPhotos > 1 && (
+          <div 
+            style={{
+              position: 'absolute',
+              bottom: '10px',
+              right: '10px',
+              background: 'rgba(0, 0, 0, 0.7)',
+              color: '#FFFFFF',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              padding: '3px 8px',
+              borderRadius: 'var(--radius-pill)',
+              backdropFilter: 'blur(4px)'
+            }}
+          >
+            {selectedPhotoIndex + 1} / {totalPhotos}
+          </div>
+        )}
+      </div>
+
+      {/* Thumbnail Bar */}
+      {totalPhotos > 1 && (
         <div 
           style={{
-            position: 'absolute',
-            bottom: '10px',
-            right: '12px',
-            background: 'rgba(0, 0, 0, 0.8)',
-            border: '1px solid rgba(255, 255, 255, 0.25)',
-            borderRadius: 'var(--radius-pill)',
-            padding: '2px 8px',
-            fontFamily: 'var(--font-mono)',
-            fontSize: '0.72rem',
-            fontWeight: 800,
-            color: '#ffffff',
-            pointerEvents: 'none'
+            display: 'flex',
+            gap: '8px',
+            justifyContent: 'center',
+            marginBottom: '20px',
+            overflowX: 'auto',
+            paddingBottom: '4px'
           }}
         >
-          {selectedPhotoIndex + 1} / {totalPhotos}
-        </div>
-      </div>
-
-      {/* Photo Title */}
-      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', fontWeight: 700, color: '#f59e0b', textAlign: 'center', marginBottom: '14px' }}>
-        {currentPhoto.title}
-      </p>
-
-      {/* Thumbnail Strip */}
-      <div 
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${totalPhotos}, 1fr)`,
-          gap: '8px',
-          marginBottom: '20px'
-        }}
-      >
-        {photos.map((photo, idx) => {
-          const isSelected = idx === selectedPhotoIndex;
-          return (
-            <div 
-              key={photo.id}
+          {photos.map((p, idx) => (
+            <button
+              key={idx}
               onClick={() => setSelectedPhotoIndex(idx)}
               style={{
-                cursor: 'pointer',
+                width: '52px',
+                height: '52px',
                 borderRadius: '8px',
                 overflow: 'hidden',
-                border: isSelected ? '2px solid #f59e0b' : '1px solid rgba(255, 255, 255, 0.15)',
-                height: '52px',
-                background: '#000000',
-                opacity: isSelected ? 1 : 0.5,
-                boxShadow: isSelected ? '0 2px 8px rgba(245, 158, 11, 0.35)' : 'none',
-                transition: 'all 0.15s ease'
+                border: idx === selectedPhotoIndex ? '2px solid var(--maroon-primary)' : '1px solid #EADECB',
+                padding: 0,
+                cursor: 'pointer',
+                opacity: idx === selectedPhotoIndex ? 1 : 0.6,
+                transition: 'all 0.15s ease',
+                flexShrink: 0
               }}
             >
-              <img 
-                src={photo.src} 
-                alt={photo.alt} 
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              />
-            </div>
-          );
-        })}
-      </div>
+              <img src={p.src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </button>
+          ))}
+        </div>
+      )}
 
-      {/* Sleek Full-Width Vote Button (Share button removed) */}
-      <div>
+      {/* Bottom Action Bar */}
+      <div 
+        style={{
+          display: 'flex',
+          gap: '12px',
+          alignItems: 'center'
+        }}
+      >
         <button
           onClick={() => onVoteClick(pandhal.id)}
           style={{
-            width: '100%',
-            background: 'var(--gradient-hyper)',
-            color: '#000000',
-            border: '1px solid rgba(255, 255, 255, 0.35)',
-            boxShadow: '0 4px 16px rgba(245, 158, 11, 0.35)',
+            flex: 1,
+            background: 'var(--maroon-primary)',
+            color: '#FFFFFF',
+            border: '1px solid var(--maroon-dark)',
             borderRadius: 'var(--radius-pill)',
-            padding: '11px 20px',
-            fontSize: '0.92rem',
+            padding: '13px 20px',
             fontFamily: 'var(--font-display)',
             fontWeight: 900,
+            fontSize: '0.94rem',
             cursor: 'pointer',
+            boxShadow: '0 4px 14px rgba(107, 20, 20, 0.35)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '6px',
-            transition: 'transform 0.12s ease, box-shadow 0.12s ease'
-          }}
-          onMouseDown={(e) => {
-            e.currentTarget.style.transform = 'translateY(2px)';
-            e.currentTarget.style.boxShadow = '0 2px 6px rgba(245, 158, 11, 0.25)';
-          }}
-          onMouseUp={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = '0 4px 16px rgba(245, 158, 11, 0.35)';
+            gap: '6px'
           }}
         >
-          <span>VOTE FOR THIS BAPPA</span>
+          <span>VOTE FOR THIS PANDHAL →</span>
         </button>
+
+        {onClose && (
+          <button
+            onClick={onClose}
+            style={{
+              background: '#FDFBF7',
+              border: '1px solid #EADECB',
+              color: 'var(--text-secondary)',
+              borderRadius: 'var(--radius-pill)',
+              padding: '13px 18px',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 800,
+              fontSize: '0.84rem',
+              cursor: 'pointer'
+            }}
+          >
+            Close
+          </button>
+        )}
       </div>
     </div>
   );

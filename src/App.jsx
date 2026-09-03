@@ -7,10 +7,12 @@ import { AuthProvider } from './context/AuthContext';
 import { AuthGate } from './components/auth/AuthGate';
 import { useLiveVotes } from './hooks/useLiveVotes';
 import { usePandhal } from './hooks/usePandhal';
+import { useAuth } from './context/AuthContext';
 import { pandhalService } from './services/pandhalService';
 import { votingService } from './services/votingService';
 
 function MainDashboard() {
+  const { user } = useAuth();
   const { counts: liveCounts, totalVotes } = useLiveVotes();
   const { 
     pandhals, 
@@ -24,7 +26,23 @@ function MainDashboard() {
   const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'pandhals' | 'vote'
   const [selectedGalleryId, setSelectedGalleryId] = useState(null);
   const [selectedVoteId, setSelectedVoteId] = useState(null);
-  const [myVote, setMyVote] = useState(() => votingService.getMyVote());
+  const [myVote, setMyVote] = useState(null);
+
+  // 100% Live Firebase Sync: Automatically binds to the active Google user's Firestore record
+  useEffect(() => {
+    if (!user?.uid) {
+      setMyVote(null);
+      return;
+    }
+
+    const unsubscribe = votingService.subscribeUserVote(user.uid, (voteRecord) => {
+      setMyVote(voteRecord);
+    });
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, [user?.uid]);
 
   // Deep-link hash handler (#pandhals, #pandhal-XX, #vote-pandhal-XX)
   useEffect(() => {
