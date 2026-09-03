@@ -75,9 +75,9 @@ export function PandhalsPage({
           {/* Logo Badge */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
             <img 
-              src="/favicon.svg" 
+              src="/assets/cute-bappa-logo.jpg" 
               alt="Bappa Trail" 
-              style={{ width: '26px', height: '26px', display: 'block' }}
+              style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--gold-primary)', display: 'block' }}
             />
             <span 
               style={{

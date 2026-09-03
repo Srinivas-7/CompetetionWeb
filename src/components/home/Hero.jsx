@@ -32,11 +32,14 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           {/* Logo Badge */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
             <img 
-              src="/favicon.svg" 
+              src="/assets/cute-bappa-logo.jpg" 
               alt="Bappa Trail Logo" 
               style={{
-                width: '32px',
-                height: '32px',
+                width: '34px',
+                height: '34px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                border: '1.5px solid var(--gold-primary)',
                 display: 'block',
                 flexShrink: 0
               }}

@@ -90,9 +90,9 @@ export function VotePage({
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <img 
-              src="/favicon.svg" 
+              src="/assets/cute-bappa-logo.jpg" 
               alt="Bappa Trail" 
-              style={{ width: '26px', height: '26px', display: 'block' }}
+              style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--gold-primary)', display: 'block' }}
             />
             <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.92rem', color: 'var(--maroon-primary)' }}>
               BAPPA<span style={{ color: 'var(--gold-primary)' }}>TRAIL</span>

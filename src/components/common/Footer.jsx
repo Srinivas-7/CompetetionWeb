@@ -27,9 +27,9 @@ export function Footer() {
         {/* Brand Logo & Name */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <img 
-            src="/favicon.svg" 
+            src="/assets/cute-bappa-logo.jpg" 
             alt="Bappa Trail" 
-            style={{ width: '24px', height: '24px', display: 'block' }}
+            style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--gold-primary)', display: 'block' }}
           />
           <span 
             style={{

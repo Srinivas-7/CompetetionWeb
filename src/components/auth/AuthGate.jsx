@@ -134,17 +134,20 @@ export function AuthGate({ children }) {
             </span>
           </div>
 
-          {/* Logo Badge */}
+          {/* Cute Bal Ganesha Logo Badge */}
           <div style={{ marginBottom: '16px' }}>
             <img 
-              src="/favicon.svg" 
-              alt="Bappa Trail" 
+              src="/assets/cute-bappa-logo.jpg" 
+              alt="Cute Bal Ganesha Mascot" 
               style={{
-                width: '78px',
-                height: '78px',
+                width: '96px',
+                height: '96px',
                 display: 'block',
                 margin: '0 auto',
-                filter: 'drop-shadow(0 4px 16px rgba(107, 20, 20, 0.15))'
+                borderRadius: '50%',
+                objectFit: 'cover',
+                border: '3px solid var(--gold-primary)',
+                boxShadow: '0 8px 24px rgba(107, 20, 20, 0.25)'
               }}
             />
           </div>
