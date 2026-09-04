@@ -1,22 +1,25 @@
 import { getFirestore } from 'firebase/firestore';
-import { app } from '../lib/firebase';
+import { app, db as libDb } from '../lib/firebase';
 import { isFirebaseConfigured } from './config';
 
-let db = null;
+let db = libDb || null;
 
 export function getFirestoreDb() {
+  if (db) return db;
+  
   if (!isFirebaseConfigured()) {
     return null;
   }
 
-  if (!db) {
-    try {
-      db = getFirestore(app);
-    } catch (err) {
-      console.warn('[Firestore] Initialization warning:', err);
-    }
+  try {
+    db = getFirestore(app);
+  } catch (err) {
+    console.warn('[Firestore] Initialization warning:', err);
   }
 
   return db;
 }
+
+export { db };
+
 
