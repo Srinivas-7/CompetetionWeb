@@ -302,7 +302,7 @@ export function OrganizersSection() {
               </div>
 
               {/* Sponsor 1 */}
-              <div style={{ marginBottom: '14px' }}>
+              <div style={{ marginBottom: '14px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <h3
                   style={{
                     fontFamily: 'var(--font-heading)',
@@ -321,11 +321,64 @@ export function OrganizersSection() {
                     fontWeight: 600,
                     color: 'var(--text-secondary)',
                     letterSpacing: '0.01em',
-                    margin: 0
+                    margin: '0 0 8px'
                   }}
                 >
                   (MLA, Vijayanagara – Hosapete)
                 </p>
+                <a
+                  href="https://www.instagram.com/mlahrgaviyappa"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    background: '#FDFBF7',
+                    border: '1px solid #E2D7C8',
+                    color: 'var(--maroon-primary)',
+                    padding: '6px 14px',
+                    borderRadius: 'var(--radius-pill)',
+                    fontSize: '0.78rem',
+                    fontFamily: 'var(--font-mono)',
+                    fontWeight: 700,
+                    letterSpacing: '0.01em',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
+                    transition: 'all 0.2s ease',
+                    textDecoration: 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'var(--maroon-primary)';
+                    e.currentTarget.style.color = '#FFFFFF';
+                    e.currentTarget.style.borderColor = 'var(--maroon-primary)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#FDFBF7';
+                    e.currentTarget.style.color = 'var(--maroon-primary)';
+                    e.currentTarget.style.borderColor = '#E2D7C8';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                  title="Honourable H R Gaviyappa on Instagram"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ flexShrink: 0 }}
+                  >
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
+                  <span>@mlahrgaviyappa</span>
+                </a>
               </div>
 
               {/* Divider */}
@@ -340,7 +393,7 @@ export function OrganizersSection() {
               />
 
               {/* Sponsor 2 */}
-              <div style={{ marginBottom: '14px' }}>
+              <div style={{ marginBottom: '14px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <h3
                   style={{
                     fontFamily: 'var(--font-heading)',
@@ -359,11 +412,64 @@ export function OrganizersSection() {
                     fontWeight: 600,
                     color: 'var(--text-secondary)',
                     letterSpacing: '0.01em',
-                    margin: 0
+                    margin: '0 0 8px'
                   }}
                 >
                   (Samaja Sevakaru, Hosapete)
                 </p>
+                <a
+                  href="https://www.instagram.com/hg_virupaksha_official_"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    background: '#FDFBF7',
+                    border: '1px solid #E2D7C8',
+                    color: 'var(--maroon-primary)',
+                    padding: '6px 14px',
+                    borderRadius: 'var(--radius-pill)',
+                    fontSize: '0.78rem',
+                    fontFamily: 'var(--font-mono)',
+                    fontWeight: 700,
+                    letterSpacing: '0.01em',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
+                    transition: 'all 0.2s ease',
+                    textDecoration: 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'var(--maroon-primary)';
+                    e.currentTarget.style.color = '#FFFFFF';
+                    e.currentTarget.style.borderColor = 'var(--maroon-primary)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#FDFBF7';
+                    e.currentTarget.style.color = 'var(--maroon-primary)';
+                    e.currentTarget.style.borderColor = '#E2D7C8';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                  title="H G Virupaksha on Instagram"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ flexShrink: 0 }}
+                  >
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
+                  <span>@hg_virupaksha_official_</span>
+                </a>
               </div>
             </div>
 
