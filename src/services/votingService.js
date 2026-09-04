@@ -261,8 +261,10 @@ class VotingService {
   }
 
   /**
-   * Subscribes to live counts directly from Firestore with multi-source resilient synchronization.
-   * Listens to top-level `/counters` documents, `/counters/.../shards`, and verifies with `/voters`.
+   * Subscribes to live counts directly from active Firestore voter documents in real time.
+   * DIRECT 1-to-1 CONNECTION:
+   * - When a vote is cast: document added in /voters -> count immediately increases by 1.
+   * - When a user/vote is deleted in Firestore: document removed -> count immediately decreases or resets to 0!
    * 
    * @param {function} callback - Receives { [pandhalId]: number }
    * @returns {function} Cleanup function
@@ -276,121 +278,49 @@ class VotingService {
       return () => {};
     }
 
-    const topCounts = {};
-    const shardCounts = {};
-    const voterCounts = {};
+    // Real-time listener directly on the /voters collection
+    const votersCol = collection(firestoreInstance, 'voters');
+    const unsubscribe = onSnapshot(
+      votersCol,
+      (snapshot) => {
+        const counts = {};
+        PANDHALS_DATA.forEach((p) => {
+          counts[p.id] = 0;
+        });
 
-    PANDHALS_DATA.forEach((p) => {
-      topCounts[p.id] = 0;
-      shardCounts[p.id] = 0;
-      voterCounts[p.id] = 0;
-    });
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          if (data?.pandhalId && counts[data.pandhalId] !== undefined) {
+            counts[data.pandhalId] += 1;
+          }
+        });
 
-    const notifyCombinedCounts = () => {
-      const merged = {};
-      PANDHALS_DATA.forEach((p) => {
-        const top = topCounts[p.id] || 0;
-        const shard = shardCounts[p.id] || 0;
-        const voter = voterCounts[p.id] || 0;
-        // Take the maximum verified count across all synchronization sources
-        merged[p.id] = Math.max(top, shard, voter);
-      });
-      this.countsCache = merged;
-      callback(merged);
-    };
-
-    // 1. Real-time Listener on top-level /counters (21 documents)
-    let unsubTopLevel = null;
-    try {
-      const countersCol = collection(firestoreInstance, 'counters');
-      unsubTopLevel = onSnapshot(
-        countersCol,
-        (snapshot) => {
-          snapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            const pid = docSnap.id;
-            const count = typeof data?.count === 'number' 
-              ? data.count 
-              : (typeof data?.totalVotes === 'number' ? data.totalVotes : 0);
-            if (topCounts[pid] !== undefined) {
-              topCounts[pid] = count;
-            }
-          });
-          notifyCombinedCounts();
-        },
-        (err) => {
-          console.warn('[VotingService] Top-level counters listener notice:', err);
-        }
-      );
-    } catch (err) {
-      console.warn('[VotingService] Setup top-level counters error:', err);
-    }
-
-    // 2. Real-time Listener on collectionGroup('shards')
-    let unsubShards = null;
-    try {
-      const shardsQuery = collectionGroup(firestoreInstance, 'shards');
-      unsubShards = onSnapshot(
-        shardsQuery,
-        (snapshot) => {
-          const tempShards = {};
-          PANDHALS_DATA.forEach((p) => { tempShards[p.id] = 0; });
-
-          snapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            const count = typeof data?.count === 'number' ? data.count : 0;
-            const pathSegments = docSnap.ref.path.split('/');
-            const pandhalId = pathSegments[1];
-
-            if (pandhalId && tempShards[pandhalId] !== undefined) {
-              tempShards[pandhalId] += count;
-            }
-          });
-
-          Object.keys(tempShards).forEach((k) => {
-            shardCounts[k] = tempShards[k];
-          });
-          notifyCombinedCounts();
-        },
-        (err) => {
-          console.warn('[VotingService] Shards listener notice:', err);
-        }
-      );
-    } catch (err) {
-      console.warn('[VotingService] Setup shards listener error:', err);
-    }
-
-    // 3. Direct Voter Document Sync (Scans /voters once on load to ensure all recorded votes count)
-    const scanVoters = async () => {
-      try {
-        const votersCol = collection(firestoreInstance, 'voters');
-        const snap = await getDocs(votersCol);
-        if (snap && !snap.empty) {
-          const tempVoters = {};
-          PANDHALS_DATA.forEach((p) => { tempVoters[p.id] = 0; });
-          snap.forEach((docSnap) => {
-            const data = docSnap.data();
-            if (data?.pandhalId && tempVoters[data.pandhalId] !== undefined) {
-              tempVoters[data.pandhalId] += 1;
-            }
-          });
-          Object.keys(tempVoters).forEach((k) => {
-            voterCounts[k] = tempVoters[k];
-          });
-          notifyCombinedCounts();
-        }
-      } catch (err) {
-        // Handled silently if voter collection read permissions are scoped
+        this.countsCache = counts;
+        callback(counts);
+      },
+      (err) => {
+        console.warn('[VotingService] Voters realtime listener warning:', err);
+        // Fallback to top-level counters if /voters collection listener encounters scoped permission
+        try {
+          const countersCol = collection(firestoreInstance, 'counters');
+          getDocs(countersCol).then((snap) => {
+            const counts = {};
+            PANDHALS_DATA.forEach((p) => { counts[p.id] = 0; });
+            snap.forEach((docSnap) => {
+              const data = docSnap.data();
+              const pid = docSnap.id;
+              const count = typeof data?.count === 'number' ? data.count : 0;
+              if (counts[pid] !== undefined) counts[pid] = count;
+            });
+            this.countsCache = counts;
+            callback(counts);
+          }).catch(() => {});
+        } catch {}
       }
-    };
-    scanVoters();
-
-    // Initial baseline broadcast
-    notifyCombinedCounts();
+    );
 
     return () => {
-      if (typeof unsubTopLevel === 'function') unsubTopLevel();
-      if (typeof unsubShards === 'function') unsubShards();
+      if (typeof unsubscribe === 'function') unsubscribe();
     };
   }
 }
