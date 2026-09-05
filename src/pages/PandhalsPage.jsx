@@ -3,6 +3,7 @@ import { PandhalGrid } from '../components/pandhal/PandhalGrid';
 import { Leaderboard } from '../components/leaderboard/Leaderboard';
 import { Modal } from '../components/common/Modal';
 import { useAuth } from '../context/AuthContext';
+import { useProgress } from '../hooks/useProgress';
 import { Footer } from '../components/common/Footer';
 
 export function PandhalsPage({
@@ -13,10 +14,12 @@ export function PandhalsPage({
   setSearchQuery,
   onCardClick,
   onVoteClick,
+  onProfileClick,
   onShuffle,
   onBack
 }) {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const { totalPoints } = useProgress(myVote);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   useEffect(() => {
@@ -93,22 +96,24 @@ export function PandhalsPage({
             </span>
           </div>
 
-          {/* User Profile / Status */}
+          {/* User Profile / Status - Clicking opens Profile & Progress Page */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
             {user && (
-              <div 
+              <button 
+                onClick={onProfileClick}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '5px',
-                  background: 'rgba(107, 20, 20, 0.08)',
-                  border: '1px solid rgba(107, 20, 20, 0.2)',
+                  background: '#FFFFFF',
+                  border: '1.5px solid var(--gold-primary)',
                   borderRadius: 'var(--radius-pill)',
-                  padding: '2px 8px 2px 2px',
-                  cursor: 'pointer'
+                  padding: '2px 8px 2px 3px',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 6px rgba(200, 157, 71, 0.18)',
+                  transition: 'all 0.12s ease'
                 }}
-                onClick={logout}
-                title={`Signed in as ${user.email}. Click to sign out.`}
+                title="View your Devotee Profile & Karma Progress"
               >
                 {user.photoURL ? (
                   <img 
@@ -117,17 +122,15 @@ export function PandhalsPage({
                     style={{ width: '20px', height: '20px', borderRadius: '50%', border: '1px solid var(--gold-primary)' }}
                   />
                 ) : (
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8, color: 'var(--maroon-primary)' }}>
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                  </svg>
+                  <span style={{ fontSize: '12px' }}>👤</span>
                 )}
                 <span 
                   style={{ 
                     fontFamily: 'var(--font-sans)', 
-                    fontSize: '0.66rem', 
-                    fontWeight: 700, 
+                    fontSize: '0.68rem', 
+                    fontWeight: 800, 
                     color: 'var(--maroon-primary)', 
-                    maxWidth: '70px', 
+                    maxWidth: '75px', 
                     overflow: 'hidden', 
                     textOverflow: 'ellipsis', 
                     whiteSpace: 'nowrap' 
@@ -135,7 +138,21 @@ export function PandhalsPage({
                 >
                   {user.displayName?.split(' ')[0] || user.email?.split('@')[0]}
                 </span>
-              </div>
+                <span 
+                  style={{ 
+                    fontFamily: 'var(--font-mono)', 
+                    fontSize: '0.66rem', 
+                    fontWeight: 900, 
+                    color: 'var(--maroon-dark)',
+                    background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
+                    padding: '1px 5px',
+                    borderRadius: 'var(--radius-pill)',
+                    border: '1px solid var(--gold-primary)'
+                  }}
+                >
+                  🪙 {totalPoints}
+                </span>
+              </button>
             )}
           </div>
         </div>

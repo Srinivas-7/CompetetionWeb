@@ -5,13 +5,15 @@ import { Footer } from '../components/common/Footer';
 
 export function Home({ 
   totalVotes = 0,
-  onExploreClick
+  onExploreClick,
+  onProfileClick
 }) {
   return (
     <div style={{ background: 'var(--bg-page)', color: '#ffffff', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* 1. Grand Hero & Interactive CTA */}
       <Hero 
         onExploreClick={onExploreClick} 
+        onProfileClick={onProfileClick}
         totalVotes={totalVotes}
       />
 

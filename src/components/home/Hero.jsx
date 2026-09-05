@@ -1,8 +1,10 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useProgress } from '../../hooks/useProgress';
 
-export function Hero({ onExploreClick, totalVotes = 0 }) {
-  const { user, logout } = useAuth();
+export function Hero({ onExploreClick, onProfileClick, totalVotes = 0 }) {
+  const { user } = useAuth();
+  const { totalPoints } = useProgress();
 
   return (
     <div style={{ background: 'var(--bg-page)', color: 'var(--text-primary)', overflow: 'hidden' }}>
@@ -62,21 +64,23 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
 
           {/* Right User Profile + Live Pill + Quick Action */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-            {/* Logged in Google User Pill */}
+            {/* Logged in Google User Pill - Clicking opens Profile & Progress Page */}
             {user && (
-              <div 
+              <button 
+                onClick={onProfileClick}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '5px',
-                  background: 'rgba(107, 20, 20, 0.08)',
-                  border: '1px solid rgba(107, 20, 20, 0.2)',
+                  gap: '6px',
+                  background: '#FFFFFF',
+                  border: '1.5px solid var(--gold-primary)',
                   borderRadius: 'var(--radius-pill)',
-                  padding: '2px 8px 2px 2px',
-                  cursor: 'pointer'
+                  padding: '3px 10px 3px 4px',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 6px rgba(200, 157, 71, 0.2)',
+                  transition: 'all 0.12s ease'
                 }}
-                onClick={logout}
-                title={`Signed in as ${user.email}. Click to sign out.`}
+                title="View your Devotee Profile & Progress Points"
               >
                 {user.photoURL ? (
                   <img 
@@ -85,17 +89,15 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                     style={{ width: '22px', height: '22px', borderRadius: '50%', border: '1px solid var(--gold-primary)' }}
                   />
                 ) : (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8, color: 'var(--maroon-primary)' }}>
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                  </svg>
+                  <span style={{ fontSize: '13px' }}>👤</span>
                 )}
                 <span 
                   style={{ 
                     fontFamily: 'var(--font-sans)', 
-                    fontSize: '0.68rem', 
-                    fontWeight: 700, 
+                    fontSize: '0.72rem', 
+                    fontWeight: 800, 
                     color: 'var(--maroon-primary)', 
-                    maxWidth: '80px', 
+                    maxWidth: '85px', 
                     overflow: 'hidden', 
                     textOverflow: 'ellipsis', 
                     whiteSpace: 'nowrap' 
@@ -103,8 +105,21 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                 >
                   {user.displayName?.split(' ')[0] || user.email?.split('@')[0]}
                 </span>
-                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>✕</span>
-              </div>
+                <span 
+                  style={{ 
+                    fontFamily: 'var(--font-mono)', 
+                    fontSize: '0.68rem', 
+                    fontWeight: 900, 
+                    color: 'var(--maroon-dark)',
+                    background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
+                    padding: '1px 6px',
+                    borderRadius: 'var(--radius-pill)',
+                    border: '1px solid var(--gold-primary)'
+                  }}
+                >
+                  🪙 {totalPoints}
+                </span>
+              </button>
             )}
 
             <button

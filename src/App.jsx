@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Home } from './pages/Home';
 import { PandhalsPage } from './pages/PandhalsPage';
 import { VotePage } from './pages/VotePage';
+import { ProgressPage } from './pages/ProgressPage';
 import { PandhalDetails } from './components/pandhal/PandhalDetails';
 import { AuthProvider } from './context/AuthContext';
 import { AuthGate } from './components/auth/AuthGate';
@@ -10,6 +11,7 @@ import { usePandhal } from './hooks/usePandhal';
 import { useAuth } from './context/AuthContext';
 import { pandhalService } from './services/pandhalService';
 import { votingService } from './services/votingService';
+import { progressService } from './services/progressService';
 
 function MainDashboard() {
   const { user } = useAuth();
@@ -23,7 +25,7 @@ function MainDashboard() {
     shuffle
   } = usePandhal(liveCounts);
 
-  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'pandhals' | 'vote'
+  const [currentPage, setCurrentPage] = useState('home'); // 'home' | 'pandhals' | 'vote' | 'progress'
   const [selectedGalleryId, setSelectedGalleryId] = useState(null);
   const [selectedVoteId, setSelectedVoteId] = useState(null);
   const [myVote, setMyVote] = useState(null);
@@ -44,11 +46,18 @@ function MainDashboard() {
     };
   }, [user?.uid]);
 
-  // Deep-link hash handler (#pandhals, #pandhal-XX, #vote-pandhal-XX)
+  // Deep-link hash handler (#pandhals, #progress, #profile, #pandhal-XX, #vote-pandhal-XX)
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '');
       
+      if (hash === 'progress' || hash === 'profile') {
+        setCurrentPage('progress');
+        setSelectedGalleryId(null);
+        setSelectedVoteId(null);
+        return;
+      }
+
       if (hash.startsWith('vote-')) {
         const id = hash.replace('vote-', '');
         const target = pandhalService.getPandhalById(id);
@@ -105,6 +114,9 @@ function MainDashboard() {
 
   const handleOpenGallery = (id) => {
     setSelectedGalleryId(id);
+    if (user?.uid) {
+      progressService.recordPandhalVisit(user.uid, id);
+    }
     if (history.pushState) {
       history.pushState(null, null, `#${id}`);
     }
@@ -138,7 +150,19 @@ function MainDashboard() {
     setMyVote(votingService.getMyVote());
   };
 
-  // 1. DEDICATED VOTE PAGE
+  // 1. DEDICATED DEVOTEE PROGRESS & PROFILE PAGE
+  if (currentPage === 'progress') {
+    return (
+      <ProgressPage 
+        myVote={myVote}
+        onBack={() => navigateTo('pandhals', 'pandhals')}
+        onExploreClick={() => navigateTo('pandhals', 'pandhals')}
+        onVoteClick={(id) => id ? handleOpenVote(id) : navigateTo('pandhals', 'pandhals')}
+      />
+    );
+  }
+
+  // 2. DEDICATED VOTE PAGE
   if (currentPage === 'vote' && selectedVotePandhal) {
     return (
       <VotePage 
@@ -149,7 +173,7 @@ function MainDashboard() {
     );
   }
 
-  // 2. DEDICATED PANDHALS LIST PAGE
+  // 3. DEDICATED PANDHALS LIST PAGE
   if (currentPage === 'pandhals') {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -161,6 +185,7 @@ function MainDashboard() {
           setSearchQuery={setSearchQuery}
           onCardClick={handleOpenGallery}
           onVoteClick={handleOpenVote}
+          onProfileClick={() => navigateTo('progress', 'progress')}
           onShuffle={shuffle}
           onBack={() => navigateTo('home')}
         />
@@ -179,12 +204,13 @@ function MainDashboard() {
     );
   }
 
-  // 3. HOME LANDING PAGE
+  // 4. HOME LANDING PAGE
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Home 
         totalVotes={totalVotes}
         onExploreClick={() => navigateTo('pandhals', 'pandhals')}
+        onProfileClick={() => navigateTo('progress', 'progress')}
       />
     </div>
   );
