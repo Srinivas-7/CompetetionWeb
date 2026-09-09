@@ -6,41 +6,42 @@ service cloud.firestore {
     // =========================================================================
     // GANAPATHI TRAIL 2026 - PRODUCTION SECURITY RULES
     // 
-    // - Public live leaderboard counter reads (authenticated and guest)
-    // - Authenticated Google Identity (request.auth.uid) for voting
-    // - 1 vote per UID per event with distributed + top-level counter synchronization
+    // - All writes MUST go through backend Firebase Admin API (/api/vote)
+    // - NO direct browser writes allowed to ANY collection (voters, counters, shards)
+    // - Authenticated users can read only their own ballot record
+    // - Shards and counters are publicly readable or queried via /api/counters
     // =========================================================================
 
-    // 1. Top-Level Counters (21 Pandhals)
+    // 1. Sharded Counters & Top-Level Counters (Read-only, writes forbidden from browser)
     match /counters/{pandhalId} {
       allow read: if true;
-      allow write: if request.auth != null;
-    }
-
-    // 2. Sharded Counters (21 Pandhals × 10 Shards = 210 Shards)
-    match /{path=**}/shards/{shardId} {
-      allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if false;
     }
 
     match /counters/{pandhalId}/shards/{shardId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if false;
     }
 
-    // 3. Voter Ballot Records
-    match /voters/{voterDocId} {
-      // Allow voters to read their ballot status (and public aggregate verification)
+    match /{path=**}/shards/{shardId} {
       allow read: if true;
-      
-      // Allow authenticated user to write their ballot
-      allow write: if request.auth != null;
+      allow write: if false;
     }
 
-    // 4. Default collection access
+    // 2. Voter Ballot Records
+    match /voters/{voterDocId} {
+      // Allow users to read only their own ballot document
+      allow read: if request.auth != null && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid);
+      
+      // Absolutely NO direct browser writes (must go through /api/vote with verifyIdToken)
+      allow write: if false;
+    }
+
+    // 3. Default fallback: deny all writes
     match /{document=**} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if false;
     }
   }
 }
+

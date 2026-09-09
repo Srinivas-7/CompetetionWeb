@@ -11,7 +11,7 @@ import {
   type Auth, 
   type User 
 } from 'firebase/auth';
-import { initializeAppCheck, ReCaptchaV3Provider, type AppCheck } from 'firebase/app-check';
+import { initializeAppCheck, ReCaptchaV3Provider, getToken, type AppCheck } from 'firebase/app-check';
 
 // Client-side Firebase configuration from VITE_ environment variables
 const apiKey = import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyBxqgieHExe8CpvjfZZebh3yt22R7-_Tg4";
@@ -108,3 +108,18 @@ if (typeof window !== 'undefined') {
   }
 }
 export const appCheck = appCheckInstance;
+
+/**
+ * Retrieves a valid Firebase App Check token for authenticating client requests.
+ */
+export async function getAppCheckToken(forceRefresh = false): Promise<string | null> {
+  if (!appCheckInstance) return null;
+  try {
+    const tokenResult = await getToken(appCheckInstance, forceRefresh);
+    return tokenResult?.token || null;
+  } catch (err) {
+    console.warn('[Firebase AppCheck] Token retrieval warning:', err);
+    return null;
+  }
+}
+

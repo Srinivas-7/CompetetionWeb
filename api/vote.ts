@@ -41,19 +41,64 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  // 3. Optional Firebase App Check Verification
-  const appCheckToken = req.headers['x-firebase-appcheck'];
-  if (typeof appCheckToken === 'string' && appCheckToken.trim().length > 0) {
+  // 3. Strict Firebase App Check Verification
+  const appCheckToken = (req.headers['x-firebase-appcheck'] || req.headers['X-Firebase-AppCheck']) as string | undefined;
+  const isDevelopment = process.env.NODE_ENV === 'development' && process.env.APP_CHECK_ENFORCED !== 'true';
+
+  if (!isDevelopment) {
+    if (!appCheckToken || typeof appCheckToken !== 'string' || appCheckToken.trim().length === 0) {
+      return res.status(401).json({
+        success: false,
+        error: 'MISSING_APP_CHECK_TOKEN',
+        message: 'App Check token is missing. Access is restricted to authentic client applications.',
+      });
+    }
+
     try {
-      await adminAppCheck.verifyToken(appCheckToken);
+      await adminAppCheck.verifyToken(appCheckToken.trim());
+    } catch (appCheckErr: any) {
+      console.error('[AppCheck Error] Token verification failed:', appCheckErr?.message || appCheckErr);
+      return res.status(401).json({
+        success: false,
+        error: 'INVALID_APP_CHECK_TOKEN',
+        message: 'App Check token verification failed. Access is denied for unauthorized or modified client environments.',
+      });
+    }
+  } else if (appCheckToken && typeof appCheckToken === 'string' && appCheckToken.trim().length > 0) {
+    // In development mode, verify if provided
+    try {
+      await adminAppCheck.verifyToken(appCheckToken.trim());
     } catch (appCheckErr) {
-      console.warn('[AppCheck Warning] Token verification failed:', appCheckErr);
-      // Log for audit; do not block legitimate browser clients if AppCheck is optional
+      console.warn('[AppCheck Dev Warning] Token verification warning in dev mode:', appCheckErr);
     }
   }
 
   // 4. Input Payload Extraction & Validation
-  const { idToken, pandhalId, pandhalName, voterName } = req.body || {};
+  let body = req.body;
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body);
+    } catch {
+      return res.status(400).json({
+        success: false,
+        error: 'MALFORMED_JSON',
+        message: 'Invalid JSON request payload.',
+      });
+    }
+  }
+
+  const { idToken: bodyToken, pandhalId, pandhalName, voterName } = body || {};
+
+  // Extract token from Authorization header if present, else fallback to bodyToken
+  let idToken = bodyToken;
+  const authHeader = req.headers['authorization'] || req.headers['Authorization'];
+  if (typeof authHeader === 'string' && authHeader.trim().length > 0) {
+    if (authHeader.startsWith('Bearer ')) {
+      idToken = authHeader.substring(7).trim();
+    } else {
+      idToken = authHeader.trim();
+    }
+  }
 
   if (!idToken || typeof idToken !== 'string' || idToken.trim().length === 0) {
     return res.status(401).json({
