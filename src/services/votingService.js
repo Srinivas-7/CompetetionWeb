@@ -1,7 +1,7 @@
 import { isValidPandhalId } from '../utils/validation';
 import { PANDHALS_DATA } from '../data/pandhals';
 import { auth, db, getAppCheckToken } from '../lib/firebase';
-import { doc, onSnapshot, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot, getDoc, collectionGroup, getDocs } from 'firebase/firestore';
 
 const EVENT_ID = 'ganapathi_chaturthi_2026';
 
@@ -162,6 +162,11 @@ class VotingService {
         };
         this.myVoteCache = voteRecord;
 
+        // Optimistically increment live count for instant UI feedback
+        if (!data.idempotent && this.countsCache[pandhalId] !== undefined) {
+          this.countsCache[pandhalId] += 1;
+        }
+
         return {
           success: true,
           message: data.message || `Your vote for ${pandhalName} is successfully locked!`,
@@ -223,13 +228,16 @@ class VotingService {
   /**
    * Fetches latest aggregated shard counts from the serverless edge endpoint (/api/counters).
    * Edge-cached for 20s (stale-while-revalidate=60s).
+   * Automatically falls back to direct Firestore shard queries in local dev or network failure.
    * 
    * @returns {Promise<{counts: Record<string, number>, totalVotes: number}>}
    */
   async fetchLiveCounts() {
+    // 1. Primary: Serverless Edge endpoint with CDN caching
     try {
       const response = await fetch('/api/counters');
-      if (response.ok) {
+      const contentType = response.headers.get('content-type') || '';
+      if (response.ok && contentType.includes('application/json')) {
         const data = await response.json();
         if (data.success && data.counts) {
           this.countsCache = { ...this.countsCache, ...data.counts };
@@ -240,7 +248,40 @@ class VotingService {
         }
       }
     } catch (err) {
-      console.warn('[VotingService] fetchLiveCounts warning:', err);
+      // API endpoint unavailable or in local Vite dev
+    }
+
+    // 2. Direct Firestore fallback (reads 210 public shards directly)
+    // Ensures real-time vote totals display seamlessly in local dev, preview, or edge cache miss
+    if (db) {
+      try {
+        const shardsSnapshot = await getDocs(collectionGroup(db, 'shards'));
+        const directCounts = {};
+        PANDHALS_DATA.forEach((p) => {
+          directCounts[p.id] = 0;
+        });
+
+        shardsSnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const count = typeof data.count === 'number' ? data.count : 0;
+          const pathSegments = docSnap.ref.path.split('/');
+          const pandhalId = pathSegments[1];
+
+          if (pandhalId && directCounts[pandhalId] !== undefined) {
+            directCounts[pandhalId] += count;
+          }
+        });
+
+        let total = 0;
+        Object.values(directCounts).forEach((v) => {
+          total += v;
+        });
+
+        this.countsCache = { ...this.countsCache, ...directCounts };
+        return { counts: this.countsCache, totalVotes: total };
+      } catch (firestoreErr) {
+        console.warn('[VotingService] direct Firestore fallback warning:', firestoreErr?.message || firestoreErr);
+      }
     }
 
     let total = 0;
