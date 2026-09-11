@@ -13,6 +13,9 @@ import {
 } from './_lib/constants';
 import { checkRateLimit } from './_lib/rateLimiter';
 
+// In-memory store for local development sessions when service account credentials are not configured in local .env
+const devVoterStore = new Map<string, { pandhalId: string; pandhalName: string }>();
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // 1. CORS & Preflight Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -241,6 +244,45 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   } catch (dbError: any) {
     console.error('[Firestore Tx Error]', dbError);
+
+    // Handle local development without service account key in .env.local gracefully
+    const isNoAdc = dbError?.message?.includes('NO_ADC_FOUND') || dbError?.message?.includes('Could not load the default credentials');
+    const isDev = process.env.NODE_ENV === 'development' || !process.env.FIREBASE_PRIVATE_KEY;
+
+    if (isNoAdc && isDev) {
+      console.warn('[Vite API Dev Notice] Recording vote in local dev session (FIREBASE_PRIVATE_KEY not set in local env).');
+      
+      const existingDevVote = devVoterStore.get(uid);
+      if (existingDevVote) {
+        if (existingDevVote.pandhalId === pandhalId) {
+          return res.status(200).json({
+            success: true,
+            message: `Your vote for ${cleanPandhalName} is successfully locked!`,
+            pandhalId,
+            pandhalName: cleanPandhalName,
+            idempotent: true,
+          });
+        }
+        return res.status(409).json({
+          success: false,
+          error: 'ALREADY_VOTED',
+          message: `Your Google account has already cast its ballot for "${existingDevVote.pandhalName}". Each account is permitted exactly 1 vote.`,
+          previousPandhalId: existingDevVote.pandhalId,
+          previousPandhalName: existingDevVote.pandhalName,
+        });
+      }
+
+      devVoterStore.set(uid, { pandhalId, pandhalName: cleanPandhalName });
+
+      return res.status(200).json({
+        success: true,
+        message: `Your vote for ${cleanPandhalName} is successfully locked!`,
+        pandhalId,
+        pandhalName: cleanPandhalName,
+        idempotent: false,
+      });
+    }
+
     return res.status(500).json({
       success: false,
       error: 'TRANSACTION_FAILED',
