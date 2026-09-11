@@ -47,24 +47,33 @@
   --gradient-cyber: linear-gradient(135deg, #6B1414 0%, #4A0E17 100%);
   --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(253, 251, 247, 0.7) 100%);
 
-  /* Warm Borders & Elegant Shadows */
-  --border-subtle: 1px solid #EADECB;
-  --border-thick: 1.5px solid #EADECB;
-  --border-gold: 1.5px solid #C89D47;
-  --border-maroon: 1.5px solid #6B1414;
-  --border-neon-pink: 1.5px solid #6B1414;
-  --border-neon-lime: 1.5px solid #C89D47;
-  --border-neon-cyan: 1.5px solid #6B1414;
+  /* Warm Borders & Hard Neo-Brutalist Boundaries */
+  --border-subtle: 1.5px solid #EADECB;
+  --border-thick: 2px solid var(--maroon-dark);
+  --border-gold: 2px solid var(--gold-primary);
+  --border-maroon: 2px solid var(--maroon-primary);
+  --border-neon-pink: 2px solid var(--maroon-primary);
+  --border-neon-lime: 2px solid var(--gold-primary);
+  --border-neon-cyan: 2px solid var(--maroon-primary);
+  --border-dark: 2px solid #1A1A1A;
 
-  --shadow-card: 0 4px 16px rgba(91, 20, 20, 0.07);
-  --shadow-card-hover: 0 8px 24px rgba(91, 20, 20, 0.14);
-  --shadow-button: 0 4px 14px rgba(107, 20, 20, 0.35);
-  --shadow-gold: 0 4px 14px rgba(200, 157, 71, 0.3);
+  /* Hard Offset Tactile Neo-Brutalist Shadows (No Blur) */
+  --shadow-card: 4px 4px 0px var(--maroon-dark);
+  --shadow-card-hover: 7px 7px 0px var(--maroon-dark);
+  --shadow-button: 3px 3px 0px var(--maroon-dark);
+  --shadow-button-hover: 5px 5px 0px var(--maroon-dark);
+  --shadow-gold: 4px 4px 0px var(--gold-dark);
   
-  --shadow-3d-pink: 0 4px 14px rgba(107, 20, 20, 0.35);
-  --shadow-3d-lime: 0 4px 14px rgba(22, 163, 74, 0.3);
-  --shadow-3d-cyan: 0 4px 14px rgba(107, 20, 20, 0.35);
-  --shadow-3d-white: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --shadow-3d-pink: 4px 4px 0px var(--maroon-dark);
+  --shadow-3d-lime: 4px 4px 0px var(--maroon-dark);
+  --shadow-3d-cyan: 4px 4px 0px var(--maroon-dark);
+  --shadow-3d-white: 3px 3px 0px var(--maroon-dark);
+
+  --shadow-brutal-sm: 2px 2px 0px var(--maroon-dark);
+  --shadow-brutal: 4px 4px 0px var(--maroon-dark);
+  --shadow-brutal-lg: 6px 6px 0px var(--maroon-dark);
+  --shadow-brutal-xl: 8px 8px 0px var(--maroon-dark);
+  --shadow-brutal-gold: 4px 4px 0px var(--gold-dark);
 
   /* Typography */
   --font-display: 'Unbounded', system-ui, sans-serif;
@@ -73,11 +82,11 @@
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'Space Grotesk', monospace;
 
-  /* Sizing */
-  --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-pill: 9999px;
+  /* Geometric Neo-Brutalist Radii */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-pill: 4px;
   --container-max: 1240px;
 }

@@ -27,17 +27,18 @@ export function PandhalInfo({ pandhal }) {
       </div>
       <div 
         style={{
-          fontSize: '0.78rem',
+          fontSize: '0.8rem',
           color: 'var(--ivory-cream)',
-          background: 'rgba(255, 215, 0, 0.08)',
-          borderLeft: '3px solid var(--gold-primary)',
-          padding: '6px 10px',
-          borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
+          background: 'rgba(200, 157, 71, 0.12)',
+          border: '1.5px solid var(--gold-primary)',
+          boxShadow: '2px 2px 0px var(--gold-primary)',
+          padding: '8px 10px',
+          borderRadius: 'var(--radius-xs)',
           marginTop: '6px',
           lineHeight: 1.35
         }}
       >
-        <strong>Theme:</strong> {pandhal.theme} (Est. {pandhal.establishedYear})
+        <strong style={{ color: 'var(--gold-light)' }}>THEME:</strong> {pandhal.theme} (Est. {pandhal.establishedYear})
       </div>
     </div>
   );

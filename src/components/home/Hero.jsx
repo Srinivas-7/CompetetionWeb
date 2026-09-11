@@ -12,11 +12,9 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           position: 'sticky',
           top: 0,
           zIndex: 80,
-          background: 'rgba(251, 247, 240, 0.94)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          borderBottom: '1.5px solid #EADECB',
-          padding: '10px 14px'
+          background: '#FBF7F0',
+          borderBottom: '2.5px solid var(--maroon-dark)',
+          padding: '10px 16px'
         }}
       >
         <div 
@@ -26,7 +24,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '8px'
+            gap: '10px'
           }}
         >
           {/* Logo Badge */}
@@ -35,11 +33,12 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               src="/assets/cute-bappa-logo.jpg" 
               alt="Bappa Utsav Logo" 
               style={{
-                width: '34px',
-                height: '34px',
-                borderRadius: '50%',
+                width: '36px',
+                height: '36px',
+                borderRadius: '4px',
                 objectFit: 'cover',
-                border: '1.5px solid var(--gold-primary)',
+                border: '2px solid var(--maroon-dark)',
+                boxShadow: '2px 2px 0px var(--maroon-dark)',
                 display: 'block',
                 flexShrink: 0
               }}
@@ -48,9 +47,9 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               <span 
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontWeight: 800,
-                  fontSize: '0.94rem',
-                  letterSpacing: '-0.02em',
+                  fontWeight: 900,
+                  fontSize: '0.96rem',
+                  letterSpacing: '-0.03em',
                   color: 'var(--maroon-primary)',
                   whiteSpace: 'nowrap'
                 }}
@@ -61,18 +60,19 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           </div>
 
           {/* Right User Profile + Live Pill + Quick Action */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
             {/* Logged in Google User Pill */}
             {user && (
               <div 
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '5px',
-                  background: 'rgba(107, 20, 20, 0.08)',
-                  border: '1px solid rgba(107, 20, 20, 0.2)',
-                  borderRadius: 'var(--radius-pill)',
-                  padding: '2px 8px 2px 2px',
+                  gap: '6px',
+                  background: '#FFFFFF',
+                  border: '1.5px solid var(--maroon-dark)',
+                  boxShadow: '2px 2px 0px var(--maroon-dark)',
+                  borderRadius: '4px',
+                  padding: '3px 8px 3px 4px',
                   cursor: 'pointer'
                 }}
                 onClick={logout}
@@ -82,7 +82,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                   <img 
                     src={user.photoURL} 
                     alt={user.displayName || 'User'} 
-                    style={{ width: '22px', height: '22px', borderRadius: '50%', border: '1px solid var(--gold-primary)' }}
+                    style={{ width: '22px', height: '22px', borderRadius: '2px', border: '1px solid var(--maroon-dark)' }}
                   />
                 ) : (
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8, color: 'var(--maroon-primary)' }}>
@@ -92,10 +92,10 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                 <span 
                   style={{ 
                     fontFamily: 'var(--font-sans)', 
-                    fontSize: '0.68rem', 
-                    fontWeight: 700, 
+                    fontSize: '0.7rem', 
+                    fontWeight: 800, 
                     color: 'var(--maroon-primary)', 
-                    maxWidth: '80px', 
+                    maxWidth: '85px', 
                     overflow: 'hidden', 
                     textOverflow: 'ellipsis', 
                     whiteSpace: 'nowrap' 
@@ -103,7 +103,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                 >
                   {user.displayName?.split(' ')[0] || user.email?.split('@')[0]}
                 </span>
-                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>✕</span>
+                <span style={{ fontSize: '0.6rem', fontWeight: 900, color: 'var(--maroon-dark)' }}>✕</span>
               </div>
             )}
 
@@ -112,13 +112,12 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               className="btn-3d-pink"
               style={{
                 padding: '6px 14px',
-                fontSize: '0.74rem',
+                fontSize: '0.78rem',
                 fontFamily: 'var(--font-display)',
+                fontWeight: 900,
+                letterSpacing: '0.04em',
                 whiteSpace: 'nowrap',
-                flexShrink: 0,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '3px'
+                flexShrink: 0
               }}
             >
               <span>VOTE</span>
@@ -132,27 +131,24 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         style={{
           maxWidth: 'var(--container-max)',
           margin: '0 auto',
-          padding: '28px 16px 24px',
+          padding: '32px 16px 28px',
           textAlign: 'center',
           position: 'relative'
         }}
       >
         {/* Official Utsav Sticker */}
-        <div style={{ marginBottom: '18px' }}>
+        <div style={{ marginBottom: '20px' }}>
           <span 
+            className="brutal-badge"
             style={{
-              display: 'inline-block',
               background: '#FDF6E2',
               color: 'var(--maroon-primary)',
-              border: '1.5px solid var(--gold-primary)',
-              boxShadow: '0 2px 8px rgba(200, 157, 71, 0.25)',
-              fontFamily: 'var(--font-mono)',
-              fontWeight: 800,
+              border: '2px solid var(--maroon-dark)',
+              boxShadow: '3px 3px 0px var(--maroon-dark)',
               fontSize: '0.76rem',
-              letterSpacing: '0.06em',
+              letterSpacing: '0.08em',
               padding: '6px 14px',
-              borderRadius: 'var(--radius-pill)',
-              textTransform: 'uppercase'
+              borderRadius: '4px'
             }}
           >
             ★ BAPPA UTSAV 2026 ★
@@ -160,26 +156,25 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         </div>
 
         {/* Regal Gajotsava Logo Emblem Card */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '22px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
           <div 
             style={{
               position: 'relative',
               background: '#FFFFFF',
-              borderRadius: '20px',
+              borderRadius: '6px',
               padding: '8px',
-              border: '2px solid var(--gold-primary)',
-              boxShadow: '0 8px 24px rgba(107, 20, 20, 0.12), 0 0 16px rgba(200, 157, 71, 0.25)',
-              maxWidth: 'clamp(170px, 45vw, 220px)',
+              border: '2.5px solid var(--maroon-dark)',
+              boxShadow: '6px 6px 0px var(--maroon-dark)',
+              maxWidth: 'clamp(180px, 45vw, 230px)',
               width: '100%',
               boxSizing: 'border-box'
             }}
           >
-            {/* Inner Gold Inset Border */}
             <div 
               style={{
-                borderRadius: '14px',
+                borderRadius: '4px',
                 overflow: 'hidden',
-                border: '1px solid rgba(200, 157, 71, 0.4)',
+                border: '1.5px solid var(--gold-primary)',
                 background: '#FAF7F2',
                 display: 'flex',
                 alignItems: 'center',
@@ -193,7 +188,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                   width: '100%',
                   height: 'auto',
                   display: 'block',
-                  borderRadius: '13px'
+                  borderRadius: '3px'
                 }}
               />
             </div>
@@ -203,30 +198,30 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         {/* Massive Display Typography */}
         <h1 
           style={{
-            fontSize: 'clamp(2rem, 7.5vw, 3.1rem)',
-            lineHeight: 1.1,
+            fontSize: 'clamp(2.1rem, 8vw, 3.4rem)',
+            lineHeight: 1.08,
             fontFamily: 'var(--font-display)',
-            fontWeight: 800,
-            letterSpacing: '-0.035em',
-            margin: '0 0 14px',
+            fontWeight: 900,
+            letterSpacing: '-0.04em',
+            margin: '0 0 16px',
             textTransform: 'uppercase',
             color: 'var(--text-primary)'
           }}
         >
           <div>ONE CITY.</div>
-          <div className="gradient-text-hyper">21 BAPPAS.</div>
-          <div style={{ color: 'var(--maroon-primary)' }}>ONE VOTE.</div>
+          <div style={{ color: 'var(--maroon-primary)', textDecoration: 'underline', textDecorationColor: 'var(--gold-primary)', textUnderlineOffset: '6px' }}>21 BAPPAS.</div>
+          <div style={{ color: 'var(--text-primary)' }}>ONE VOTE.</div>
         </h1>
 
         {/* Subtext */}
         <p 
           style={{
-            fontSize: '0.96rem',
+            fontSize: '0.98rem',
             lineHeight: 1.55,
             color: 'var(--text-secondary)',
-            maxWidth: '460px',
-            margin: '0 auto 26px',
-            fontWeight: 500
+            maxWidth: '480px',
+            margin: '0 auto 28px',
+            fontWeight: 600
           }}
         >
           Explore full 4K photo collections, artisan stories, eco-cleanliness checks, and cast your verified community vote in real-time.

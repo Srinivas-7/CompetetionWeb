@@ -25,21 +25,18 @@ export function OrganizersSection() {
       <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto' }}>
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{ marginBottom: '10px' }}>
+          <div style={{ marginBottom: '12px' }}>
             <span
+              className="brutal-badge"
               style={{
-                display: 'inline-block',
-                background: 'rgba(200, 157, 71, 0.18)',
+                background: 'rgba(200, 157, 71, 0.22)',
                 color: 'var(--gold-light)',
-                border: '1px solid var(--gold-primary)',
-                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.25)',
-                fontFamily: 'var(--font-mono)',
-                fontWeight: 800,
-                fontSize: '0.78rem',
+                border: '1.5px solid var(--gold-primary)',
+                boxShadow: '3px 3px 0px var(--gold-dark)',
+                fontSize: '0.76rem',
                 letterSpacing: '0.08em',
                 padding: '6px 14px',
-                borderRadius: 'var(--radius-pill)',
-                textTransform: 'uppercase'
+                borderRadius: '4px'
               }}
             >
               ★ ORGANISERS &amp; SPONSORS ★
@@ -49,11 +46,12 @@ export function OrganizersSection() {
           <h2
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
+              fontSize: 'clamp(1.6rem, 4.5vw, 2.3rem)',
               fontWeight: 900,
               margin: '0 0 8px',
-              letterSpacing: '-0.02em',
-              color: '#FFFFFF'
+              letterSpacing: '-0.03em',
+              color: '#FFFFFF',
+              textTransform: 'uppercase'
             }}
           >
             Organised With Devotion &amp; Vision
@@ -61,11 +59,12 @@ export function OrganizersSection() {
 
           <p
             style={{
-              fontSize: '0.92rem',
-              color: 'rgba(255, 255, 255, 0.8)',
+              fontSize: '0.94rem',
+              color: 'rgba(255, 255, 255, 0.85)',
               margin: '0 auto',
               maxWidth: '520px',
-              lineHeight: 1.5
+              lineHeight: 1.5,
+              fontWeight: 500
             }}
           >
             Honoring the organizing team and our esteemed event sponsors bringing together the 21 Grand Pandhals of Chaturthi 2026.
@@ -78,7 +77,7 @@ export function OrganizersSection() {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 420px))',
             justifyContent: 'center',
-            gap: '24px',
+            gap: '28px',
             margin: '0 auto'
           }}
         >
@@ -87,42 +86,38 @@ export function OrganizersSection() {
             style={{
               background: '#FFFFFF',
               color: 'var(--text-primary)',
-              border: '1.5px solid var(--gold-primary)',
-              borderRadius: '20px',
+              border: '2.5px solid var(--gold-primary)',
+              borderRadius: '4px',
               overflow: 'hidden',
-              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.3)',
+              boxShadow: '6px 6px 0px #000000',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
               padding: '28px 24px',
               textAlign: 'center',
               position: 'relative',
-              transition: 'transform 0.25s ease, box-shadow 0.25s ease'
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 18px 40px rgba(0, 0, 0, 0.4)';
+              e.currentTarget.style.transform = 'translate(-2px, -2px)';
+              e.currentTarget.style.boxShadow = '9px 9px 0px #000000';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 12px 32px rgba(0, 0, 0, 0.3)';
+              e.currentTarget.style.transform = 'translate(0, 0)';
+              e.currentTarget.style.boxShadow = '6px 6px 0px #000000';
             }}
           >
             <div style={{ position: 'relative', zIndex: 1 }}>
               {/* Organizer Badge */}
               <div style={{ marginBottom: '18px' }}>
                 <span
+                  className="brutal-badge"
                   style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
                     background: 'var(--maroon-primary)',
                     color: '#FFFFFF',
                     fontSize: '0.78rem',
-                    fontWeight: 800,
-                    fontFamily: 'var(--font-mono)',
                     padding: '5px 14px',
-                    borderRadius: 'var(--radius-pill)',
+                    borderRadius: '4px',
                     letterSpacing: '0.06em'
                   }}
                 >

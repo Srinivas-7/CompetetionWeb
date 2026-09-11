@@ -18,10 +18,11 @@ export const PandhalCard = memo(function PandhalCard({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        borderRadius: 'var(--radius-md)',
+        borderRadius: '4px',
         background: '#FFFFFF',
-        border: '1px solid #EADECB',
-        boxShadow: '0 4px 16px rgba(91, 20, 20, 0.07)'
+        border: '2px solid var(--maroon-dark)',
+        boxShadow: '4px 4px 0px var(--maroon-dark)',
+        transition: 'transform 0.12s ease, box-shadow 0.12s ease'
       }}
     >
       {/* 1. Photo Stage */}
@@ -34,7 +35,7 @@ export const PandhalCard = memo(function PandhalCard({
           position: 'relative',
           background: '#F5EFEB',
           cursor: 'pointer',
-          borderBottom: '1.5px solid #EADECB'
+          borderBottom: '2px solid var(--maroon-dark)'
         }}
       >
         <img 
@@ -78,11 +79,12 @@ export const PandhalCard = memo(function PandhalCard({
               background: 'var(--maroon-primary)',
               color: '#FFFFFF',
               fontFamily: 'var(--font-mono)',
-              fontWeight: 800,
-              fontSize: 'clamp(0.65rem, 1.8vw, 0.78rem)',
-              padding: '2px 8px',
-              borderRadius: '4px',
-              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)'
+              fontWeight: 900,
+              fontSize: 'clamp(0.68rem, 1.8vw, 0.8rem)',
+              padding: '2px 7px',
+              borderRadius: '2px',
+              border: '1.5px solid var(--maroon-dark)',
+              boxShadow: '2px 2px 0px var(--maroon-dark)'
             }}
           >
             #{String(pandhal.number).padStart(2, '0')}
@@ -93,17 +95,18 @@ export const PandhalCard = memo(function PandhalCard({
               position: 'absolute',
               top: '6px',
               right: '6px',
-              background: 'rgba(0, 0, 0, 0.65)',
-              color: '#FFFFFF',
+              background: '#FFFFFF',
+              color: 'var(--maroon-dark)',
               fontFamily: 'var(--font-mono)',
-              fontSize: 'clamp(0.6rem, 1.5vw, 0.72rem)',
-              fontWeight: 700,
+              fontSize: 'clamp(0.62rem, 1.5vw, 0.74rem)',
+              fontWeight: 900,
               padding: '2px 7px',
-              borderRadius: 'var(--radius-pill)',
+              borderRadius: '2px',
+              border: '1.5px solid var(--maroon-dark)',
+              boxShadow: '2px 2px 0px var(--maroon-dark)',
               display: 'flex',
               alignItems: 'center',
-              gap: '4px',
-              backdropFilter: 'blur(4px)'
+              gap: '4px'
             }}
           >
             <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.9 }}>
@@ -120,13 +123,15 @@ export const PandhalCard = memo(function PandhalCard({
             bottom: '6px',
             left: '6px',
             fontFamily: 'var(--font-mono)',
-            fontSize: 'clamp(0.58rem, 1.4vw, 0.7rem)',
+            fontSize: 'clamp(0.6rem, 1.4vw, 0.72rem)',
+            background: 'var(--maroon-dark)',
             color: '#FFFFFF',
-            fontWeight: 700,
+            padding: '1px 5px',
+            borderRadius: '2px',
+            fontWeight: 800,
             display: 'flex',
             alignItems: 'center',
-            gap: '3px',
-            textShadow: '0 1px 3px rgba(0,0,0,0.8)'
+            gap: '3px'
           }}
         >
           <span>GALLERY</span>
@@ -136,12 +141,12 @@ export const PandhalCard = memo(function PandhalCard({
       {/* 2. Card Content & Live Voting Section */}
       <div 
         style={{ 
-          padding: 'clamp(8px, 1.8vw, 14px)', 
+          padding: 'clamp(10px, 2vw, 14px)', 
           display: 'flex', 
           flexDirection: 'column', 
           flex: 1,
           justifyContent: 'space-between',
-          gap: '8px',
+          gap: '10px',
           background: '#FFFFFF'
         }}
       >
@@ -149,12 +154,12 @@ export const PandhalCard = memo(function PandhalCard({
         <div onClick={() => onCardClick(pandhal.id)} style={{ cursor: 'pointer' }}>
           <h3 
             style={{ 
-              fontSize: 'clamp(0.78rem, 2.2vw, 1.05rem)', 
+              fontSize: 'clamp(0.82rem, 2.2vw, 1.05rem)', 
               fontFamily: 'var(--font-heading)',
-              fontWeight: 800, 
+              fontWeight: 900, 
               color: 'var(--text-primary)', 
-              margin: '0 0 3px',
-              lineHeight: 1.25,
+              margin: '0 0 4px',
+              lineHeight: 1.22,
               letterSpacing: '-0.02em',
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -168,8 +173,9 @@ export const PandhalCard = memo(function PandhalCard({
 
           <p 
             style={{ 
-              fontSize: 'clamp(0.65rem, 1.6vw, 0.78rem)', 
+              fontSize: 'clamp(0.66rem, 1.6vw, 0.78rem)', 
               color: 'var(--text-secondary)', 
+              fontWeight: 600,
               margin: 0,
               display: 'flex',
               alignItems: 'center',
@@ -193,20 +199,21 @@ export const PandhalCard = memo(function PandhalCard({
             justifyContent: 'space-between',
             alignItems: 'center',
             background: 'var(--bg-cream-accent)',
-            border: '1px solid #EADECB',
-            borderRadius: '6px',
-            padding: '4px 6px',
+            border: '1.5px solid var(--maroon-dark)',
+            borderRadius: '3px',
+            padding: '4px 8px',
             gap: '4px'
           }}
         >
           <span 
             style={{ 
               fontFamily: 'var(--font-mono)', 
-              fontSize: 'clamp(0.56rem, 1.4vw, 0.68rem)', 
-              color: 'var(--text-secondary)', 
-              fontWeight: 700, 
+              fontSize: 'clamp(0.58rem, 1.4vw, 0.7rem)', 
+              color: 'var(--text-primary)', 
+              fontWeight: 800, 
               whiteSpace: 'nowrap', 
-              flexShrink: 0
+              flexShrink: 0,
+              letterSpacing: '0.04em'
             }}
           >
             VOTES
@@ -217,10 +224,11 @@ export const PandhalCard = memo(function PandhalCard({
               background: 'var(--maroon-primary)',
               color: '#FFFFFF',
               fontWeight: 900,
-              fontSize: 'clamp(0.62rem, 1.5vw, 0.74rem)',
+              fontSize: 'clamp(0.66rem, 1.5vw, 0.78rem)',
               padding: '2px 8px',
-              borderRadius: 'var(--radius-pill)',
-              boxShadow: '0 1px 4px rgba(107, 20, 20, 0.3)',
+              borderRadius: '2px',
+              border: '1px solid var(--maroon-dark)',
+              boxShadow: '1px 1px 0px var(--maroon-dark)',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -244,27 +252,35 @@ export const PandhalCard = memo(function PandhalCard({
               width: '100%',
               background: hasVoted ? 'var(--green-emerald)' : 'var(--maroon-primary)',
               color: '#FFFFFF',
-              border: hasVoted ? '1px solid var(--green-dark)' : '1px solid var(--maroon-dark)',
-              boxShadow: hasVoted ? '0 2px 6px rgba(22, 163, 74, 0.35)' : '0 2px 8px rgba(107, 20, 20, 0.35)',
-              borderRadius: 'var(--radius-pill)',
-              padding: 'clamp(6px, 1.4vw, 9px) 4px',
+              border: '2px solid var(--maroon-dark)',
+              boxShadow: '2.5px 2.5px 0px var(--maroon-dark)',
+              borderRadius: '3px',
+              padding: 'clamp(7px, 1.5vw, 10px) 4px',
               fontFamily: 'var(--font-display)',
               fontWeight: 900,
-              fontSize: 'clamp(0.66rem, 1.6vw, 0.8rem)',
-              letterSpacing: '0.02em',
+              fontSize: 'clamp(0.7rem, 1.6vw, 0.84rem)',
+              letterSpacing: '0.04em',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '3px',
+              gap: '4px',
               whiteSpace: 'nowrap',
-              transition: 'background 0.15s ease, transform 0.12s ease'
+              transition: 'transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease'
             }}
             onMouseEnter={(e) => {
               if (!hasVoted) e.currentTarget.style.background = 'var(--maroon-hover)';
+              e.currentTarget.style.transform = 'translate(-1px, -1px)';
+              e.currentTarget.style.boxShadow = '4px 4px 0px var(--maroon-dark)';
             }}
             onMouseLeave={(e) => {
               if (!hasVoted) e.currentTarget.style.background = 'var(--maroon-primary)';
+              e.currentTarget.style.transform = 'translate(0, 0)';
+              e.currentTarget.style.boxShadow = '2.5px 2.5px 0px var(--maroon-dark)';
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.transform = 'translate(1.5px, 1.5px)';
+              e.currentTarget.style.boxShadow = '1px 1px 0px var(--maroon-dark)';
             }}
           >
             <span>{hasVoted ? '✓ LOCKED' : 'VOTE'}</span>

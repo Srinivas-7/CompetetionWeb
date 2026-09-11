@@ -8,10 +8,11 @@ export function Footer() {
       style={{
         marginTop: 'auto',
         background: 'var(--maroon-dark)',
-        borderTop: '2px solid var(--gold-primary)',
-        padding: '32px 16px 28px',
+        borderTop: '3.5px solid var(--gold-primary)',
+        boxShadow: '0 -3px 0px var(--maroon-dark)',
+        padding: '36px 16px 30px',
         textAlign: 'center',
-        color: 'rgba(255, 255, 255, 0.8)'
+        color: 'rgba(255, 255, 255, 0.9)'
       }}
     >
       <div
@@ -29,15 +30,16 @@ export function Footer() {
           <img 
             src="/assets/cute-bappa-logo.jpg" 
             alt="Bappa Utsav" 
-            style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--gold-primary)', display: 'block' }}
+            style={{ width: '32px', height: '32px', borderRadius: '4px', objectFit: 'cover', border: '2px solid var(--gold-primary)', boxShadow: '2px 2px 0px var(--gold-primary)', display: 'block' }}
           />
           <span 
             style={{
               fontFamily: 'var(--font-heading)',
-              fontWeight: 800,
-              fontSize: '1rem',
-              letterSpacing: '-0.02em',
-              color: '#FFFFFF'
+              fontWeight: 900,
+              fontSize: '1.05rem',
+              letterSpacing: '-0.01em',
+              color: '#FFFFFF',
+              textTransform: 'uppercase'
             }}
           >
             BAPPA<span style={{ color: 'var(--gold-primary)' }}> UTSAV</span>
@@ -45,17 +47,17 @@ export function Footer() {
         </div>
 
         {/* Tagline */}
-        <p style={{ margin: 0, fontSize: '0.84rem', color: 'rgba(255, 255, 255, 0.7)' }}>
+        <p style={{ margin: 0, fontSize: '0.86rem', color: 'rgba(255, 255, 255, 0.85)', fontWeight: 600, letterSpacing: '0.02em' }}>
           Chaturthi 2026 • Celebrating Devotion, Art &amp; Tradition
         </p>
 
         {/* Divider */}
         <div 
           style={{
-            height: '1px',
+            height: '2px',
             width: '60px',
             background: 'var(--gold-primary)',
-            margin: '4px 0'
+            margin: '6px 0'
           }}
         />
 
@@ -64,7 +66,8 @@ export function Footer() {
           style={{
             margin: 0,
             fontSize: '0.82rem',
-            fontFamily: 'var(--font-sans)',
+            fontFamily: 'var(--font-mono)',
+            fontWeight: 700,
             color: 'rgba(255, 255, 255, 0.6)'
           }}
         >
