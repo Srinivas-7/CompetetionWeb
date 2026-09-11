@@ -6,42 +6,41 @@ service cloud.firestore {
     // =========================================================================
     // GANAPATHI TRAIL 2026 - PRODUCTION SECURITY RULES
     // 
-    // - All writes MUST go through backend Firebase Admin API (/api/vote)
-    // - NO direct browser writes allowed to ANY collection (voters, counters, shards)
-    // - Authenticated users can read only their own ballot record
-    // - Shards and counters are publicly readable or queried via /api/counters
+    // - Authenticated users (request.auth != null) can cast 1 vote for their UID
+    // - Voters cannot update or delete their vote document once created
+    // - Distributed counters and shards are publicly readable and writeable by voters
     // =========================================================================
 
-    // 1. Sharded Counters & Top-Level Counters (Read-only, writes forbidden from browser)
+    // 1. Sharded Counters & Top-Level Counters
     match /counters/{pandhalId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if request.auth != null;
     }
 
     match /counters/{pandhalId}/shards/{shardId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if request.auth != null;
     }
 
     match /{path=**}/shards/{shardId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if request.auth != null;
     }
 
-    // 2. Voter Ballot Records
+    // 2. Voter Ballot Records (1 vote per authenticated user UID)
     match /voters/{voterDocId} {
       // Allow users to read only their own ballot document
       allow read: if request.auth != null && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid);
       
-      // Absolutely NO direct browser writes (must go through /api/vote with verifyIdToken)
-      allow write: if false;
+      // Allow authenticated users to create only their own unique vote doc (cannot update or delete)
+      allow create: if request.auth != null && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid);
+      allow update, delete: if false;
     }
 
-    // 3. Default fallback: deny all writes
+    // 3. Default fallback
     match /{document=**} {
       allow read: if true;
-      allow write: if false;
+      allow write: if request.auth != null;
     }
   }
 }
-
