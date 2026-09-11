@@ -367,7 +367,7 @@ export const PANDHALS_DATA = [
     location: "Town Hall Ground, Court Road",
     establishedYear: 1935,
     theme: "The Grand Royal Throne of Maharashtra",
-    description: "The crowning glory of Ganapathi Trail! The oldest, grandest 25-foot idol seated on an emperor's simhasan with 108 golden kalash towers.",
+    description: "The crowning glory of Bappa Utsav 2026! The oldest, grandest 25-foot idol seated on an emperor's simhasan with 108 golden kalash towers.",
     badge: "Crown of the City",
     photos: [
       { id: "p21-1", type: "bappa", title: "25-Foot Maha Raja Supreme Idol", src: "/pandhals/pandhal-21/cover.webp", alt: "Maha Raja Central Idol" },

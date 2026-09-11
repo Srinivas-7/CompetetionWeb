@@ -1,12 +1,20 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { FieldValue } from 'firebase-admin/firestore';
 import { adminAuth, adminDb, adminAppCheck } from './_lib/firebaseAdmin';
-import { isValidPandhalId, NUM_SHARDS, EVENT_ID, getDeterministicShardIndex } from './_lib/constants';
+import { 
+  isValidPandhalId, 
+  NUM_SHARDS, 
+  EVENT_ID, 
+  getDeterministicShardIndex,
+  RATE_LIMIT_IP_MAX,
+  RATE_LIMIT_IP_WINDOW_MS,
+  RATE_LIMIT_UID_MAX,
+  RATE_LIMIT_UID_WINDOW_MS
+} from './_lib/constants';
 import { checkRateLimit } from './_lib/rateLimiter';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // 1. CORS & Preflight Headers
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader(
@@ -30,7 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const forwarded = req.headers['x-forwarded-for'];
   const clientIp = typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : req.socket?.remoteAddress || 'unknown';
   
-  const rateLimit = checkRateLimit(clientIp, 15, 60000); // 15 requests/min per IP
+  const rateLimit = checkRateLimit(clientIp, RATE_LIMIT_IP_MAX, RATE_LIMIT_IP_WINDOW_MS);
   if (!rateLimit.allowed) {
     res.setHeader('Retry-After', String(rateLimit.retryAfterSec || 30));
     return res.status(429).json({
@@ -130,11 +138,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const { uid, email, name: tokenName } = decodedToken;
-  const verifiedVoterName = tokenName || voterName || email?.split('@')[0] || 'Devotee';
+  const rawVoterName = typeof voterName === 'string' ? voterName.trim().slice(0, 80) : '';
+  const verifiedVoterName = (typeof tokenName === 'string' && tokenName.trim().slice(0, 80)) || rawVoterName || email?.split('@')[0] || 'Devotee';
+  const cleanPandhalName = typeof pandhalName === 'string' ? pandhalName.trim().slice(0, 100) : pandhalId;
   const voterDocId = `${EVENT_ID}_${uid}`;
 
   // 5b. Authenticated UID-based Abuse Rate Limiter
-  const uidRateLimit = checkRateLimit(`uid:${uid}`, 6, 60000); // 6 attempts/min per user
+  const uidRateLimit = checkRateLimit(`uid:${uid}`, RATE_LIMIT_UID_MAX, RATE_LIMIT_UID_WINDOW_MS);
   if (!uidRateLimit.allowed) {
     res.setHeader('Retry-After', String(uidRateLimit.retryAfterSec || 15));
     return res.status(429).json({
@@ -172,7 +182,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return {
             status: 'IDEMPOTENT_SUCCESS',
             pandhalId,
-            pandhalName: existingData.pandhalName || pandhalName || pandhalId,
+            pandhalName: existingData.pandhalName || cleanPandhalName || pandhalId,
           };
         }
         // Duplicate vote for a different pandhal
@@ -189,7 +199,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         email: email || '',
         voterName: verifiedVoterName,
         pandhalId,
-        pandhalName: pandhalName || pandhalId,
+        pandhalName: cleanPandhalName,
         eventId: EVENT_ID,
         votedAt: FieldValue.serverTimestamp(),
         ip: clientIp,
@@ -207,7 +217,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return {
         status: 'SUCCESS',
         pandhalId,
-        pandhalName: pandhalName || pandhalId,
+        pandhalName: cleanPandhalName,
       };
     });
 
@@ -233,8 +243,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error('[Firestore Tx Error]', dbError);
     return res.status(500).json({
       success: false,
-      error: dbError?.code || 'TRANSACTION_FAILED',
-      message: dbError?.message || 'Failed to record vote due to high server traffic. Please retry in a moment.',
+      error: 'TRANSACTION_FAILED',
+      message: 'Failed to record vote due to high server traffic. Please retry in a moment.',
     });
   }
 }

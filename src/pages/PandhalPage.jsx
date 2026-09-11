@@ -12,7 +12,7 @@ export function PandhalPage({
       <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--gold-light)' }}>
         <h3>Pandhal Not Found</h3>
         <button onClick={onBackToTrail} style={{ marginTop: '16px' }} className="festive-btn">
-          Back to Trail
+          Back to Pandhals
         </button>
       </div>
     );

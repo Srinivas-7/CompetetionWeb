@@ -28,7 +28,7 @@ export function Footer() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <img 
             src="/assets/cute-bappa-logo.jpg" 
-            alt="Bappa Trail" 
+            alt="Bappa Utsav" 
             style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--gold-primary)', display: 'block' }}
           />
           <span 
@@ -40,7 +40,7 @@ export function Footer() {
               color: '#FFFFFF'
             }}
           >
-            BAPPA<span style={{ color: 'var(--gold-primary)' }}>TRAIL</span>
+            BAPPA<span style={{ color: 'var(--gold-primary)' }}> UTSAV</span>
           </span>
         </div>
 
@@ -68,7 +68,7 @@ export function Footer() {
             color: 'rgba(255, 255, 255, 0.6)'
           }}
         >
-          &copy; {currentYear} Bappa Trail. All Rights Reserved.
+          &copy; {currentYear} Bappa Utsav. All Rights Reserved.
         </p>
       </div>
     </footer>

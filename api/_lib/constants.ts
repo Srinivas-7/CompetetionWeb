@@ -36,6 +36,19 @@ export function isValidPandhalId(id: string): id is ValidPandhalId {
 const envShards = parseInt(process.env.NUM_SHARDS || '', 10);
 export const NUM_SHARDS = !isNaN(envShards) && envShards >= 3 && envShards <= 50 ? envShards : 10;
 
+// Configurable Rate Limit Thresholds
+const envIpLimit = parseInt(process.env.RATE_LIMIT_IP_MAX || '', 10);
+export const RATE_LIMIT_IP_MAX = !isNaN(envIpLimit) && envIpLimit > 0 ? envIpLimit : 15;
+
+const envIpWindow = parseInt(process.env.RATE_LIMIT_IP_WINDOW_MS || '', 10);
+export const RATE_LIMIT_IP_WINDOW_MS = !isNaN(envIpWindow) && envIpWindow > 0 ? envIpWindow : 60000;
+
+const envUidLimit = parseInt(process.env.RATE_LIMIT_UID_MAX || '', 10);
+export const RATE_LIMIT_UID_MAX = !isNaN(envUidLimit) && envUidLimit > 0 ? envUidLimit : 6;
+
+const envUidWindow = parseInt(process.env.RATE_LIMIT_UID_WINDOW_MS || '', 10);
+export const RATE_LIMIT_UID_WINDOW_MS = !isNaN(envUidWindow) && envUidWindow > 0 ? envUidWindow : 60000;
+
 /**
  * Deterministic, cryptographically uniform shard selection.
  * Uses SHA-256 hash of (eventId + uid + pandhalId) to guarantee:

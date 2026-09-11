@@ -57,7 +57,7 @@ export function VoteSuccess({
           onClick={onDoneClick}
           style={{ width: '100%' }}
         >
-          Continue Exploring Trail
+          Continue Exploring Pandhals
         </Button>
       </div>
     </div>

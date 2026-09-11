@@ -76,7 +76,7 @@ export function PandhalsPage({
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
             <img 
               src="/assets/cute-bappa-logo.jpg" 
-              alt="Bappa Trail" 
+              alt="Bappa Utsav" 
               style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--gold-primary)', display: 'block' }}
             />
             <span 
@@ -89,7 +89,7 @@ export function PandhalsPage({
                 whiteSpace: 'nowrap'
               }}
             >
-              BAPPA<span style={{ color: 'var(--gold-primary)' }}>TRAIL</span>
+              BAPPA<span style={{ color: 'var(--gold-primary)' }}> UTSAV</span>
             </span>
           </div>
 
@@ -340,7 +340,7 @@ export function PandhalsPage({
         isOpen={showLeaderboard} 
         onClose={() => setShowLeaderboard(false)}
         maxWidth="680px"
-        ariaLabel="Live Trail Leaderboard"
+        ariaLabel="Live Leaderboard"
       >
         <Leaderboard 
           liveCounts={liveCounts}

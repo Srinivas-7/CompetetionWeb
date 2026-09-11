@@ -85,17 +85,17 @@ export function VotePage({
             }}
           >
             <span>←</span>
-            <span>Back to Trail</span>
+            <span>Back to Pandhals</span>
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <img 
               src="/assets/cute-bappa-logo.jpg" 
-              alt="Bappa Trail" 
+              alt="Bappa Utsav" 
               style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--gold-primary)', display: 'block' }}
             />
             <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.92rem', color: 'var(--maroon-primary)' }}>
-              BAPPA<span style={{ color: 'var(--gold-primary)' }}>TRAIL</span>
+              BAPPA<span style={{ color: 'var(--gold-primary)' }}> UTSAV</span>
             </span>
           </div>
         </div>
@@ -272,7 +272,7 @@ export function VotePage({
                 >
                   Your Google account has already cast its 1 unique vote for <strong>{myVote.pandhalName}</strong>.
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                    Each Google account is permitted 1 vote across the trail.
+                    Each Google account is permitted 1 vote across the celebration.
                   </div>
                 </div>
               ) : (

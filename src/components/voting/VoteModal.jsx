@@ -206,7 +206,7 @@ export function VoteModal({
               >
                 Your Google account has already voted for <strong>{myVote.pandhalName}</strong>. 
                 <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                  Each Google account can cast exactly 1 vote across the trail.
+                  Each Google account can cast exactly 1 vote across the celebration.
                 </div>
               </div>
             ) : (
@@ -324,7 +324,7 @@ export function VoteModal({
                 cursor: 'pointer'
               }}
             >
-              <span>CONTINUE EXPLORING TRAIL</span>
+              <span>CONTINUE EXPLORING PANDHALS</span>
             </button>
           </div>
         )}

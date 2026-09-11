@@ -74,7 +74,7 @@ export function AuthGate({ children }) {
           }}
         />
         <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.2rem', marginBottom: '4px', color: 'var(--maroon-primary)' }}>
-          CONNECTING TO BAPPA TRAIL
+          CONNECTING TO BAPPA UTSAV
         </div>
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
           Verifying your Google session…
@@ -130,7 +130,7 @@ export function AuthGate({ children }) {
                 textTransform: 'uppercase'
               }}
             >
-              ★ CHATURTHI 2026 OFFICIAL TRAIL ★
+              ★ BAPPA UTSAV 2026 ★
             </span>
           </div>
 
@@ -165,7 +165,7 @@ export function AuthGate({ children }) {
               color: 'var(--maroon-primary)'
             }}
           >
-            BAPPA<span style={{ color: 'var(--gold-primary)' }}>TRAIL</span>
+            BAPPA<span style={{ color: 'var(--gold-primary)' }}> UTSAV</span>
           </h1>
 
           <p 
@@ -177,7 +177,7 @@ export function AuthGate({ children }) {
               fontWeight: 600
             }}
           >
-            Enjoy, vote for your beloved Bappa, and visit them across the grand trail.
+            Enjoy, vote for your beloved Bappa, and celebrate the grand festival.
           </p>
 
           {/* Error Message */}

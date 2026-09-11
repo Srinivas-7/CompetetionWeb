@@ -33,7 +33,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
             <img 
               src="/assets/cute-bappa-logo.jpg" 
-              alt="Bappa Trail Logo" 
+              alt="Bappa Utsav Logo" 
               style={{
                 width: '34px',
                 height: '34px',
@@ -55,7 +55,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                   whiteSpace: 'nowrap'
                 }}
               >
-                BAPPA<span style={{ color: 'var(--gold-primary)' }}>TRAIL</span>
+                BAPPA<span style={{ color: 'var(--gold-primary)' }}> UTSAV</span>
               </span>
             </div>
           </div>
@@ -137,7 +137,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           position: 'relative'
         }}
       >
-        {/* Official Trail Sticker */}
+        {/* Official Utsav Sticker */}
         <div style={{ marginBottom: '18px' }}>
           <span 
             style={{
@@ -155,7 +155,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               textTransform: 'uppercase'
             }}
           >
-            ★ CHATURTHI 2026 OFFICIAL TRAIL ★
+            ★ BAPPA UTSAV 2026 ★
           </span>
         </div>
 
