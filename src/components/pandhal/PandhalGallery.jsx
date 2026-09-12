@@ -69,32 +69,29 @@ export function PandhalGallery({
     <div 
       style={{
         background: '#FFFFFF',
-        border: '3px solid var(--maroon-dark)',
-        borderRadius: 'var(--radius-xs)',
+        border: '1.5px solid #EADECB',
+        borderRadius: '24px',
         padding: '24px 20px',
         color: 'var(--text-primary)',
         position: 'relative',
-        boxShadow: '6px 6px 0px var(--maroon-dark)',
+        boxShadow: '0 12px 36px rgba(91, 20, 20, 0.12)',
         maxWidth: '720px',
         margin: '0 auto'
       }}
     >
       {/* Header Info */}
-      <div style={{ marginBottom: '18px', textAlign: 'center', paddingRight: '24px', paddingLeft: '24px' }}>
+      <div style={{ marginBottom: '16px', textAlign: 'center', paddingRight: '24px', paddingLeft: '24px' }}>
         <span 
           style={{
             display: 'inline-block',
             background: 'var(--maroon-primary)',
             color: '#FFFFFF',
-            border: '1.5px solid var(--maroon-dark)',
-            boxShadow: '2px 2px 0px var(--maroon-dark)',
             fontFamily: 'var(--font-mono)',
-            fontWeight: 900,
+            fontWeight: 800,
             fontSize: '0.74rem',
-            padding: '3px 8px',
-            borderRadius: 'var(--radius-xs)',
-            marginBottom: '8px',
-            letterSpacing: '0.04em'
+            padding: '2px 8px',
+            borderRadius: '4px',
+            marginBottom: '6px'
           }}
         >
           #{String(pandhal.number).padStart(2, '0')} OFFICIAL
@@ -103,20 +100,18 @@ export function PandhalGallery({
         <h2 
           style={{
             fontFamily: 'var(--font-heading)',
-            fontSize: 'clamp(1.3rem, 4.5vw, 1.75rem)',
-            fontWeight: 900,
+            fontSize: 'clamp(1.25rem, 4vw, 1.6rem)',
+            fontWeight: 800,
             color: 'var(--text-primary)',
-            margin: '0 0 6px',
-            lineHeight: 1.15,
-            textTransform: 'uppercase',
-            letterSpacing: '-0.01em'
+            margin: '0 0 4px',
+            lineHeight: 1.2
           }}
         >
           {pandhal.name}
         </h2>
 
-        <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-          {pandhal.location} • <span style={{ color: 'var(--maroon-primary)', fontWeight: 800 }}>{pandhal.theme}</span>
+        <p style={{ margin: 0, fontSize: '0.86rem', color: 'var(--text-secondary)' }}>
+          {pandhal.location} • <span style={{ color: 'var(--maroon-primary)', fontWeight: 700 }}>{pandhal.theme}</span>
         </p>
       </div>
 
@@ -129,12 +124,12 @@ export function PandhalGallery({
           position: 'relative',
           width: '100%',
           aspectRatio: '16 / 11',
-          borderRadius: 'var(--radius-xs)',
+          borderRadius: '16px',
           overflow: 'hidden',
           backgroundColor: '#F5EFEB',
-          border: '2.5px solid var(--maroon-dark)',
+          border: '1px solid #EADECB',
           margin: '0 auto 16px',
-          boxShadow: '4px 4px 0px var(--maroon-dark)'
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)'
         }}
       >
         <img 
@@ -158,28 +153,19 @@ export function PandhalGallery({
                 left: '10px',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                background: '#FFFFFF',
+                background: 'rgba(255, 255, 255, 0.85)',
                 color: 'var(--maroon-primary)',
-                border: '2px solid var(--maroon-dark)',
+                border: '1px solid #EADECB',
                 width: '36px',
                 height: '36px',
-                borderRadius: 'var(--radius-xs)',
+                borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1.2rem',
-                fontWeight: 900,
+                fontSize: '1.1rem',
+                fontWeight: 800,
                 cursor: 'pointer',
-                boxShadow: '2px 2px 0px var(--maroon-dark)',
-                transition: 'transform 0.08s ease, box-shadow 0.08s ease'
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = 'translateY(-50%) translate(1px, 1px)';
-                e.currentTarget.style.boxShadow = '1px 1px 0px var(--maroon-dark)';
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = 'translateY(-50%) translate(0, 0)';
-                e.currentTarget.style.boxShadow = '2px 2px 0px var(--maroon-dark)';
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
               }}
               aria-label="Previous photo"
             >
@@ -193,28 +179,19 @@ export function PandhalGallery({
                 right: '10px',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                background: '#FFFFFF',
+                background: 'rgba(255, 255, 255, 0.85)',
                 color: 'var(--maroon-primary)',
-                border: '2px solid var(--maroon-dark)',
+                border: '1px solid #EADECB',
                 width: '36px',
                 height: '36px',
-                borderRadius: 'var(--radius-xs)',
+                borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1.2rem',
-                fontWeight: 900,
+                fontSize: '1.1rem',
+                fontWeight: 800,
                 cursor: 'pointer',
-                boxShadow: '2px 2px 0px var(--maroon-dark)',
-                transition: 'transform 0.08s ease, box-shadow 0.08s ease'
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = 'translateY(-50%) translate(1px, 1px)';
-                e.currentTarget.style.boxShadow = '1px 1px 0px var(--maroon-dark)';
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = 'translateY(-50%) translate(0, 0)';
-                e.currentTarget.style.boxShadow = '2px 2px 0px var(--maroon-dark)';
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
               }}
               aria-label="Next photo"
             >
@@ -230,15 +207,14 @@ export function PandhalGallery({
               position: 'absolute',
               bottom: '10px',
               right: '10px',
-              background: 'var(--maroon-dark)',
+              background: 'rgba(0, 0, 0, 0.7)',
               color: '#FFFFFF',
-              border: '1.5px solid #FFFFFF',
-              boxShadow: '2px 2px 0px rgba(0, 0, 0, 0.4)',
               fontFamily: 'var(--font-mono)',
               fontSize: '0.72rem',
-              fontWeight: 800,
+              fontWeight: 700,
               padding: '3px 8px',
-              borderRadius: 'var(--radius-xs)'
+              borderRadius: 'var(--radius-pill)',
+              backdropFilter: 'blur(4px)'
             }}
           >
             {selectedPhotoIndex + 1} / {totalPhotos}
@@ -265,10 +241,9 @@ export function PandhalGallery({
               style={{
                 width: '52px',
                 height: '52px',
-                borderRadius: 'var(--radius-xs)',
+                borderRadius: '8px',
                 overflow: 'hidden',
-                border: idx === selectedPhotoIndex ? '2.5px solid var(--maroon-primary)' : '1.5px solid #EADECB',
-                boxShadow: idx === selectedPhotoIndex ? '2px 2px 0px var(--maroon-dark)' : 'none',
+                border: idx === selectedPhotoIndex ? '2px solid var(--maroon-primary)' : '1px solid #EADECB',
                 padding: 0,
                 cursor: 'pointer',
                 opacity: idx === selectedPhotoIndex ? 1 : 0.6,
@@ -296,29 +271,18 @@ export function PandhalGallery({
             flex: 1,
             background: 'var(--maroon-primary)',
             color: '#FFFFFF',
-            border: '2.5px solid var(--maroon-dark)',
-            borderRadius: 'var(--radius-xs)',
-            padding: '14px 20px',
+            border: '1px solid var(--maroon-dark)',
+            borderRadius: 'var(--radius-pill)',
+            padding: '13px 20px',
             fontFamily: 'var(--font-display)',
             fontWeight: 900,
-            fontSize: '0.96rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.04em',
+            fontSize: '0.94rem',
             cursor: 'pointer',
-            boxShadow: '4px 4px 0px var(--maroon-dark)',
+            boxShadow: '0 4px 14px rgba(107, 20, 20, 0.35)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '6px',
-            transition: 'transform 0.08s ease, box-shadow 0.08s ease'
-          }}
-          onMouseDown={(e) => {
-            e.currentTarget.style.transform = 'translate(2px, 2px)';
-            e.currentTarget.style.boxShadow = '2px 2px 0px var(--maroon-dark)';
-          }}
-          onMouseUp={(e) => {
-            e.currentTarget.style.transform = 'translate(0, 0)';
-            e.currentTarget.style.boxShadow = '4px 4px 0px var(--maroon-dark)';
+            gap: '6px'
           }}
         >
           <span>VOTE FOR THIS PANDHAL →</span>
@@ -328,27 +292,15 @@ export function PandhalGallery({
           <button
             onClick={onClose}
             style={{
-              background: 'var(--ivory-warm)',
-              border: '2px solid var(--maroon-dark)',
-              color: 'var(--maroon-primary)',
-              borderRadius: 'var(--radius-xs)',
-              padding: '14px 20px',
+              background: '#FDFBF7',
+              border: '1px solid #EADECB',
+              color: 'var(--text-secondary)',
+              borderRadius: 'var(--radius-pill)',
+              padding: '13px 18px',
               fontFamily: 'var(--font-mono)',
-              fontWeight: 900,
-              fontSize: '0.86rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
-              cursor: 'pointer',
-              boxShadow: '3px 3px 0px var(--maroon-dark)',
-              transition: 'transform 0.08s ease, box-shadow 0.08s ease'
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.transform = 'translate(1px, 1px)';
-              e.currentTarget.style.boxShadow = '1px 1px 0px var(--maroon-dark)';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.transform = 'translate(0, 0)';
-              e.currentTarget.style.boxShadow = '3px 3px 0px var(--maroon-dark)';
+              fontWeight: 800,
+              fontSize: '0.84rem',
+              cursor: 'pointer'
             }}
           >
             Close

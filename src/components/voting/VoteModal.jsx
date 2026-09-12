@@ -46,17 +46,17 @@ export function VoteModal({
     <Modal isOpen={isOpen} onClose={isSubmitting ? () => {} : onClose} ariaLabel="Vote for Bappa">
       <div 
         style={{
-          background: 'var(--bg-card)',
-          border: '3px solid var(--maroon-dark)',
-          borderRadius: 'var(--radius-xs)',
+          background: '#121522',
+          border: '1.5px solid rgba(255, 255, 255, 0.16)',
+          borderRadius: '24px',
           maxWidth: '430px',
           width: '100%',
           padding: '28px 20px',
           position: 'relative',
           textAlign: 'center',
           boxSizing: 'border-box',
-          boxShadow: '6px 6px 0px var(--maroon-dark)',
-          color: 'var(--text-primary)'
+          boxShadow: '0 12px 36px rgba(0, 0, 0, 0.6)',
+          color: '#ffffff'
         }}
       >
         {/* Close Button */}
@@ -65,30 +65,20 @@ export function VoteModal({
             onClick={onClose}
             style={{
               position: 'absolute',
-              right: '12px',
-              top: '12px',
+              right: '14px',
+              top: '14px',
               width: '32px',
               height: '32px',
-              borderRadius: 'var(--radius-xs)',
-              background: 'var(--ivory-warm)',
-              border: '2px solid var(--maroon-dark)',
-              boxShadow: '2px 2px 0px var(--maroon-dark)',
-              color: 'var(--maroon-primary)',
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#ffffff',
               fontSize: '18px',
               fontWeight: 900,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              cursor: 'pointer',
-              transition: 'transform 0.08s ease, box-shadow 0.08s ease'
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.transform = 'translate(1px, 1px)';
-              e.currentTarget.style.boxShadow = '1px 1px 0px var(--maroon-dark)';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.transform = 'translate(0, 0)';
-              e.currentTarget.style.boxShadow = '2px 2px 0px var(--maroon-dark)';
+              cursor: 'pointer'
             }}
             aria-label="Close dialog"
           >
@@ -104,28 +94,24 @@ export function VoteModal({
             style={{
               width: '74px',
               height: '74px',
-              borderRadius: 'var(--radius-xs)',
+              borderRadius: '50%',
               objectFit: 'cover',
-              border: '2.5px solid var(--maroon-dark)',
+              border: '2.5px solid #f59e0b',
               margin: '0 auto 10px',
-              boxShadow: '3px 3px 0px var(--maroon-dark)',
-              display: 'block'
+              boxShadow: '0 4px 16px rgba(245, 158, 11, 0.35)'
             }}
-          />
-          <h2 
+          />          <h2 
             style={{ 
-              fontSize: '1.3rem', 
+              fontSize: '1.25rem', 
               fontFamily: 'var(--font-heading)',
-              fontWeight: 900, 
-              color: 'var(--maroon-primary)', 
-              margin: '0 0 2px',
-              textTransform: 'uppercase',
-              letterSpacing: '-0.01em'
+              fontWeight: 800, 
+              color: '#ffffff', 
+              margin: '0 0 2px'
             }}
           >
             {pandhal.name}
           </h2>
-          <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0, fontWeight: 600 }}>
+          <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0 }}>
             {pandhal.location}
           </p>
         </div>
@@ -134,10 +120,9 @@ export function VoteModal({
         {user && (
           <div 
             style={{
-              background: 'var(--ivory-warm)',
-              border: '2px solid var(--maroon-dark)',
-              boxShadow: '2px 2px 0px var(--maroon-dark)',
-              borderRadius: 'var(--radius-xs)',
+              background: 'rgba(245, 158, 11, 0.08)',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+              borderRadius: '12px',
               padding: '8px 12px',
               marginBottom: '18px',
               display: 'flex',
@@ -150,18 +135,18 @@ export function VoteModal({
               <img 
                 src={user.photoURL} 
                 alt={user.displayName || 'Voter'} 
-                style={{ width: '28px', height: '28px', borderRadius: '2px', border: '1.5px solid var(--maroon-dark)' }}
+                style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid #f59e0b' }}
               />
             ) : (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.9, color: 'var(--maroon-primary)' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8 }}>
                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
               </svg>
             )}
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--maroon-primary)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>
                 ✓ VERIFIED GOOGLE VOTER
               </div>
-              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {user.displayName || user.email}
               </div>
             </div>
@@ -174,14 +159,13 @@ export function VoteModal({
             {errorMessage && (
               <div 
                 style={{
-                  background: '#FEE2E2',
-                  border: '2px solid var(--maroon-dark)',
-                  boxShadow: '2px 2px 0px var(--maroon-dark)',
-                  color: '#991B1B',
-                  borderRadius: 'var(--radius-xs)',
+                  background: 'rgba(239, 68, 68, 0.12)',
+                  border: '1px solid #ef4444',
+                  color: '#fca5a5',
+                  borderRadius: '10px',
                   padding: '10px 12px',
                   fontSize: '0.84rem',
-                  fontWeight: 800,
+                  fontWeight: 700,
                   marginBottom: '14px',
                   textAlign: 'left'
                 }}
@@ -193,17 +177,15 @@ export function VoteModal({
             {isAlreadyVotedForThis ? (
               <div 
                 style={{
-                  background: '#DCFCE7',
-                  border: '2px solid var(--maroon-dark)',
-                  boxShadow: '3px 3px 0px var(--maroon-dark)',
-                  borderRadius: 'var(--radius-xs)',
+                  background: 'rgba(16, 185, 129, 0.12)',
+                  border: '1px solid #10b981',
+                  borderRadius: '12px',
                   padding: '14px',
-                  color: '#166534',
+                  color: '#10b981',
                   fontFamily: 'var(--font-display)',
-                  fontWeight: 900,
+                  fontWeight: 800,
                   fontSize: '0.92rem',
-                  marginBottom: '16px',
-                  textTransform: 'uppercase'
+                  marginBottom: '16px'
                 }}
               >
                 ✓ You already locked your vote for {pandhal.name}!
@@ -211,28 +193,26 @@ export function VoteModal({
             ) : isAlreadyVotedForOther ? (
               <div 
                 style={{
-                  background: '#FEF3C7',
-                  border: '2px solid var(--maroon-dark)',
-                  boxShadow: '3px 3px 0px var(--maroon-dark)',
-                  borderRadius: 'var(--radius-xs)',
+                  background: 'rgba(245, 158, 11, 0.12)',
+                  border: '1px solid #f59e0b',
+                  borderRadius: '12px',
                   padding: '14px',
-                  color: '#92400E',
+                  color: '#ffffff',
                   fontSize: '0.86rem',
                   lineHeight: 1.45,
                   marginBottom: '16px',
-                  textAlign: 'left',
-                  fontWeight: 600
+                  textAlign: 'left'
                 }}
               >
                 Your Google account has already voted for <strong>{myVote.pandhalName}</strong>. 
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '4px', fontWeight: 600 }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                   Each Google account can cast exactly 1 vote across the celebration.
                 </div>
               </div>
             ) : (
               <div style={{ marginBottom: '18px' }}>
-                <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: '0 0 16px', lineHeight: 1.45, fontWeight: 600 }}>
-                  Click below to lock your 1 unique community vote for <strong style={{ color: 'var(--maroon-primary)' }}>{pandhal.name}</strong>.
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: '0 0 16px', lineHeight: 1.45 }}>
+                  Click below to lock your 1 unique community vote for <strong style={{ color: '#ffffff' }}>{pandhal.name}</strong>.
                 </p>
 
                 <button
@@ -240,32 +220,24 @@ export function VoteModal({
                   disabled={isSubmitting}
                   style={{
                     width: '100%',
-                    border: '2.5px solid var(--maroon-dark)',
-                    background: 'var(--maroon-primary)',
-                    color: '#FFFFFF',
-                    borderRadius: 'var(--radius-xs)',
-                    padding: '14px 20px',
+                    border: '1px solid rgba(255, 255, 255, 0.35)',
+                    background: 'var(--gradient-hyper)',
+                    color: '#000000',
+                    borderRadius: 'var(--radius-pill)',
+                    padding: '13px 20px',
                     fontSize: '0.98rem',
                     fontFamily: 'var(--font-display)',
                     fontWeight: 900,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.04em',
-                    cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                    boxShadow: '4px 4px 0px var(--maroon-dark)',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 16px rgba(245, 158, 11, 0.35)',
                     opacity: isSubmitting ? 0.6 : 1,
-                    transition: 'transform 0.08s ease, box-shadow 0.08s ease'
+                    transition: 'transform 0.12s ease'
                   }}
                   onMouseDown={(e) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.transform = 'translate(2px, 2px)';
-                      e.currentTarget.style.boxShadow = '2px 2px 0px var(--maroon-dark)';
-                    }
+                    e.currentTarget.style.transform = 'translateY(2px)';
                   }}
                   onMouseUp={(e) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.transform = 'translate(0, 0)';
-                      e.currentTarget.style.boxShadow = '4px 4px 0px var(--maroon-dark)';
-                    }
+                    e.currentTarget.style.transform = 'none';
                   }}
                 >
                   <span>{isSubmitting ? 'LOCKING BALLOT…' : 'CONFIRM MY VOTE'}</span>
@@ -282,17 +254,17 @@ export function VoteModal({
               style={{
                 width: '42px',
                 height: '42px',
-                border: '3.5px solid var(--maroon-dark)',
-                borderTopColor: 'var(--gold-primary)',
+                border: '3px solid rgba(245, 158, 11, 0.2)',
+                borderTopColor: '#f59e0b',
                 borderRadius: '50%',
                 margin: '0 auto 14px',
                 animation: 'spinSlow 0.8s linear infinite'
               }}
             />
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', fontWeight: 900, color: 'var(--maroon-primary)', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', fontWeight: 900, color: '#ffffff', margin: '0 0 4px', textTransform: 'uppercase' }}>
               Recording your vote…
             </h3>
-            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0, fontWeight: 600 }}>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: 0 }}>
               Locking vote to your verified Google account
             </p>
           </div>
@@ -305,17 +277,17 @@ export function VoteModal({
               style={{
                 width: '64px',
                 height: '64px',
-                background: 'var(--green-emerald)',
-                border: '2.5px solid var(--maroon-dark)',
+                background: '#10b981',
+                border: '2px solid #ffffff',
                 color: '#ffffff',
-                borderRadius: 'var(--radius-xs)',
+                borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '32px',
                 fontWeight: 900,
                 margin: '0 auto 12px',
-                boxShadow: '3px 3px 0px var(--maroon-dark)'
+                boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)'
               }}
             >
               ✓
@@ -323,46 +295,33 @@ export function VoteModal({
 
             <h3 
               style={{ 
-                fontSize: '1.45rem', 
+                fontSize: '1.4rem', 
                 fontFamily: 'var(--font-display)',
                 fontWeight: 900, 
-                color: 'var(--maroon-primary)', 
+                color: '#ffffff', 
                 margin: '0 0 6px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.02em'
+                textTransform: 'uppercase'
               }}
             >
               VOTE LOCKED!
             </h3>
-            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: '0 0 20px', lineHeight: 1.45, fontWeight: 600 }}>
-              Your sacred vote for <strong style={{ color: 'var(--maroon-primary)' }}>{pandhal.name}</strong> is officially counted! Ganpati Bappa Morya!
+            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: '0 0 20px', lineHeight: 1.45 }}>
+              Your sacred vote for <strong style={{ color: '#f59e0b' }}>{pandhal.name}</strong> is officially counted! Ganpati Bappa Morya!
             </p>
 
             <button
               onClick={onClose}
               style={{
                 width: '100%',
-                border: '2px solid var(--maroon-dark)',
-                background: 'var(--ivory-warm)',
-                color: 'var(--maroon-primary)',
-                borderRadius: 'var(--radius-xs)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                background: 'rgba(255, 255, 255, 0.08)',
+                color: '#ffffff',
+                borderRadius: 'var(--radius-pill)',
                 padding: '12px',
                 fontSize: '0.88rem',
-                fontFamily: 'var(--font-mono)',
-                fontWeight: 900,
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em',
-                cursor: 'pointer',
-                boxShadow: '3px 3px 0px var(--maroon-dark)',
-                transition: 'transform 0.08s ease, box-shadow 0.08s ease'
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = 'translate(1px, 1px)';
-                e.currentTarget.style.boxShadow = '1px 1px 0px var(--maroon-dark)';
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = 'translate(0, 0)';
-                e.currentTarget.style.boxShadow = '3px 3px 0px var(--maroon-dark)';
+                fontFamily: 'var(--font-display)',
+                fontWeight: 800,
+                cursor: 'pointer'
               }}
             >
               <span>CONTINUE EXPLORING PANDHALS</span>

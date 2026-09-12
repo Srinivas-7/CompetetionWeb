@@ -123,132 +123,86 @@ button {
   display: inline-block;
 }
 
-/* Neo-Brutalist Tactile Push Buttons */
+/* Standard Tactile Push Buttons */
 .btn-3d-pink {
   background: var(--maroon-primary);
   color: #ffffff;
-  font-family: var(--font-display);
   font-weight: 900;
-  border: 2px solid var(--maroon-dark);
-  box-shadow: 3px 3px 0px var(--maroon-dark);
-  border-radius: var(--radius-sm);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 14px rgba(107, 20, 20, 0.35);
+  border-radius: var(--radius-pill);
+  transition: all 0.12s ease;
 }
 
 .btn-3d-pink:hover {
   background: var(--maroon-hover);
-  transform: translate(-1.5px, -1.5px);
-  box-shadow: 5px 5px 0px var(--maroon-dark);
+  box-shadow: 0 6px 18px rgba(107, 20, 20, 0.45);
 }
 
 .btn-3d-pink:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px var(--maroon-dark);
+  transform: translateY(2px);
+  box-shadow: 0 2px 6px rgba(107, 20, 20, 0.25);
 }
 
 .btn-3d-lime {
   background: var(--green-emerald);
   color: #ffffff;
-  font-family: var(--font-display);
   font-weight: 900;
-  border: 2px solid var(--maroon-dark);
-  box-shadow: 3px 3px 0px var(--maroon-dark);
-  border-radius: var(--radius-sm);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-.btn-3d-lime:hover {
-  transform: translate(-1.5px, -1.5px);
-  box-shadow: 5px 5px 0px var(--maroon-dark);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+  border-radius: var(--radius-pill);
+  transition: all 0.12s ease;
 }
 
 .btn-3d-lime:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px var(--maroon-dark);
+  transform: translateY(2px);
+  box-shadow: 0 2px 6px rgba(22, 163, 74, 0.2);
 }
 
 .btn-3d-giant {
   background: var(--maroon-primary);
   color: #ffffff;
-  font-family: var(--font-display);
   font-weight: 900;
-  font-size: 1.05rem;
-  letter-spacing: -0.01em;
-  border: 2.5px solid var(--maroon-dark);
-  box-shadow: 5px 5px 0px var(--maroon-dark);
-  border-radius: var(--radius-sm);
+  font-size: 1.08rem;
+  letter-spacing: -0.02em;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 24px rgba(107, 20, 20, 0.4);
+  border-radius: var(--radius-pill);
   padding: 16px 28px;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: all 0.15s ease;
 }
 
 .btn-3d-giant:hover {
   background: var(--maroon-hover);
-  transform: translate(-2.5px, -2.5px);
-  box-shadow: 8px 8px 0px var(--maroon-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(107, 20, 20, 0.5);
 }
 
 .btn-3d-giant:active {
-  transform: translate(3px, 3px);
-  box-shadow: 2px 2px 0px var(--maroon-dark);
+  transform: translateY(2px);
+  box-shadow: 0 4px 12px rgba(107, 20, 20, 0.3);
 }
 
-.festive-btn {
-  background: var(--maroon-primary);
-  color: #ffffff;
-  font-family: var(--font-display);
-  font-weight: 800;
-  padding: 10px 20px;
-  border: 2px solid var(--maroon-dark);
-  border-radius: var(--radius-sm);
-  box-shadow: 3px 3px 0px var(--maroon-dark);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-.festive-btn:hover {
-  transform: translate(-1.5px, -1.5px);
-  box-shadow: 5px 5px 0px var(--maroon-dark);
-}
-
-.festive-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px var(--maroon-dark);
-}
-
-/* Neo-Brutalist Card Container */
+/* Standard Premium Card Container */
 .max-card {
   background: var(--bg-card);
-  border: 2px solid var(--maroon-dark);
-  border-radius: var(--radius-sm);
-  box-shadow: 4px 4px 0px var(--maroon-dark);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border: 1px solid #EADECB;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(91, 20, 20, 0.07);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   position: relative;
   overflow: hidden;
 }
 
 .max-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0px var(--maroon-dark);
-}
-
-/* Neo-Brutalist Badge Utility */
-.brutal-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1.5px solid var(--maroon-dark);
-  box-shadow: 2px 2px 0px var(--maroon-dark);
-  border-radius: var(--radius-xs);
-  font-family: var(--font-mono);
-  font-weight: 800;
-  text-transform: uppercase;
+  border-color: var(--maroon-primary);
+  box-shadow: 0 8px 24px rgba(91, 20, 20, 0.14);
+  transform: translateY(-2px);
 }
 
 /* Modal Open Lock */

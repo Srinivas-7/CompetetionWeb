@@ -99,33 +99,34 @@ export function AuthGate({ children }) {
         }}
       >
         <div 
+          className="max-card"
           style={{
             maxWidth: '460px',
             width: '100%',
             padding: '36px 24px',
             textAlign: 'center',
             background: '#FFFFFF',
-            border: '3px solid var(--maroon-dark)',
-            borderRadius: 'var(--radius-xs)',
-            boxShadow: '6px 6px 0px var(--maroon-dark)',
+            border: '1.5px solid #EADECB',
+            borderRadius: '24px',
+            boxShadow: '0 12px 36px rgba(91, 20, 20, 0.08)',
             position: 'relative'
           }}
         >
           {/* Top Badge */}
-          <div style={{ marginBottom: '18px' }}>
+          <div style={{ marginBottom: '16px' }}>
             <span 
               style={{
                 display: 'inline-block',
                 background: '#FDF6E2',
                 color: 'var(--maroon-primary)',
-                border: '1.5px solid var(--maroon-dark)',
-                boxShadow: '2px 2px 0px var(--maroon-dark)',
+                border: '1.5px solid var(--gold-primary)',
+                boxShadow: '0 2px 8px rgba(200, 157, 71, 0.25)',
                 fontFamily: 'var(--font-mono)',
-                fontWeight: 900,
-                fontSize: '0.76rem',
-                letterSpacing: '0.08em',
-                padding: '5px 14px',
-                borderRadius: 'var(--radius-xs)',
+                fontWeight: 800,
+                fontSize: '0.74rem',
+                letterSpacing: '0.06em',
+                padding: '5px 12px',
+                borderRadius: 'var(--radius-pill)',
                 textTransform: 'uppercase'
               }}
             >
@@ -134,7 +135,7 @@ export function AuthGate({ children }) {
           </div>
 
           {/* Cute Bal Ganesha Logo Badge */}
-          <div style={{ marginBottom: '18px' }}>
+          <div style={{ marginBottom: '16px' }}>
             <img 
               src="/assets/cute-bappa-logo.jpg" 
               alt="Cute Bal Ganesha Mascot" 
@@ -143,10 +144,10 @@ export function AuthGate({ children }) {
                 height: '96px',
                 display: 'block',
                 margin: '0 auto',
-                borderRadius: 'var(--radius-xs)',
+                borderRadius: '50%',
                 objectFit: 'cover',
-                border: '3px solid var(--maroon-dark)',
-                boxShadow: '4px 4px 0px var(--maroon-dark)'
+                border: '3px solid var(--gold-primary)',
+                boxShadow: '0 8px 24px rgba(107, 20, 20, 0.25)'
               }}
             />
           </div>
@@ -154,11 +155,11 @@ export function AuthGate({ children }) {
           {/* Title */}
           <h1 
             style={{
-              fontSize: 'clamp(1.9rem, 6vw, 2.4rem)',
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 900,
+              fontSize: 'clamp(1.8rem, 6vw, 2.3rem)',
+              fontFamily: 'var(--font-display)',
+              fontWeight: 800,
               lineHeight: 1.1,
-              letterSpacing: '-0.02em',
+              letterSpacing: '-0.03em',
               margin: '0 0 8px',
               textTransform: 'uppercase',
               color: 'var(--maroon-primary)'
@@ -184,13 +185,12 @@ export function AuthGate({ children }) {
             <div 
               style={{
                 background: '#FEE2E2',
-                border: '2px solid var(--maroon-dark)',
-                boxShadow: '3px 3px 0px var(--maroon-dark)',
+                border: '1px solid #EF4444',
                 color: '#991B1B',
-                borderRadius: 'var(--radius-xs)',
+                borderRadius: '12px',
                 padding: '10px 14px',
                 fontSize: '0.84rem',
-                fontWeight: 800,
+                fontWeight: 700,
                 marginBottom: '20px',
                 textAlign: 'left'
               }}
@@ -205,31 +205,35 @@ export function AuthGate({ children }) {
             style={{
               width: '100%',
               background: '#FFFFFF',
-              color: 'var(--maroon-dark)',
-              border: '2.5px solid var(--maroon-dark)',
-              boxShadow: '4px 4px 0px var(--maroon-dark)',
-              borderRadius: 'var(--radius-xs)',
+              color: '#1A1A1A',
+              border: '1.5px solid #EADECB',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
+              borderRadius: 'var(--radius-pill)',
               padding: '15px 20px',
               fontFamily: 'var(--font-display)',
-              fontWeight: 900,
+              fontWeight: 800,
               fontSize: '1rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '12px',
               marginBottom: '20px',
-              transition: 'transform 0.08s ease, box-shadow 0.08s ease'
+              transition: 'transform 0.12s ease, box-shadow 0.12s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--maroon-primary)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(107, 20, 20, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = '#EADECB';
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.08)';
             }}
             onMouseDown={(e) => {
-              e.currentTarget.style.transform = 'translate(2px, 2px)';
-              e.currentTarget.style.boxShadow = '2px 2px 0px var(--maroon-dark)';
+              e.currentTarget.style.transform = 'translateY(2px)';
             }}
             onMouseUp={(e) => {
-              e.currentTarget.style.transform = 'translate(0, 0)';
-              e.currentTarget.style.boxShadow = '4px 4px 0px var(--maroon-dark)';
+              e.currentTarget.style.transform = 'none';
             }}
           >
             {/* Google G Logo SVG */}
@@ -255,7 +259,7 @@ export function AuthGate({ children }) {
           </button>
 
           {/* Privacy Note */}
-          <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+          <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
             One-tap Google verification guarantees 1 verified vote per devotee.
           </p>
         </div>
