@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 console.log('====================================================');
-console.log('BAPPA UTSAV 2026 — COMPREHENSIVE V7 TEST HARNESS');
+console.log('GAJOTSAV 2026 — COMPREHENSIVE V7 TEST HARNESS');
 console.log('====================================================\n');
 
 const EVENT_ID = 'ganapathi_chaturthi_2026';

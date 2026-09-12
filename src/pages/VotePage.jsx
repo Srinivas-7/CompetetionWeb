@@ -91,11 +91,11 @@ export function VotePage({
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <img 
               src="/assets/cute-bappa-logo.jpg" 
-              alt="Bappa Utsav" 
+              alt="Gajotsav 2026" 
               style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--gold-primary)', display: 'block' }}
             />
             <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.92rem', color: 'var(--maroon-primary)' }}>
-              BAPPA<span style={{ color: 'var(--gold-primary)' }}> UTSAV</span>
+              GAJ<span style={{ color: 'var(--gold-primary)' }}>OTSAV 2026</span>
             </span>
           </div>
         </div>

@@ -1,5 +1,5 @@
 export const APP_CONFIG = {
-  TITLE: "Bappa Utsav 2026",
+  TITLE: "Gajotsav 2026",
   SUBTITLE: "Ganesh Utsav 2026",
   TOTAL_PANDHALS: 21,
   STORAGE_KEYS: {

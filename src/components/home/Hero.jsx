@@ -33,7 +33,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
             <img 
               src="/assets/cute-bappa-logo.jpg" 
-              alt="Bappa Utsav Logo" 
+              alt="Gajotsav Logo" 
               style={{
                 width: '34px',
                 height: '34px',
@@ -55,7 +55,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                   whiteSpace: 'nowrap'
                 }}
               >
-                BAPPA<span style={{ color: 'var(--gold-primary)' }}> UTSAV</span>
+                GAJ<span style={{ color: 'var(--gold-primary)' }}>OTSAV 2026</span>
               </span>
             </div>
           </div>
@@ -155,7 +155,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               textTransform: 'uppercase'
             }}
           >
-            ★ BAPPA UTSAV 2026 ★
+            ★ GAJOTSAV 2026 ★
           </span>
         </div>
 

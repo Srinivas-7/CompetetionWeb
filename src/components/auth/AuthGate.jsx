@@ -74,7 +74,7 @@ export function AuthGate({ children }) {
           }}
         />
         <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.2rem', marginBottom: '4px', color: 'var(--maroon-primary)' }}>
-          CONNECTING TO BAPPA UTSAV
+          CONNECTING TO GAJOTSAV 2026
         </div>
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
           Verifying your Google session…
@@ -130,7 +130,7 @@ export function AuthGate({ children }) {
                 textTransform: 'uppercase'
               }}
             >
-              ★ BAPPA UTSAV 2026 ★
+              ★ GAJOTSAV 2026 ★
             </span>
           </div>
 
