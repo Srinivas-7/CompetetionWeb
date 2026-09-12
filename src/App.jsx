@@ -135,7 +135,7 @@ function MainDashboard() {
   };
 
   const handleVoteRecorded = () => {
-    setMyVote(votingService.getMyVote());
+    setMyVote(votingService.getMyVote(user?.uid));
   };
 
   // 1. DEDICATED VOTE PAGE

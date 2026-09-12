@@ -27,37 +27,84 @@ function getDeterministicShardIndex(uid, pandhalId) {
 
 class VotingService {
   constructor() {
+    this.currentUid = null;
     this.myVoteCache = null;
     this.countsCache = {};
     PANDHALS_DATA.forEach((p) => {
       this.countsCache[p.id] = 0;
     });
 
+    // Remove legacy unscoped cache keys to prevent cross-account leakage
     if (typeof window !== 'undefined') {
       try {
-        const stored = localStorage.getItem('bappatrail_my_vote_cache');
+        localStorage.removeItem('bappatrail_my_vote_cache');
+        localStorage.removeItem('gt_my_vote');
+      } catch {}
+    }
+  }
+
+  /**
+   * Returns currently cached vote record for the active user UID
+   * @param {string|null} uid 
+   */
+  getMyVote(uid = null) {
+    const targetUid = uid || auth?.currentUser?.uid || this.currentUid;
+    if (!targetUid) return null;
+
+    if (this.currentUid === targetUid && this.myVoteCache) {
+      return this.myVoteCache;
+    }
+
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem(`gt_vote_${EVENT_ID}_${targetUid}`);
         if (stored) {
-          this.myVoteCache = JSON.parse(stored);
+          const parsed = JSON.parse(stored);
+          if (this.currentUid === targetUid) {
+            this.myVoteCache = parsed;
+          }
+          return parsed;
+        }
+      } catch {}
+    }
+    return null;
+  }
+
+  /**
+   * Sets cached vote record scoped strictly to the user UID
+   * @param {object|null} voteData 
+   * @param {string|null} uid 
+   */
+  setMyVote(voteData, uid = null) {
+    const targetUid = uid || auth?.currentUser?.uid || this.currentUid;
+    if (!targetUid) return;
+
+    this.currentUid = targetUid;
+    this.myVoteCache = voteData;
+
+    if (typeof window !== 'undefined') {
+      try {
+        if (voteData) {
+          localStorage.setItem(`gt_vote_${EVENT_ID}_${targetUid}`, JSON.stringify(voteData));
+        } else {
+          localStorage.removeItem(`gt_vote_${EVENT_ID}_${targetUid}`);
         }
       } catch {}
     }
   }
 
   /**
-   * Returns currently cached vote record for the active user
+   * Clears cached vote record for a specific user UID or active user
+   * @param {string|null} uid 
    */
-  getMyVote() {
-    return this.myVoteCache;
-  }
-
-  /**
-   * Sets cached vote record
-   */
-  setMyVote(voteData) {
-    this.myVoteCache = voteData;
-    if (typeof window !== 'undefined' && voteData) {
+  clearMyVote(uid = null) {
+    const targetUid = uid || auth?.currentUser?.uid || this.currentUid;
+    if (!targetUid || this.currentUid === targetUid) {
+      this.myVoteCache = null;
+    }
+    if (targetUid && typeof window !== 'undefined') {
       try {
-        localStorage.setItem('bappatrail_my_vote_cache', JSON.stringify(voteData));
+        localStorage.removeItem(`gt_vote_${EVENT_ID}_${targetUid}`);
       } catch {}
     }
   }
@@ -72,13 +119,20 @@ class VotingService {
    */
   subscribeUserVote(uid, callback) {
     if (!uid) {
+      this.currentUid = null;
       this.myVoteCache = null;
       callback(null);
       return () => {};
     }
 
+    // Switch active UID and fetch this specific user's cached record (if any)
+    this.currentUid = uid;
+    this.myVoteCache = this.getMyVote(uid);
+
+    // Initial emit for fast render
+    callback(this.myVoteCache);
+
     if (!db) {
-      callback(this.myVoteCache);
       return () => {};
     }
 
@@ -94,15 +148,18 @@ class VotingService {
               pandhalName: data.pandhalName || data.pandhalId,
               votedAt: data.votedAt,
             };
-            this.setMyVote(voteData);
+            this.setMyVote(voteData, uid);
             callback(voteData);
           } else {
-            callback(this.myVoteCache);
+            // User has NOT voted in Firestore! Clear any cache and notify listeners with null
+            this.clearMyVote(uid);
+            callback(null);
           }
         },
         (err) => {
           console.warn('[VotingService] subscribeUserVote warning:', err?.message || err);
-          callback(this.myVoteCache);
+          // On network/permission error, only emit this specific user's scoped cache
+          callback(this.getMyVote(uid));
         }
       );
 
@@ -111,7 +168,7 @@ class VotingService {
       };
     } catch (err) {
       console.warn('[VotingService] subscribeUserVote error:', err);
-      callback(this.myVoteCache);
+      callback(this.getMyVote(uid));
       return () => {};
     }
   }
@@ -219,7 +276,7 @@ class VotingService {
           this.setMyVote({
             pandhalId: txResult.previousPandhalId || 'unknown',
             pandhalName: prevName,
-          });
+          }, currentUser.uid);
 
           return {
             success: false,
@@ -236,7 +293,7 @@ class VotingService {
           pandhalName,
           votedAt: new Date().toISOString(),
         };
-        this.setMyVote(voteRecord);
+        this.setMyVote(voteRecord, currentUser.uid);
 
         if (txResult.status !== 'IDEMPOTENT_SUCCESS' && this.countsCache[pandhalId] !== undefined) {
           this.countsCache[pandhalId] += 1;
@@ -287,7 +344,7 @@ class VotingService {
           pandhalName,
           votedAt: new Date().toISOString(),
         };
-        this.setMyVote(voteRecord);
+        this.setMyVote(voteRecord, currentUser.uid);
 
         if (!data.idempotent && this.countsCache[pandhalId] !== undefined) {
           this.countsCache[pandhalId] += 1;
@@ -308,7 +365,7 @@ class VotingService {
         this.setMyVote({
           pandhalId: previousPandhalId || 'unknown',
           pandhalName: previousPandhalName,
-        });
+        }, currentUser.uid);
 
         return {
           success: false,
@@ -341,7 +398,7 @@ class VotingService {
         pandhalName,
         votedAt: new Date().toISOString(),
       };
-      this.setMyVote(voteRecord);
+      this.setMyVote(voteRecord, currentUser.uid);
       if (this.countsCache[pandhalId] !== undefined) {
         this.countsCache[pandhalId] += 1;
       }
@@ -361,7 +418,7 @@ class VotingService {
         pandhalName,
         votedAt: new Date().toISOString(),
       };
-      this.setMyVote(voteRecord);
+      this.setMyVote(voteRecord, currentUser.uid);
       return {
         success: true,
         message: `Your vote for ${pandhalName} is successfully locked!`,
