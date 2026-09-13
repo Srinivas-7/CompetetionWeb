@@ -5,6 +5,7 @@ import { VotePage } from './pages/VotePage';
 import { PandhalDetails } from './components/pandhal/PandhalDetails';
 import { AuthProvider } from './context/AuthContext';
 import { AuthGate } from './components/auth/AuthGate';
+import { LaunchGate } from './components/launch/LaunchGate';
 import { useLiveVotes } from './hooks/useLiveVotes';
 import { usePandhal } from './hooks/usePandhal';
 import { useAuth } from './context/AuthContext';
@@ -192,10 +193,12 @@ function MainDashboard() {
 
 export function App() {
   return (
-    <AuthProvider>
-      <AuthGate>
-        <MainDashboard />
-      </AuthGate>
-    </AuthProvider>
+    <LaunchGate>
+      <AuthProvider>
+        <AuthGate>
+          <MainDashboard />
+        </AuthGate>
+      </AuthProvider>
+    </LaunchGate>
   );
 }

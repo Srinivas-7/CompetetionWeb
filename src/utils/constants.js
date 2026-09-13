@@ -1,3 +1,10 @@
+export const LAUNCH_CONFIG = {
+  // 14 September 2026, 5:00:00 PM IST (Asia/Kolkata)
+  LAUNCH_TIME_ISO: "2026-09-14T17:00:00+05:30",
+  LAUNCH_TIMESTAMP: 1789471800000, // Date.parse("2026-09-14T17:00:00+05:30")
+  TIMEZONE: "Asia/Kolkata"
+};
+
 export const APP_CONFIG = {
   TITLE: "Gajotsav 2026",
   SUBTITLE: "Ganesh Utsav 2026",
