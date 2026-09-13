@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { FieldValue } from 'firebase-admin/firestore';
-import { adminAuth, adminDb, adminAppCheck } from './_lib/firebaseAdmin';
+import { adminAuth, adminDb } from './_lib/firebaseAdmin';
 import { 
   isValidPandhalId, 
   NUM_SHARDS, 
@@ -22,7 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, X-Firebase-AppCheck'
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
   );
 
   if (req.method === 'OPTIONS') {
@@ -52,36 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  // 3. Optional Firebase App Check Verification (Enforced ONLY if configured in env)
-  const appCheckToken = (req.headers['x-firebase-appcheck'] || req.headers['X-Firebase-AppCheck']) as string | undefined;
-  const isAppCheckEnforced = process.env.APP_CHECK_ENFORCED === 'true';
 
-  if (isAppCheckEnforced) {
-    if (!appCheckToken || typeof appCheckToken !== 'string' || appCheckToken.trim().length === 0) {
-      return res.status(401).json({
-        success: false,
-        error: 'MISSING_APP_CHECK_TOKEN',
-        message: 'App Check token is missing. Access is restricted to authentic client applications.',
-      });
-    }
-
-    try {
-      await adminAppCheck.verifyToken(appCheckToken.trim());
-    } catch (appCheckErr: any) {
-      console.error('[AppCheck Error] Token verification failed:', appCheckErr?.message || appCheckErr);
-      return res.status(401).json({
-        success: false,
-        error: 'INVALID_APP_CHECK_TOKEN',
-        message: 'App Check token verification failed.',
-      });
-    }
-  } else if (appCheckToken && typeof appCheckToken === 'string' && appCheckToken.trim().length > 0) {
-    try {
-      await adminAppCheck.verifyToken(appCheckToken.trim());
-    } catch (appCheckErr) {
-      console.warn('[AppCheck Warning] Token verification warning:', appCheckErr);
-    }
-  }
 
   // 4. Input Payload Extraction & Validation
   let body = req.body;

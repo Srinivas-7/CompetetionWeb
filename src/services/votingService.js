@@ -1,6 +1,6 @@
 import { isValidPandhalId } from '../utils/validation';
 import { PANDHALS_DATA } from '../data/pandhals';
-import { auth, db, getAppCheckToken } from '../lib/firebase';
+import { auth, db } from '../lib/firebase';
 import { 
   doc, 
   onSnapshot, 
@@ -314,16 +314,11 @@ class VotingService {
     // SECONDARY PATH: Serverless /api/vote Endpoint
     try {
       const idToken = await currentUser.getIdToken(false);
-      const appCheckToken = await getAppCheckToken(false);
 
       const requestHeaders = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${idToken}`,
       };
-
-      if (appCheckToken) {
-        requestHeaders['X-Firebase-AppCheck'] = appCheckToken;
-      }
 
       const response = await fetch('/api/vote', {
         method: 'POST',

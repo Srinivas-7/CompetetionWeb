@@ -11,7 +11,6 @@ import {
   type Auth, 
   type User 
 } from 'firebase/auth';
-import { initializeAppCheck, ReCaptchaV3Provider, getToken, type AppCheck } from 'firebase/app-check';
 
 // Client-side Firebase configuration from VITE_ environment variables
 const apiKey = import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyBxqgieHExe8CpvjfZZebh3yt22R7-_Tg4";
@@ -91,35 +90,3 @@ export async function signInWithGoogleCredential(idToken: string): Promise<User>
 export async function signOut(): Promise<void> {
   await firebaseSignOut(auth);
 }
-
-// 4. App Check Initialization (reCAPTCHA v3)
-let appCheckInstance: AppCheck | null = null;
-if (typeof window !== 'undefined') {
-  const recaptchaSiteKey = import.meta.env.VITE_FIREBASE_RECAPTCHA_SITE_KEY;
-  if (recaptchaSiteKey && !recaptchaSiteKey.includes('Dummy')) {
-    try {
-      appCheckInstance = initializeAppCheck(app, {
-        provider: new ReCaptchaV3Provider(recaptchaSiteKey),
-        isTokenAutoRefreshEnabled: true,
-      });
-    } catch (err) {
-      console.warn('[Firebase AppCheck] Initialization warning:', err);
-    }
-  }
-}
-export const appCheck = appCheckInstance;
-
-/**
- * Retrieves a valid Firebase App Check token for authenticating client requests.
- */
-export async function getAppCheckToken(forceRefresh = false): Promise<string | null> {
-  if (!appCheckInstance) return null;
-  try {
-    const tokenResult = await getToken(appCheckInstance, forceRefresh);
-    return tokenResult?.token || null;
-  } catch (err) {
-    console.warn('[Firebase AppCheck] Token retrieval warning:', err);
-    return null;
-  }
-}
-
