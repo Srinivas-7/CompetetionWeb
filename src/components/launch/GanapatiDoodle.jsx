@@ -42,21 +42,20 @@ export function GanapatiDoodle({ size = 260, className = '' }) {
         }}
       />
 
-      {/* Exact Hand-Drawn Ganapati Doodle Image */}
+      {/* Exact Hand-Drawn Ganapati Doodle Image (Transparent PNG) */}
       <img
         src="/assets/ganapati-doodle.png"
         alt="Hand-drawn Bappa Doodle"
         style={{
-          width: '85%',
-          height: '85%',
+          width: '88%',
+          height: '88%',
           objectFit: 'contain',
           position: 'relative',
           zIndex: 1,
-          mixBlendMode: 'multiply',
           display: 'block',
           userSelect: 'none',
           pointerEvents: 'none',
-          filter: 'contrast(1.08)'
+          filter: 'drop-shadow(0 6px 16px rgba(107, 20, 20, 0.14))'
         }}
       />
 

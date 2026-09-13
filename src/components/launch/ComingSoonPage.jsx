@@ -27,6 +27,12 @@ export function ComingSoonPage() {
 
   const pad = (n) => String(n).padStart(2, '0');
 
+  // Compute prominent remaining time string (e.g., "1 DAY 1 HOUR")
+  const displayHours = timeLeft.minutes > 0 ? timeLeft.hours + 1 : timeLeft.hours;
+  const timeRemainingSummary = timeLeft.total > 0
+    ? `${timeLeft.days > 0 ? `${timeLeft.days} DAY ` : ''}${displayHours} HOUR${displayHours !== 1 ? 'S' : ''}`.trim()
+    : 'LAUNCHING NOW';
+
   return (
     <div
       style={{
@@ -121,7 +127,7 @@ export function ComingSoonPage() {
           </span>
         </div>
 
-        {/* Central Requested Ganapati Doodle Illustration */}
+        {/* Central Transparent Ganapati Doodle Illustration */}
         <div
           style={{
             margin: '4px 0 14px',
@@ -170,7 +176,7 @@ export function ComingSoonPage() {
             borderRadius: '14px',
             padding: '8px 20px',
             boxShadow: '0 4px 14px rgba(91, 20, 20, 0.06)',
-            marginBottom: '20px'
+            marginBottom: '16px'
           }}
         >
           <p
@@ -202,7 +208,7 @@ export function ComingSoonPage() {
           >
             {[
               { label: 'DAYS', value: pad(timeLeft.days) },
-              { label: 'HOURS', value: pad(timeLeft.hours) },
+              { label: 'HOURS', value: pad(displayHours) },
               { label: 'MINS', value: pad(timeLeft.minutes) },
               { label: 'SECS', value: pad(timeLeft.seconds) }
             ].map((unit) => (
