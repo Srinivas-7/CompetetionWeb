@@ -13,8 +13,7 @@ import {
 } from './_lib/constants';
 import { checkRateLimit } from './_lib/rateLimiter';
 
-// In-memory store for session voting when service account credentials are not configured
-const devVoterStore = new Map<string, { pandhalId: string; pandhalName: string }>();
+
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // 1. CORS & Preflight Headers
@@ -34,6 +33,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       success: false,
       error: 'METHOD_NOT_ALLOWED',
       message: 'Only POST requests are supported.',
+    });
+  }
+
+  // 1b. Launch Time Gate (14 Sep 2026, 5:00:00 PM IST)
+  const LAUNCH_TIMESTAMP = 1789385400000;
+  if (Date.now() < LAUNCH_TIMESTAMP) {
+    return res.status(403).json({
+      success: false,
+      error: 'VOTING_NOT_STARTED',
+      message: 'Voting has not officially started yet. The celebration opens on 14 September 2026 at 5:00 PM IST.',
     });
   }
 
@@ -220,37 +229,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       idempotent: txResult.status === 'IDEMPOTENT_SUCCESS',
     });
   } catch (dbError: any) {
-    console.warn('[Firestore Tx Warning / Fallback]', dbError?.message || dbError);
-
-    // Fallback in-memory handler if Firebase Private Key is not present in server environment
-    const existingDevVote = devVoterStore.get(uid);
-    if (existingDevVote) {
-      if (existingDevVote.pandhalId === pandhalId) {
-        return res.status(200).json({
-          success: true,
-          message: `Your vote for ${cleanPandhalName} is successfully locked!`,
-          pandhalId,
-          pandhalName: cleanPandhalName,
-          idempotent: true,
-        });
-      }
-      return res.status(409).json({
-        success: false,
-        error: 'ALREADY_VOTED',
-        message: `Your Google account has already cast its ballot for "${existingDevVote.pandhalName}". Each account is permitted exactly 1 vote.`,
-        previousPandhalId: existingDevVote.pandhalId,
-        previousPandhalName: existingDevVote.pandhalName,
-      });
-    }
-
-    devVoterStore.set(uid, { pandhalId, pandhalName: cleanPandhalName });
-
-    return res.status(200).json({
-      success: true,
-      message: `Your vote for ${cleanPandhalName} is successfully locked!`,
-      pandhalId,
-      pandhalName: cleanPandhalName,
-      idempotent: false,
+    console.error('[Firestore Tx Error / Vote Not Persisted]', dbError?.message || dbError);
+    return res.status(500).json({
+      success: false,
+      error: 'VOTE_NOT_PERSISTED',
+      message: 'We were unable to record your vote due to a database error. Your vote was NOT recorded. Please try again.',
     });
   }
 }

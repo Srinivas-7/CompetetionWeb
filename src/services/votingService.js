@@ -1,15 +1,15 @@
 import { isValidPandhalId } from '../utils/validation';
 import { PANDHALS_DATA } from '../data/pandhals';
 import { auth, db } from '../lib/firebase';
-import { 
-  doc, 
-  onSnapshot, 
-  getDoc, 
-  collectionGroup, 
-  getDocs, 
-  runTransaction, 
-  serverTimestamp, 
-  increment 
+import {
+  doc,
+  onSnapshot,
+  getDoc,
+  collectionGroup,
+  getDocs,
+  runTransaction,
+  serverTimestamp,
+  increment
 } from 'firebase/firestore';
 
 const EVENT_ID = 'ganapathi_chaturthi_2026';
@@ -39,7 +39,7 @@ class VotingService {
       try {
         localStorage.removeItem('bappatrail_my_vote_cache');
         localStorage.removeItem('gt_my_vote');
-      } catch {}
+      } catch { }
     }
   }
 
@@ -65,7 +65,7 @@ class VotingService {
           }
           return parsed;
         }
-      } catch {}
+      } catch { }
     }
     return null;
   }
@@ -89,7 +89,7 @@ class VotingService {
         } else {
           localStorage.removeItem(`gt_vote_${EVENT_ID}_${targetUid}`);
         }
-      } catch {}
+      } catch { }
     }
   }
 
@@ -105,7 +105,7 @@ class VotingService {
     if (targetUid && typeof window !== 'undefined') {
       try {
         localStorage.removeItem(`gt_vote_${EVENT_ID}_${targetUid}`);
-      } catch {}
+      } catch { }
     }
   }
 
@@ -122,7 +122,7 @@ class VotingService {
       this.currentUid = null;
       this.myVoteCache = null;
       callback(null);
-      return () => {};
+      return () => { };
     }
 
     // Switch active UID and fetch this specific user's cached record (if any)
@@ -133,7 +133,7 @@ class VotingService {
     callback(this.myVoteCache);
 
     if (!db) {
-      return () => {};
+      return () => { };
     }
 
     try {
@@ -169,7 +169,7 @@ class VotingService {
     } catch (err) {
       console.warn('[VotingService] subscribeUserVote error:', err);
       callback(this.getMyVote(uid));
-      return () => {};
+      return () => { };
     }
   }
 
@@ -384,6 +384,14 @@ class VotingService {
           success: false,
           errorType: 'INVALID_TOKEN',
           message: data.message || 'Your sign-in session expired. Please sign in again with Google.',
+        };
+      }
+
+      if (response.status === 403) {
+        return {
+          success: false,
+          errorType: 'VOTING_NOT_STARTED',
+          message: data.message || 'Voting has not officially started yet.',
         };
       }
 
