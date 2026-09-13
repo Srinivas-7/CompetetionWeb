@@ -392,39 +392,22 @@ class VotingService {
         };
       }
 
-      // Safe local resolution if backend API is not configured or in transition
-      const voteRecord = {
-        pandhalId,
-        pandhalName,
-        votedAt: new Date().toISOString(),
-      };
-      this.setMyVote(voteRecord, currentUser.uid);
-      if (this.countsCache[pandhalId] !== undefined) {
-        this.countsCache[pandhalId] += 1;
-      }
-
+      // Unexpected status code from /api/vote (e.g. 500, 502, 503)
       return {
-        success: true,
-        message: `Your vote for ${pandhalName} is successfully locked!`,
+        success: false,
+        errorType: 'SERVER_ERROR',
+        message: `We couldn't confirm your vote for "${pandhalName}" due to a server issue. Your vote was NOT recorded. Please try again.`,
         pandhalId,
-        pandhalName,
-        idempotent: false,
+        pandhalName
       };
     } catch (err) {
       console.warn('[VotingService] Network vote error:', err);
-      // Safe client record fallback so devotee is never blocked
-      const voteRecord = {
-        pandhalId,
-        pandhalName,
-        votedAt: new Date().toISOString(),
-      };
-      this.setMyVote(voteRecord, currentUser.uid);
       return {
-        success: true,
-        message: `Your vote for ${pandhalName} is successfully locked!`,
+        success: false,
+        errorType: 'NETWORK_ERROR',
+        message: `We couldn't confirm your vote for "${pandhalName}" due to a network error. Your vote was NOT recorded. Please check your connection and retry.`,
         pandhalId,
-        pandhalName,
-        idempotent: false,
+        pandhalName
       };
     }
   }
