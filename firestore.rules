@@ -33,7 +33,9 @@ service cloud.firestore {
       allow read: if request.auth != null && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid);
       
       // Allow authenticated users to create only their own unique vote doc (cannot update or delete)
-      allow create: if request.auth != null && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid);
+      allow create: if request.auth != null 
+                    && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid)
+                    && request.time >= timestamp.value(1789446600000);
       allow update, delete: if false;
     }
 

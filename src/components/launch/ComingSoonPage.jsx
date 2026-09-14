@@ -190,7 +190,7 @@ export function ComingSoonPage() {
               textTransform: 'uppercase'
             }}
           >
-            14 SEPTEMBER • 5:00 PM
+            15 SEPTEMBER • 10:00 AM IST
           </p>
         </div>
 
@@ -263,10 +263,10 @@ export function ComingSoonPage() {
             lineHeight: 1.5,
             color: 'var(--text-secondary, #66554B)',
             margin: '0',
-            maxWidth: '340px'
+            maxWidth: '360px'
           }}
         >
-          Get ready to witness and celebrate the grand festival of Gajotsav 2026.
+          Bappa is taking a little longer to arrive — thank you for your patience, the celebration begins 15 September at 10:00 AM IST.
         </p>
       </main>
 
