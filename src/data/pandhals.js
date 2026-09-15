@@ -576,7 +576,7 @@ export const PANDHALS_DATA = [
   {
     "id": "pandhal-15",
     "number": 15,
-    "name": "Ekanath yuvaka Samithi",
+    "name": "Ekatha yuvaka Samithi",
     "photos": [
       {
         "id": "pandhal-15-img-1",
