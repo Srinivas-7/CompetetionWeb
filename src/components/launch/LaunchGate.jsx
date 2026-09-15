@@ -59,7 +59,7 @@ export function LaunchGate({ children }) {
     // Immediate check
     checkStatus();
 
-    // High frequency interval (every 1s) to guarantee instant transition at 10:00:00 AM IST
+    // High frequency interval (every 1s) to guarantee instant transition at 6:00:00 PM IST
     const interval = setInterval(checkStatus, 1000);
 
     // Also set a precise timeout target

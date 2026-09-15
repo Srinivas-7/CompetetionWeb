@@ -190,7 +190,7 @@ export function ComingSoonPage() {
               textTransform: 'uppercase'
             }}
           >
-            15 SEPTEMBER • 10:00 AM IST
+            15 SEPTEMBER • 6:00 PM IST
           </p>
         </div>
 
@@ -266,7 +266,7 @@ export function ComingSoonPage() {
             maxWidth: '360px'
           }}
         >
-          Bappa is taking a little longer to arrive — thank you for your patience, the celebration begins 15 September at 10:00 AM IST.
+          Bappa is taking a little longer to arrive — thank you for your patience, the celebration begins 15 September at 6:00 PM IST.
         </p>
       </main>
 
