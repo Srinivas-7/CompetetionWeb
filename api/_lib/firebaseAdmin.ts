@@ -24,35 +24,58 @@ let appInstance: App | null = null;
 let dbInstance: Firestore | null = null;
 let authInstance: Auth | null = null;
 
-export function getAdminApp(): App {
+export function getAdminApp(): App | null {
   if (appInstance) return appInstance;
-  if (getApps().length > 0) {
-    appInstance = getApps()[0];
+  try {
+    if (getApps().length > 0) {
+      appInstance = getApps()[0];
+      return appInstance;
+    }
+
+    const projectId = process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || 'bappatrail-fef2d';
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL || '';
+    const privateKeyRaw = process.env.FIREBASE_PRIVATE_KEY || '';
+
+    if (clientEmail && privateKeyRaw) {
+      appInstance = initializeApp({
+        credential: cert({
+          projectId,
+          clientEmail,
+          privateKey: formatPrivateKey(privateKeyRaw),
+        }),
+      });
+    } else {
+      appInstance = initializeApp({ projectId });
+    }
     return appInstance;
+  } catch (err) {
+    console.warn('[firebaseAdmin] Failed to initialize admin app:', err);
+    return null;
   }
-
-  const projectId = process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || 'bappatrail-fef2d';
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL || '';
-  const privateKeyRaw = process.env.FIREBASE_PRIVATE_KEY || '';
-
-  if (clientEmail && privateKeyRaw) {
-    appInstance = initializeApp({
-      credential: cert({
-        projectId,
-        clientEmail,
-        privateKey: formatPrivateKey(privateKeyRaw),
-      }),
-    });
-  } else {
-    // Default application default credentials fallback
-    appInstance = initializeApp({
-      projectId,
-    });
-  }
-
-  return appInstance;
 }
 
-export const adminApp: App = getAdminApp();
-export const adminDb: Firestore = getFirestore(adminApp);
-export const adminAuth: Auth = getAuth(adminApp);
+export function getAdminDb(): Firestore | null {
+  if (dbInstance) return dbInstance;
+  try {
+    const app = getAdminApp();
+    if (!app) return null;
+    dbInstance = getFirestore(app);
+    return dbInstance;
+  } catch (err) {
+    console.warn('[firebaseAdmin] Failed to get Firestore admin instance:', err);
+    return null;
+  }
+}
+
+export function getAdminAuth(): Auth | null {
+  if (authInstance) return authInstance;
+  try {
+    const app = getAdminApp();
+    if (!app) return null;
+    authInstance = getAuth(app);
+    return authInstance;
+  } catch (err) {
+    console.warn('[firebaseAdmin] Failed to get Auth admin instance:', err);
+    return null;
+  }
+}
