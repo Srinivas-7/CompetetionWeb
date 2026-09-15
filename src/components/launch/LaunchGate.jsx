@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { LAUNCH_CONFIG } from '../../utils/constants';
 import { ComingSoonPage } from './ComingSoonPage';
 
-const bypassGate = typeof window !== 'undefined' && (
+const isDev = import.meta.env.DEV;
+const bypassGate = isDev && typeof window !== 'undefined' && (
   new URLSearchParams(window.location.search).has('skipgate') ||
   new URLSearchParams(window.location.search).has('preview')
 );
