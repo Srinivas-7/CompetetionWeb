@@ -243,6 +243,13 @@ export const PANDHALS_DATA = [
     "name": "Bhima Yuvakara Sangha",
     "photos": [
       {
+        "id": "pandhal-07-img-4",
+        "src": "/pandhals/pandhal-07/IMG_7111.webp",
+        "thumbSrc": "/pandhals/pandhal-07/IMG_7111-thumb.webp",
+        "alt": "Bhima Yuvakara Sangha - Photo 4",
+        "aspectRatio": 0.75
+      },
+      {
         "id": "pandhal-07-img-1",
         "src": "/pandhals/pandhal-07/IMG_7108.JPG.webp",
         "thumbSrc": "/pandhals/pandhal-07/IMG_7108.JPG-thumb.webp",
@@ -262,13 +269,6 @@ export const PANDHALS_DATA = [
         "thumbSrc": "/pandhals/pandhal-07/IMG_7099.JPG-thumb.webp",
         "alt": "Bhima Yuvakara Sangha - Photo 3",
         "aspectRatio": 1.778
-      },
-      {
-        "id": "pandhal-07-img-4",
-        "src": "/pandhals/pandhal-07/IMG_7111.webp",
-        "thumbSrc": "/pandhals/pandhal-07/IMG_7111-thumb.webp",
-        "alt": "Bhima Yuvakara Sangha - Photo 4",
-        "aspectRatio": 0.75
       },
       {
         "id": "pandhal-07-img-5",
