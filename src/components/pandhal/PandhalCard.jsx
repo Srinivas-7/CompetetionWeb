@@ -30,11 +30,11 @@ export const PandhalCard = memo(function PandhalCard({
         onClick={() => onCardClick(pandhal.id)}
         style={{ 
           width: '100%', 
-          aspectRatio: coverPhoto.aspectRatio ? `${coverPhoto.aspectRatio}` : '3 / 4',
-          minHeight: '160px',
+          aspectRatio: coverPhoto.aspectRatio ? `${coverPhoto.aspectRatio}` : '4 / 5',
+          minHeight: '180px',
           overflow: 'hidden', 
           position: 'relative',
-          background: '#1A0C0C',
+          background: 'radial-gradient(circle at center, #2C1212 0%, #150606 100%)',
           cursor: 'pointer',
           borderBottom: '1.5px solid #EADECB'
         }}
@@ -42,6 +42,11 @@ export const PandhalCard = memo(function PandhalCard({
         <img 
           src={coverPhoto.thumbSrc || coverPhoto.src} 
           alt={coverPhoto.alt || pandhal.name} 
+          onError={(e) => {
+            if (e.currentTarget.src !== coverPhoto.src && coverPhoto.src) {
+              e.currentTarget.src = coverPhoto.src;
+            }
+          }}
           style={{ 
             width: '100%', 
             height: '100%', 
@@ -50,6 +55,7 @@ export const PandhalCard = memo(function PandhalCard({
             transition: 'transform 0.3s ease'
           }}
           loading="lazy"
+          decoding="async"
         />
 
         {/* Gradient shadow overlay */}
