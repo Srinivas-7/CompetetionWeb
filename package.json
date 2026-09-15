@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "node scripts/checkNoHardcodedTimestamps.js && vite build",
+    "preview": "vite preview",
+    "check:timestamps": "node scripts/checkNoHardcodedTimestamps.js",
+    "test:bypass": "node scripts/testLaunchGateBypass.js",
+    "set-launch-time": "node scripts/setLaunchTime.js"
   },
   "dependencies": {
     "firebase": "^10.12.2",

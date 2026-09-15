@@ -1,9 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { FieldValue } from 'firebase-admin/firestore';
 import { getAdminAuth, getAdminDb } from './_lib/firebaseAdmin';
 import { 
   isValidPandhalId, 
-  NUM_SHARDS, 
   EVENT_ID, 
   getDeterministicShardIndex,
   RATE_LIMIT_IP_MAX,
@@ -12,8 +10,6 @@ import {
   RATE_LIMIT_UID_WINDOW_MS
 } from './_lib/constants';
 import { checkRateLimit } from './_lib/rateLimiter';
-
-
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // 1. CORS & Preflight Headers
@@ -36,16 +32,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  // 1b. Launch Time Gate (15 Sep 2026, 7:40:00 PM IST)
-  const LAUNCH_TIMESTAMP = 1789481400000;
-  if (Date.now() < LAUNCH_TIMESTAMP) {
-    return res.status(403).json({
-      success: false,
-      error: 'VOTING_NOT_STARTED',
-      message: 'Voting has not officially started yet. Bappa is taking a little longer to arrive — thank you for your patience, the celebration begins 15 September 2026 at 7:40 PM IST.',
-    });
-  }
-
   // 2. Client IP & Rate Limiting Abuse Protection
   const forwarded = req.headers['x-forwarded-for'];
   const clientIp = typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : req.socket?.remoteAddress || 'unknown';
@@ -61,7 +47,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  // 4. Input Payload Extraction & Validation
+  // 3. Input Payload Extraction & Validation
   let body = req.body;
   if (typeof body === 'string') {
     try {
@@ -77,7 +63,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { idToken: bodyToken, pandhalId, pandhalName, voterName } = body || {};
 
-  // Extract token from Authorization header if present, else fallback to bodyToken
   let idToken = bodyToken;
   const authHeader = req.headers['authorization'] || req.headers['Authorization'];
   if (typeof authHeader === 'string' && authHeader.trim().length > 0) {
@@ -104,7 +89,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  // 5. Cryptographic Firebase ID Token Verification via Admin SDK or Token Payload Decode
+  // 4. Token Verification
   let decodedToken: any = null;
   const adminAuth = getAdminAuth();
   if (adminAuth) {
@@ -145,7 +130,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const cleanPandhalName = typeof pandhalName === 'string' ? pandhalName.trim().slice(0, 100) : pandhalId;
   const voterDocId = `${EVENT_ID}_${uid}`;
 
-  // 5b. Authenticated UID-based Abuse Rate Limiter
+  // 5. Authenticated UID-based Rate Limiter
   const uidRateLimit = checkRateLimit(`uid:${uid}`, RATE_LIMIT_UID_MAX, RATE_LIMIT_UID_WINDOW_MS);
   if (!uidRateLimit.allowed) {
     res.setHeader('Retry-After', String(uidRateLimit.retryAfterSec || 15));
@@ -157,7 +142,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  // 6. Atomic Firestore Transaction (Uniqueness Guarantee & Sharded Counter Increment)
+  const projectId = process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || 'bappatrail-fef2d';
+
+  // 6. Firestore Vote Write (via Admin SDK or Direct REST API Fallback)
   try {
     const adminDb = getAdminDb();
     if (!adminDb) {
@@ -168,81 +155,55 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const shardIndex = getDeterministicShardIndex(uid, pandhalId);
     const shardRef = adminDb.doc(`counters/${pandhalId}/shards/shard_${shardIndex}`);
 
-    const txResult = await adminDb.runTransaction(async (transaction) => {
-      // Step A: Read voter record
-      const voterSnap = await transaction.get(voterRef);
-
-      if (voterSnap.exists) {
-        const existingData = voterSnap.data();
-        if (existingData?.pandhalId === pandhalId) {
-          // Idempotent retry: Same voter, same target -> return safe success with 0 new writes
-          return {
-            status: 'IDEMPOTENT_SUCCESS',
-            pandhalId,
-            pandhalName: existingData.pandhalName || cleanPandhalName || pandhalId,
-          };
-        }
-        // Duplicate vote for a different pandhal
-        return {
-          status: 'ALREADY_VOTED',
-          previousPandhalId: existingData?.pandhalId,
-          previousPandhalName: existingData?.pandhalName,
-        };
+    const voterSnap = await voterRef.get();
+    if (voterSnap.exists) {
+      const existingData = voterSnap.data();
+      if (existingData?.pandhalId === pandhalId) {
+        return res.status(200).json({
+          success: true,
+          message: `Your vote for ${existingData.pandhalName || cleanPandhalName} is successfully locked!`,
+          pandhalId,
+          pandhalName: existingData.pandhalName || cleanPandhalName,
+          idempotent: true,
+        });
       }
-
-      // Step B: Atomic Writes (Exactly 2 writes: 1 voter record + 1 distributed counter shard)
-      transaction.set(voterRef, {
-        uid,
-        email: email || '',
-        voterName: verifiedVoterName,
-        pandhalId,
-        pandhalName: cleanPandhalName,
-        eventId: EVENT_ID,
-        votedAt: FieldValue.serverTimestamp(),
-        ip: clientIp,
-      });
-
-      transaction.set(
-        shardRef,
-        {
-          count: FieldValue.increment(1),
-          lastUpdated: FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      );
-
-      return {
-        status: 'SUCCESS',
-        pandhalId,
-        pandhalName: cleanPandhalName,
-      };
-    });
-
-    if (txResult.status === 'ALREADY_VOTED') {
       return res.status(409).json({
         success: false,
         error: 'ALREADY_VOTED',
-        message: `Your Google account has already cast its ballot for "${txResult.previousPandhalName || 'another Bappa'}". Each account is permitted exactly 1 vote.`,
-        previousPandhalId: txResult.previousPandhalId,
-        previousPandhalName: txResult.previousPandhalName,
+        message: `Your Google account has already cast its ballot for "${existingData?.pandhalName || 'another Bappa'}". Each account is permitted exactly 1 vote.`,
+        previousPandhalId: existingData?.pandhalId,
+        previousPandhalName: existingData?.pandhalName,
       });
     }
 
-    // Success (Fresh vote or idempotent safe retry)
+    await voterRef.set({
+      uid,
+      email: email || '',
+      voterName: verifiedVoterName,
+      pandhalId,
+      pandhalName: cleanPandhalName,
+      eventId: EVENT_ID,
+      votedAt: new Date().toISOString(),
+      ip: clientIp,
+    });
+
+    shardRef.set({
+      count: 1,
+      lastUpdated: new Date().toISOString(),
+    }, { merge: true }).catch(() => {});
+
     return res.status(200).json({
       success: true,
-      message: `Your vote for ${txResult.pandhalName} is successfully locked!`,
-      pandhalId: txResult.pandhalId,
-      pandhalName: txResult.pandhalName,
-      idempotent: txResult.status === 'IDEMPOTENT_SUCCESS',
+      message: `Your vote for ${cleanPandhalName} is successfully locked!`,
+      pandhalId,
+      pandhalName: cleanPandhalName,
+      idempotent: false,
     });
   } catch (dbError: any) {
-    console.warn('[Admin SDK Firestore Tx failed, attempting Firestore REST API fallback with idToken]:', dbError?.message || dbError);
+    // REST API fallback using user's verified idToken
     try {
-      const projectId = process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || 'bappatrail-fef2d';
       const firestoreRestBase = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`;
 
-      // 1. Check if voter doc already exists
       const checkRes = await fetch(`${firestoreRestBase}/voters/${voterDocId}`, {
         headers: { 'Authorization': `Bearer ${idToken}` },
       });
@@ -269,7 +230,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
       }
 
-      // 2. Create voter record
       const createVoterRes = await fetch(`${firestoreRestBase}/voters?documentId=${voterDocId}`, {
         method: 'POST',
         headers: {
@@ -290,15 +250,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
 
       if (!createVoterRes.ok && createVoterRes.status !== 409) {
-        const errText = await createVoterRes.text();
-        console.error('[Firestore REST Voter Error]', createVoterRes.status, errText);
         throw new Error(`Firestore REST error: ${createVoterRes.status}`);
       }
 
-      // 3. Shard update (best effort background increment)
       const shardIndex = getDeterministicShardIndex(uid, pandhalId);
       const shardPath = `${firestoreRestBase}/counters/${pandhalId}/shards/shard_${shardIndex}`;
-      await fetch(shardPath, {
+      fetch(shardPath, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${idToken}`,
@@ -310,7 +267,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             lastUpdated: { timestampValue: new Date().toISOString() },
           },
         }),
-      }).catch((e) => console.warn('[Shard REST update warn]', e));
+      }).catch(() => {});
 
       return res.status(200).json({
         success: true,
@@ -320,11 +277,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         idempotent: false,
       });
     } catch (fallbackError: any) {
-      console.error('[Both Admin & REST Fallback Failed]:', fallbackError?.message || fallbackError);
+      console.error('[API Vote Fatal Failure]:', fallbackError?.message || fallbackError);
       return res.status(500).json({
         success: false,
         error: 'VOTE_NOT_PERSISTED',
-        message: 'We were unable to record your vote due to a database error. Your vote was NOT recorded. Please try again.',
+        message: 'We were unable to record your vote due to a database error. Please try again.',
       });
     }
   }

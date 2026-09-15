@@ -4,14 +4,20 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // =========================================================================
-    // GANAPATHI TRAIL 2026 - PRODUCTION SECURITY RULES
+    // GANAPATHI TRAIL 2026 - PRODUCTION SECURITY RULES (FULLY LIVE & OPEN)
     // 
-    // - Authenticated users (request.auth != null) can cast 1 vote for their UID
-    // - Voters cannot update or delete their vote document once created
+    // - 1 Vote per authenticated user UID (cannot update or delete)
     // - Distributed counters and shards are publicly readable and writeable by voters
+    // - System config is publicly readable, Admin write only
     // =========================================================================
 
-    // 1. Sharded Counters & Top-Level Counters
+    // 1. Dynamic System Configuration (Public read, Admin write only)
+    match /config/{configDocId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // 2. Sharded Counters & Top-Level Counters
     match /counters/{pandhalId} {
       allow read: if true;
       allow write: if request.auth != null;
@@ -27,19 +33,18 @@ service cloud.firestore {
       allow write: if request.auth != null;
     }
 
-    // 2. Voter Ballot Records (1 vote per authenticated user UID)
+    // 3. Voter Ballot Records (1 vote per authenticated user UID)
     match /voters/{voterDocId} {
       // Allow users to read only their own ballot document
       allow read: if request.auth != null && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid);
       
       // Allow authenticated users to create only their own unique vote doc (cannot update or delete)
       allow create: if request.auth != null 
-                    && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid)
-                    && request.time >= timestamp.value(1789481400000);
+                    && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid);
       allow update, delete: if false;
     }
 
-    // 3. Default fallback
+    // 4. Default fallback
     match /{document=**} {
       allow read: if true;
       allow write: if request.auth != null;

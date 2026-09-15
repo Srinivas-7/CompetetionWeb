@@ -1,34 +1,10 @@
-export const LAUNCH_CONFIG = {
-  // 15 September 2026, 7:40:00 PM IST (Asia/Kolkata)
-  LAUNCH_TIME_ISO: "2026-09-15T19:40:00+05:30",
-  LAUNCH_TIMESTAMP: 1789481400000, // Date.parse("2026-09-15T19:40:00+05:30")
-  TIMEZONE: "Asia/Kolkata"
+/**
+ * System and Competition Static Constants
+ * (No hardcoded launch timestamps — dynamic config lives in Firestore /config/launch)
+ */
+export const SYSTEM_CONFIG = {
+  EVENT_ID: "ganapathi_chaturthi_2026",
+  TIMEZONE: "Asia/Kolkata",
+  CONFIG_DOC_PATH: "config/launch",
+  FALLBACK_DISPLAY_DATE: "15 September 2026",
 };
-
-export const APP_CONFIG = {
-  TITLE: "Gajotsav 2026",
-  SUBTITLE: "Ganesh Utsav 2026",
-  TOTAL_PANDHALS: 21,
-  STORAGE_KEYS: {
-    MY_VOTE: 'gt_my_vote',
-    CAST_VOTES: 'gt_cast_votes_db',
-    PANDHAL_VOTES: 'gt_pandhals_votes',
-    SOUND_MUTED: 'gt_sound_muted'
-  }
-};
-
-export const CATEGORIES = [
-  { id: 'all', label: 'All 21 Pandhals' },
-  { id: 'top', label: 'Top Voted' },
-  { id: 'eco', label: 'Eco & Clay' },
-  { id: 'heritage', label: 'Heritage Mandals' },
-  { id: 'darbar', label: 'Royal Darbars' }
-];
-
-export const GALLERY_CATEGORIES = [
-  { id: 'all', label: 'All Photos' },
-  { id: 'bappa', label: 'Main Idol' },
-  { id: 'decoration', label: 'Decoration' },
-  { id: 'pandhal', label: 'Architecture' },
-  { id: 'cleanliness', label: 'Eco & Clean' }
-];

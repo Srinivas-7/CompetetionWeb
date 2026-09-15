@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { GanapatiDoodle } from './GanapatiDoodle';
-import { LAUNCH_CONFIG } from '../../utils/constants';
 
 function calculateTimeRemaining(targetTimestamp) {
+  if (!targetTimestamp) {
+    return { total: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
   const diff = targetTimestamp - Date.now();
   if (diff <= 0) {
     return { total: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
@@ -14,24 +16,20 @@ function calculateTimeRemaining(targetTimestamp) {
   return { total: diff, days, hours, minutes, seconds };
 }
 
-export function ComingSoonPage() {
-  const [timeLeft, setTimeLeft] = useState(() => calculateTimeRemaining(LAUNCH_CONFIG.LAUNCH_TIMESTAMP));
+export function ComingSoonPage({ targetTimestamp = null, displayTime = "Opening Soon" }) {
+  const [timeLeft, setTimeLeft] = useState(() => calculateTimeRemaining(targetTimestamp));
 
   useEffect(() => {
+    if (!targetTimestamp) return;
+
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeRemaining(LAUNCH_CONFIG.LAUNCH_TIMESTAMP));
+      setTimeLeft(calculateTimeRemaining(targetTimestamp));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [targetTimestamp]);
 
   const pad = (n) => String(n).padStart(2, '0');
-
-  // Compute prominent remaining time string (e.g., "1 DAY 1 HOUR")
-  const displayHours = timeLeft.minutes > 0 ? timeLeft.hours + 1 : timeLeft.hours;
-  const timeRemainingSummary = timeLeft.total > 0
-    ? `${timeLeft.days > 0 ? `${timeLeft.days} DAY ` : ''}${displayHours} HOUR${displayHours !== 1 ? 'S' : ''}`.trim()
-    : 'LAUNCHING NOW';
 
   return (
     <div
@@ -54,129 +52,80 @@ export function ComingSoonPage() {
         color: 'var(--text-primary, #1A1A1A)'
       }}
     >
-      {/* Decorative Traditional Corner Accents */}
-      <div
+      <header
         style={{
-          position: 'absolute',
-          top: '14px',
-          left: '14px',
-          fontFamily: 'var(--font-mono, monospace)',
-          fontSize: '0.78rem',
-          color: 'var(--gold-primary, #C89D47)',
-          opacity: 0.75,
-          pointerEvents: 'none',
-          userSelect: 'none'
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '6px',
+          marginBottom: '20px'
         }}
       >
-        ✦ ॐ ✦
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          top: '14px',
-          right: '14px',
-          fontFamily: 'var(--font-mono, monospace)',
-          fontSize: '0.78rem',
-          color: 'var(--gold-primary, #C89D47)',
-          opacity: 0.75,
-          pointerEvents: 'none',
-          userSelect: 'none'
-        }}
-      >
-        ✦ ॐ ✦
-      </div>
+        <span
+          style={{
+            fontFamily: 'var(--font-mono, monospace)',
+            fontSize: 'clamp(0.72rem, 2vw, 0.82rem)',
+            fontWeight: 800,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: 'var(--gold-dark, #8A6818)',
+            background: 'rgba(218, 165, 32, 0.12)',
+            padding: '4px 14px',
+            borderRadius: 'var(--radius-pill, 9999px)',
+            border: '1px solid rgba(218, 165, 32, 0.35)',
+            boxShadow: '0 2px 8px rgba(200, 157, 71, 0.12)'
+          }}
+        >
+          GANAPATHI TRAIL 2026
+        </span>
+      </header>
 
-      {/* Main Centered Card Container */}
       <main
         style={{
-          maxWidth: '480px',
-          width: '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           textAlign: 'center',
-          padding: '16px 12px',
-          boxSizing: 'border-box',
-          position: 'relative',
+          maxWidth: '440px',
+          width: '100%',
           zIndex: 1
         }}
       >
-        {/* Top Festival Pill Badge */}
-        <div style={{ marginBottom: '14px' }}>
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: '#FFF8E7',
-              color: 'var(--maroon-primary, #6B1414)',
-              border: '1.5px solid var(--gold-primary, #C89D47)',
-              boxShadow: '0 2px 10px rgba(200, 157, 71, 0.22)',
-              fontFamily: 'var(--font-mono, monospace)',
-              fontWeight: 800,
-              fontSize: 'clamp(0.72rem, 2.5vw, 0.8rem)',
-              letterSpacing: '0.08em',
-              padding: '6px 16px',
-              borderRadius: '9999px',
-              textTransform: 'uppercase'
-            }}
-          >
-            <span style={{ color: 'var(--gold-primary, #C89D47)' }}>★</span>
-            BAPPA UTSAV 2026
-            <span style={{ color: 'var(--gold-primary, #C89D47)' }}>★</span>
-          </span>
-        </div>
-
-        {/* Central Transparent Ganapati Doodle Illustration */}
         <div
           style={{
-            margin: '4px 0 14px',
-            animation: 'bappaFloat 4s ease-in-out infinite alternate',
-            transformOrigin: 'center center'
+            marginBottom: '16px',
+            filter: 'drop-shadow(0 12px 24px rgba(107, 20, 20, 0.18))',
+            animation: 'bappaFloat 4s ease-in-out infinite'
           }}
         >
-          <GanapatiDoodle size={260} />
+          <GanapatiDoodle size={110} primaryColor="#6B1414" accentColor="#C89D47" />
         </div>
 
-        {/* Prominent Announcement Heading */}
         <h1
           style={{
-            fontFamily: 'var(--font-display, "Unbounded", system-ui, sans-serif)',
-            fontSize: 'clamp(1.65rem, 6.2vw, 2.35rem)',
+            fontFamily: 'var(--font-heading, "Unbounded", system-ui, sans-serif)',
+            fontSize: 'clamp(1.5rem, 5.5vw, 2.2rem)',
             fontWeight: 900,
             lineHeight: 1.15,
-            letterSpacing: '-0.03em',
-            margin: '0 0 12px',
             color: 'var(--maroon-primary, #6B1414)',
-            textTransform: 'uppercase',
-            wordBreak: 'break-word'
+            margin: '0 0 10px',
+            letterSpacing: '-0.02em',
+            textShadow: '0 2px 10px rgba(107, 20, 20, 0.08)'
           }}
         >
-          BAPPA IS <br />
-          <span
-            style={{
-              backgroundImage: 'linear-gradient(135deg, #DFBF7A 0%, #C89D47 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              display: 'inline-block'
-            }}
-          >
-            COMING SOON
-          </span>
+          Bappa is Arriving
         </h1>
 
-        {/* Launch Date & Time Badge */}
         <div
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            background: 'rgba(255, 255, 255, 0.95)',
-            border: '1.5px solid #EADECB',
-            borderRadius: '14px',
-            padding: '8px 20px',
-            boxShadow: '0 4px 14px rgba(91, 20, 20, 0.06)',
-            marginBottom: '16px'
+            gap: '6px',
+            background: 'rgba(107, 20, 20, 0.06)',
+            border: '1px solid rgba(107, 20, 20, 0.15)',
+            padding: '6px 14px',
+            borderRadius: '12px',
+            marginBottom: '20px'
           }}
         >
           <p
@@ -190,11 +139,10 @@ export function ComingSoonPage() {
               textTransform: 'uppercase'
             }}
           >
-            15 SEPTEMBER • 7:40 PM IST
+            {displayTime}
           </p>
         </div>
 
-        {/* Live Countdown Unit Cards */}
         {timeLeft.total > 0 && (
           <div
             style={{
@@ -254,7 +202,6 @@ export function ComingSoonPage() {
           </div>
         )}
 
-        {/* Subtitle / Festive Tagline */}
         <p
           style={{
             fontFamily: 'var(--font-sans, system-ui, sans-serif)',
@@ -266,11 +213,10 @@ export function ComingSoonPage() {
             maxWidth: '360px'
           }}
         >
-          Bappa is taking a little longer to arrive — thank you for your patience, the celebration begins 15 September at 7:40 PM IST.
+          Thank you for your patience — the celebration begins at {displayTime}.
         </p>
       </main>
 
-      {/* Micro-Animation Keyframes */}
       <style>
         {`
           @keyframes bappaFloat {
@@ -278,28 +224,10 @@ export function ComingSoonPage() {
               transform: translateY(0px) scale(1);
             }
             50% {
-              transform: translateY(-8px) scale(1.01);
+              transform: translateY(-8px) scale(1.02);
             }
             100% {
               transform: translateY(0px) scale(1);
-            }
-          }
-          @keyframes pulseGlow {
-            0%, 100% {
-              opacity: 0.4;
-              transform: scale(0.9);
-            }
-            50% {
-              opacity: 1;
-              transform: scale(1.15);
-            }
-          }
-          @keyframes spinSlow {
-            from {
-              transform: rotate(0deg);
-            }
-            to {
-              transform: rotate(360deg);
             }
           }
         `}
