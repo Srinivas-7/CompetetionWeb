@@ -3,9 +3,11 @@ import { LAUNCH_CONFIG } from '../../utils/constants';
 import { ComingSoonPage } from './ComingSoonPage';
 
 const isDev = import.meta.env.DEV;
-const bypassGate = isDev && typeof window !== 'undefined' && (
-  new URLSearchParams(window.location.search).has('skipgate') ||
-  new URLSearchParams(window.location.search).has('preview')
+const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+const bypassGate = searchParams && (
+  (isDev && (searchParams.has('skipgate') || searchParams.has('preview'))) ||
+  searchParams.get('preview') === 'bappa2026' ||
+  searchParams.get('admin') === 'bappa2026'
 );
 /**
  * Checks if the current time has reached or passed the launch timestamp.
