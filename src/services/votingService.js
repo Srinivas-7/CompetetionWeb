@@ -5,9 +5,9 @@ import {
   doc,
   onSnapshot,
   getDoc,
+  setDoc,
   collectionGroup,
   getDocs,
-  runTransaction,
   serverTimestamp,
   increment
 } from 'firebase/firestore';
@@ -38,74 +38,48 @@ class VotingService {
     if (typeof window !== 'undefined') {
       try {
         localStorage.removeItem('bappatrail_my_vote_cache');
-        localStorage.removeItem('gt_my_vote');
-      } catch { }
+      } catch {
+        // Ignored
+      }
     }
   }
 
   /**
-   * Returns currently cached vote record for the active user UID
-   * @param {string|null} uid 
+   * Retrieves the current user's vote from cache
    */
-  getMyVote(uid = null) {
-    const targetUid = uid || auth?.currentUser?.uid || this.currentUid;
-    if (!targetUid) return null;
-
-    if (this.currentUid === targetUid && this.myVoteCache) {
-      return this.myVoteCache;
-    }
-
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = localStorage.getItem(`gt_vote_${EVENT_ID}_${targetUid}`);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (this.currentUid === targetUid) {
-            this.myVoteCache = parsed;
-          }
-          return parsed;
-        }
-      } catch { }
-    }
-    return null;
-  }
-
-  /**
-   * Sets cached vote record scoped strictly to the user UID
-   * @param {object|null} voteData 
-   * @param {string|null} uid 
-   */
-  setMyVote(voteData, uid = null) {
-    const targetUid = uid || auth?.currentUser?.uid || this.currentUid;
-    if (!targetUid) return;
-
-    this.currentUid = targetUid;
-    this.myVoteCache = voteData;
-
-    if (typeof window !== 'undefined') {
-      try {
-        if (voteData) {
-          localStorage.setItem(`gt_vote_${EVENT_ID}_${targetUid}`, JSON.stringify(voteData));
-        } else {
-          localStorage.removeItem(`gt_vote_${EVENT_ID}_${targetUid}`);
-        }
-      } catch { }
+  getMyVote(uid) {
+    if (!uid) return null;
+    try {
+      const stored = localStorage.getItem(`bappatrail_vote_${uid}`);
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
     }
   }
 
   /**
-   * Clears cached vote record for a specific user UID or active user
-   * @param {string|null} uid 
+   * Caches the user's vote locally
    */
-  clearMyVote(uid = null) {
-    const targetUid = uid || auth?.currentUser?.uid || this.currentUid;
-    if (!targetUid || this.currentUid === targetUid) {
+  setMyVote(voteRecord, uid) {
+    if (!uid) return;
+    try {
+      this.myVoteCache = voteRecord;
+      localStorage.setItem(`bappatrail_vote_${uid}`, JSON.stringify(voteRecord));
+    } catch {
+      // Ignored
+    }
+  }
+
+  /**
+   * Clears the user's vote from cache
+   */
+  clearMyVote(uid) {
+    if (!uid) return;
+    try {
       this.myVoteCache = null;
-    }
-    if (targetUid && typeof window !== 'undefined') {
-      try {
-        localStorage.removeItem(`gt_vote_${EVENT_ID}_${targetUid}`);
-      } catch { }
+      localStorage.removeItem(`bappatrail_vote_${uid}`);
+    } catch {
+      // Ignored
     }
   }
 
@@ -174,7 +148,7 @@ class VotingService {
   }
 
   /**
-   * Executes atomic client-side Firestore voting transaction
+   * Executes lean client-side Firestore voting write (1 read + 1 write)
    */
   async _voteViaFirestore(currentUser, pandhalId, pandhalName, voterName) {
     if (!db) throw new Error('FIRESTORE_NOT_AVAILABLE');
@@ -187,51 +161,50 @@ class VotingService {
     const shardIdx = getDeterministicShardIndex(uid, pandhalId);
     const shardDocRef = doc(db, 'counters', pandhalId, 'shards', `shard_${shardIdx}`);
 
-    const txResult = await runTransaction(db, async (transaction) => {
-      const voterSnap = await transaction.get(voterDocRef);
-      if (voterSnap.exists()) {
-        const data = voterSnap.data();
-        if (data?.pandhalId === pandhalId) {
-          return {
-            status: 'IDEMPOTENT_SUCCESS',
-            pandhalId,
-            pandhalName: data.pandhalName || pandhalName,
-          };
-        }
+    // Check if voter already cast ballot
+    const voterSnap = await getDoc(voterDocRef);
+    if (voterSnap.exists()) {
+      const data = voterSnap.data();
+      if (data?.pandhalId === pandhalId) {
         return {
-          status: 'ALREADY_VOTED',
-          previousPandhalId: data?.pandhalId,
-          previousPandhalName: data?.pandhalName || 'another Bappa',
+          status: 'IDEMPOTENT_SUCCESS',
+          pandhalId,
+          pandhalName: data.pandhalName || pandhalName,
         };
       }
-
-      transaction.set(voterDocRef, {
-        uid,
-        email,
-        voterName: displayName,
-        pandhalId,
-        pandhalName,
-        eventId: EVENT_ID,
-        votedAt: serverTimestamp(),
-      });
-
-      transaction.set(
-        shardDocRef,
-        {
-          count: increment(1),
-          lastUpdated: serverTimestamp(),
-        },
-        { merge: true }
-      );
-
       return {
-        status: 'SUCCESS',
-        pandhalId,
-        pandhalName,
+        status: 'ALREADY_VOTED',
+        previousPandhalId: data?.pandhalId,
+        previousPandhalName: data?.pandhalName || 'another Bappa',
       };
+    }
+
+    // Write voter ballot
+    await setDoc(voterDocRef, {
+      uid,
+      email,
+      voterName: displayName,
+      pandhalId,
+      pandhalName,
+      eventId: EVENT_ID,
+      votedAt: serverTimestamp(),
     });
 
-    return txResult;
+    // Increment shard counter
+    setDoc(
+      shardDocRef,
+      {
+        count: increment(1),
+        lastUpdated: serverTimestamp(),
+      },
+      { merge: true }
+    ).catch(e => console.warn('[Shard count write warning]', e));
+
+    return {
+      status: 'SUCCESS',
+      pandhalId,
+      pandhalName,
+    };
   }
 
   /**

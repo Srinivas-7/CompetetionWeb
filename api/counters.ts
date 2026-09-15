@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { adminDb } from './_lib/firebaseAdmin';
+import { getAdminDb } from './_lib/firebaseAdmin';
 import { VALID_PANDHAL_IDS } from './_lib/constants';
 
 interface CachedCounters {
@@ -54,6 +54,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     VALID_PANDHAL_IDS.forEach((id) => {
       counts[id] = 0;
     });
+
+    const adminDb = getAdminDb();
+    if (!adminDb) {
+      throw new Error('ADMIN_DB_UNAVAILABLE');
+    }
 
     // Query all shard subcollections across all pandhals
     const shardsSnapshot = await adminDb.collectionGroup('shards').get();
