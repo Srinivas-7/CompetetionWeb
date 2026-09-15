@@ -36,13 +36,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  // 1b. Launch Time Gate (15 Sep 2026, 6:00:00 PM IST)
-  const LAUNCH_TIMESTAMP = 1789475400000;
+  // 1b. Launch Time Gate (15 Sep 2026, 7:00:00 PM IST)
+  const LAUNCH_TIMESTAMP = 1789479000000;
   if (Date.now() < LAUNCH_TIMESTAMP) {
     return res.status(403).json({
       success: false,
       error: 'VOTING_NOT_STARTED',
-      message: 'Voting has not officially started yet. Bappa is taking a little longer to arrive — thank you for your patience, the celebration begins 15 September 2026 at 6:00 PM IST.',
+      message: 'Voting has not officially started yet. Bappa is taking a little longer to arrive — thank you for your patience, the celebration begins 15 September 2026 at 7:00 PM IST.',
     });
   }
 

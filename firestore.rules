@@ -35,7 +35,7 @@ service cloud.firestore {
       // Allow authenticated users to create only their own unique vote doc (cannot update or delete)
       allow create: if request.auth != null 
                     && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid)
-                    && request.time >= timestamp.value(1789475400000);
+                    && request.time >= timestamp.value(1789479000000);
       allow update, delete: if false;
     }
 

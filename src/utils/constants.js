@@ -1,7 +1,7 @@
 export const LAUNCH_CONFIG = {
-  // 15 September 2026, 6:00:00 PM IST (Asia/Kolkata)
-  LAUNCH_TIME_ISO: "2026-09-15T18:00:00+05:30",
-  LAUNCH_TIMESTAMP: 1789475400000, // Date.parse("2026-09-15T18:00:00+05:30")
+  // 15 September 2026, 7:00:00 PM IST (Asia/Kolkata)
+  LAUNCH_TIME_ISO: "2026-09-15T19:00:00+05:30",
+  LAUNCH_TIMESTAMP: 1789479000000, // Date.parse("2026-09-15T19:00:00+05:30")
   TIMEZONE: "Asia/Kolkata"
 };
 
