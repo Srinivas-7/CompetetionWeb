@@ -397,18 +397,18 @@ export const PANDHALS_DATA = [
     "name": "Sri Vayuputra Yuvakara Sangha",
     "photos": [
       {
-        "id": "pandhal-11-img-1",
-        "src": "/pandhals/pandhal-11/IMG_7147.webp",
-        "thumbSrc": "/pandhals/pandhal-11/IMG_7147-thumb.webp",
-        "alt": "Sri Vayuputra Yuvakara Sangha - Photo 1",
-        "aspectRatio": 1.333
-      },
-      {
         "id": "pandhal-11-img-2",
         "src": "/pandhals/pandhal-11/IMG_7148.webp",
         "thumbSrc": "/pandhals/pandhal-11/IMG_7148-thumb.webp",
         "alt": "Sri Vayuputra Yuvakara Sangha - Photo 2",
         "aspectRatio": 0.75
+      },
+      {
+        "id": "pandhal-11-img-1",
+        "src": "/pandhals/pandhal-11/IMG_7147.webp",
+        "thumbSrc": "/pandhals/pandhal-11/IMG_7147-thumb.webp",
+        "alt": "Sri Vayuputra Yuvakara Sangha - Photo 1",
+        "aspectRatio": 1.333
       },
       {
         "id": "pandhal-11-img-3",
