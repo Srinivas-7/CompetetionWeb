@@ -143,24 +143,54 @@ export function VotePage({
             </span>
           </div>
 
-          {/* Hero Image Stage */}
+          {/* Hero Image Stage (Free-Style natural ratio) */}
           <div 
             style={{
               width: '100%',
-              aspectRatio: '16 / 11',
+              minHeight: '280px',
+              maxHeight: '420px',
               borderRadius: '16px',
               overflow: 'hidden',
-              backgroundColor: '#F5EFEB',
+              backgroundColor: '#160B0B',
               border: '1.5px solid #EADECB',
               margin: '0 auto 16px',
               position: 'relative',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)'
             }}
           >
+            {/* Ambient backdrop */}
+            {coverPhoto.src && (
+              <div 
+                style={{
+                  position: 'absolute',
+                  inset: '-15px',
+                  backgroundImage: `url(${coverPhoto.thumbSrc || coverPhoto.src})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  filter: 'blur(24px) brightness(0.4)',
+                  transform: 'scale(1.15)',
+                  pointerEvents: 'none'
+                }}
+              />
+            )}
             <img 
               src={coverPhoto.src} 
-              alt={coverPhoto.alt} 
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              alt={coverPhoto.alt || pandhal.name} 
+              style={{ 
+                maxWidth: '100%', 
+                maxHeight: '400px', 
+                width: 'auto', 
+                height: 'auto', 
+                objectFit: 'contain', 
+                display: 'block',
+                position: 'relative',
+                zIndex: 2,
+                borderRadius: '8px',
+                boxShadow: '0 6px 20px rgba(0,0,0,0.4)'
+              }}
             />
           </div>
 
@@ -178,9 +208,12 @@ export function VotePage({
             {pandhal.name}
           </h1>
 
-          <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: '0 0 20px' }}>
-            {pandhal.location} • <span style={{ color: 'var(--maroon-primary)', fontWeight: 700 }}>{pandhal.theme}</span>
-          </p>
+          {(pandhal.location || pandhal.theme) && (
+            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', margin: '0 0 20px' }}>
+              {pandhal.location}{pandhal.location && pandhal.theme && ' • '}
+              {pandhal.theme && <span style={{ color: 'var(--maroon-primary)', fontWeight: 700 }}>{pandhal.theme}</span>}
+            </p>
+          )}
 
           {/* Verified Google User Badge */}
           {user && (

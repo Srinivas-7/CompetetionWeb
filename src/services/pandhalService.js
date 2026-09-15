@@ -46,17 +46,17 @@ export const pandhalService = {
     const q = query.toLowerCase().trim();
     let list = (baseList || PANDHALS_DATA).filter(p => {
       const matchSearch = !q || 
-        p.name.toLowerCase().includes(q) ||
-        p.organization.toLowerCase().includes(q) ||
-        p.location.toLowerCase().includes(q) ||
-        p.theme.toLowerCase().includes(q);
+        (p.name && p.name.toLowerCase().includes(q)) ||
+        (p.organization && p.organization.toLowerCase().includes(q)) ||
+        (p.location && p.location.toLowerCase().includes(q)) ||
+        (p.theme && p.theme.toLowerCase().includes(q));
 
       if (!matchSearch) return false;
 
       if (category === 'all') return true;
-      if (category === 'eco') return p.badge.includes('Eco') || p.theme.includes('Botanical') || p.theme.includes('Clay');
-      if (category === 'heritage') return p.badge.includes('Heritage') || p.badge.includes('Ancient') || p.establishedYear < 1980;
-      if (category === 'darbar') return p.theme.includes('Darbar') || p.theme.includes('Throne') || p.theme.includes('Palace') || p.theme.includes('Raja');
+      if (category === 'eco') return (p.badge && p.badge.includes('Eco')) || (p.theme && (p.theme.includes('Botanical') || p.theme.includes('Clay')));
+      if (category === 'heritage') return (p.badge && (p.badge.includes('Heritage') || p.badge.includes('Ancient'))) || (p.establishedYear && p.establishedYear < 1980);
+      if (category === 'darbar') return (p.theme && (p.theme.includes('Darbar') || p.theme.includes('Throne') || p.theme.includes('Palace') || p.theme.includes('Raja')));
       return true;
     });
 

@@ -38,3 +38,10 @@ service-account*.json
 credentials.json
 
 *.timestamp-*.mjs
+
+# Heavy raw mobile camera files (web uses optimized WebP)
+*.HEIC
+*.heic
+*.JPG.jpeg
+*.jpeg
+

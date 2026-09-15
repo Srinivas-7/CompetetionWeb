@@ -31,10 +31,9 @@ for (let i = 1; i <= 21; i++) {
   const secondaryPhoto = (i % 2 === 1) ? lotusBappaPath : goldThronePath;
 
   fs.copyFileSync(primaryPhoto, path.join(folder, 'cover.webp'));
-  fs.copyFileSync(heroMasterPath, path.join(folder, 'decoration-01.webp'));
-  fs.copyFileSync(secondaryPhoto, path.join(folder, 'decoration-02.webp'));
-  fs.copyFileSync(primaryPhoto, path.join(folder, 'cleanliness.webp'));
-  fs.copyFileSync(heroMasterPath, path.join(folder, 'gallery-01.webp'));
+  fs.copyFileSync(heroMasterPath, path.join(folder, 'photo1.webp'));
+  fs.copyFileSync(secondaryPhoto, path.join(folder, 'photo2.webp'));
+  fs.copyFileSync(heroMasterPath, path.join(folder, 'photo3.webp'));
 }
 
 console.log('Photorealistic master images deployed across all 21 pandhals!');

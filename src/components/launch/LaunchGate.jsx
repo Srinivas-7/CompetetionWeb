@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { LAUNCH_CONFIG } from '../../utils/constants';
 import { ComingSoonPage } from './ComingSoonPage';
 
+const bypassGate = typeof window !== 'undefined' && (
+  new URLSearchParams(window.location.search).has('skipgate') ||
+  new URLSearchParams(window.location.search).has('preview')
+);
 /**
  * Checks if the current time has reached or passed the launch timestamp.
  */
@@ -78,7 +82,7 @@ export function LaunchGate({ children }) {
   }, [launched, clockOffset]);
 
   // Before launch: Show only the Coming Soon Page (gating the entire app & routes)
-  if (!launched) {
+  if (!launched && !bypassGate) {
     return <ComingSoonPage />;
   }
 

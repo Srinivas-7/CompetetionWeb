@@ -208,7 +208,7 @@ export function ComingSoonPage() {
           >
             {[
               { label: 'DAYS', value: pad(timeLeft.days) },
-              { label: 'HOURS', value: pad(displayHours) },
+              { label: 'HOURS', value: pad(timeLeft.hours) },
               { label: 'MINS', value: pad(timeLeft.minutes) },
               { label: 'SECS', value: pad(timeLeft.seconds) }
             ].map((unit) => (

@@ -8,7 +8,7 @@ export const PandhalCard = memo(function PandhalCard({
   onVoteClick, 
   onShareClick 
 }) {
-  const coverPhoto = pandhal.photos[0] || { src: '', alt: pandhal.name };
+  const coverPhoto = pandhal.photos[0] || { src: '', thumbSrc: '', alt: pandhal.name };
 
   return (
     <article 
@@ -20,31 +20,31 @@ export const PandhalCard = memo(function PandhalCard({
         height: '100%',
         borderRadius: 'var(--radius-md)',
         background: '#FFFFFF',
-        border: '1px solid #EADECB',
-        boxShadow: '0 4px 16px rgba(91, 20, 20, 0.07)'
+        border: '1.5px solid #EADECB',
+        boxShadow: '0 4px 16px rgba(91, 20, 20, 0.07)',
+        overflow: 'hidden'
       }}
     >
-      {/* 1. Photo Stage */}
+      {/* 1. Photo Stage (Free size natural aspect ratio, no crop) */}
       <div 
         onClick={() => onCardClick(pandhal.id)}
         style={{ 
           width: '100%', 
-          aspectRatio: '1 / 1',
           overflow: 'hidden', 
           position: 'relative',
-          background: '#F5EFEB',
+          background: '#1A0C0C',
           cursor: 'pointer',
           borderBottom: '1.5px solid #EADECB'
         }}
       >
         <img 
-          src={coverPhoto.src} 
-          alt={coverPhoto.alt} 
+          src={coverPhoto.thumbSrc || coverPhoto.src} 
+          alt={coverPhoto.alt || pandhal.name} 
           style={{ 
             width: '100%', 
-            height: '100%', 
-            objectFit: 'cover', 
-            display: 'block'
+            height: 'auto', 
+            display: 'block',
+            transition: 'transform 0.3s ease'
           }}
           loading="lazy"
         />
@@ -129,7 +129,7 @@ export const PandhalCard = memo(function PandhalCard({
             textShadow: '0 1px 3px rgba(0,0,0,0.8)'
           }}
         >
-          <span>GALLERY</span>
+          <span>PHOTOS</span>
         </div>
       </div>
 
@@ -166,24 +166,26 @@ export const PandhalCard = memo(function PandhalCard({
             {pandhal.name}
           </h3>
 
-          <p 
-            style={{ 
-              fontSize: 'clamp(0.65rem, 1.6vw, 0.78rem)', 
-              color: 'var(--text-secondary)', 
-              margin: 0,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis'
-            }}
-          >
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style={{ color: 'var(--maroon-primary)', flexShrink: 0 }}>
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-            </svg>
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{pandhal.location}</span>
-          </p>
+          {pandhal.location && (
+            <p 
+              style={{ 
+                fontSize: 'clamp(0.65rem, 1.6vw, 0.78rem)', 
+                color: 'var(--text-secondary)', 
+                margin: 0,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style={{ color: 'var(--maroon-primary)', flexShrink: 0 }}>
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{pandhal.location}</span>
+            </p>
+          )}
         </div>
 
         {/* Live Vote Score Strip */}

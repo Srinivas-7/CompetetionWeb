@@ -89,7 +89,7 @@ export function VoteModal({
         {/* Selected Pandhal Avatar & Title */}
         <div style={{ marginBottom: '16px' }}>
           <img 
-            src={pandhal.photos[0]?.src || ''} 
+            src={pandhal.photos[0]?.thumbSrc || pandhal.photos[0]?.src || ''} 
             alt={pandhal.name} 
             style={{
               width: '74px',
@@ -111,9 +111,11 @@ export function VoteModal({
           >
             {pandhal.name}
           </h2>
-          <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0 }}>
-            {pandhal.location}
-          </p>
+          {pandhal.location && (
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: 0 }}>
+              {pandhal.location}
+            </p>
+          )}
         </div>
 
         {/* Verified Google User Pill */}

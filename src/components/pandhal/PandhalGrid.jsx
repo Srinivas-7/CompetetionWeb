@@ -40,9 +40,8 @@ export function PandhalGrid({
   return (
     <div 
       style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-        gap: 'clamp(10px, 2.8vw, 20px)',
+        columnCount: 2,
+        columnGap: 'clamp(10px, 2.5vw, 18px)',
         width: '100%'
       }}
     >
@@ -51,15 +50,24 @@ export function PandhalGrid({
         const hasVoted = myVote && myVote.pandhalId === pandhal.id;
 
         return (
-          <PandhalCard 
+          <div 
             key={pandhal.id}
-            pandhal={pandhal}
-            voteCount={votes}
-            hasVoted={hasVoted}
-            onCardClick={onCardClick}
-            onVoteClick={onVoteClick}
-            onShareClick={onShareClick}
-          />
+            style={{
+              breakInside: 'avoid',
+              marginBottom: 'clamp(10px, 2.5vw, 18px)',
+              display: 'inline-block',
+              width: '100%'
+            }}
+          >
+            <PandhalCard 
+              pandhal={pandhal}
+              voteCount={votes}
+              hasVoted={hasVoted}
+              onCardClick={onCardClick}
+              onVoteClick={onVoteClick}
+              onShareClick={onShareClick}
+            />
+          </div>
         );
       })}
     </div>
