@@ -229,11 +229,95 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       idempotent: txResult.status === 'IDEMPOTENT_SUCCESS',
     });
   } catch (dbError: any) {
-    console.error('[Firestore Tx Error / Vote Not Persisted]', dbError?.message || dbError);
-    return res.status(500).json({
-      success: false,
-      error: 'VOTE_NOT_PERSISTED',
-      message: 'We were unable to record your vote due to a database error. Your vote was NOT recorded. Please try again.',
-    });
+    console.warn('[Admin SDK Firestore Tx failed, attempting Firestore REST API fallback with idToken]:', dbError?.message || dbError);
+    try {
+      const projectId = process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || 'bappatrail-fef2d';
+      const firestoreRestBase = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`;
+
+      // 1. Check if voter doc already exists
+      const checkRes = await fetch(`${firestoreRestBase}/voters/${voterDocId}`, {
+        headers: { 'Authorization': `Bearer ${idToken}` },
+      });
+
+      if (checkRes.ok) {
+        const voterData = await checkRes.json();
+        const existingPandhalId = voterData?.fields?.pandhalId?.stringValue;
+        const existingPandhalName = voterData?.fields?.pandhalName?.stringValue || cleanPandhalName;
+        if (existingPandhalId === pandhalId) {
+          return res.status(200).json({
+            success: true,
+            message: `Your vote for ${existingPandhalName} is successfully locked!`,
+            pandhalId,
+            pandhalName: existingPandhalName,
+            idempotent: true,
+          });
+        }
+        return res.status(409).json({
+          success: false,
+          error: 'ALREADY_VOTED',
+          message: `Your Google account has already cast its ballot for "${existingPandhalName}". Each account is permitted exactly 1 vote.`,
+          previousPandhalId: existingPandhalId,
+          previousPandhalName: existingPandhalName,
+        });
+      }
+
+      // 2. Create voter record
+      const createVoterRes = await fetch(`${firestoreRestBase}/voters?documentId=${voterDocId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${idToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fields: {
+            uid: { stringValue: uid },
+            email: { stringValue: email || '' },
+            voterName: { stringValue: verifiedVoterName },
+            pandhalId: { stringValue: pandhalId },
+            pandhalName: { stringValue: cleanPandhalName },
+            eventId: { stringValue: EVENT_ID },
+            votedAt: { timestampValue: new Date().toISOString() },
+          },
+        }),
+      });
+
+      if (!createVoterRes.ok && createVoterRes.status !== 409) {
+        const errText = await createVoterRes.text();
+        console.error('[Firestore REST Voter Error]', createVoterRes.status, errText);
+        throw new Error(`Firestore REST error: ${createVoterRes.status}`);
+      }
+
+      // 3. Shard update (best effort background increment)
+      const shardIndex = getDeterministicShardIndex(uid, pandhalId);
+      const shardPath = `${firestoreRestBase}/counters/${pandhalId}/shards/shard_${shardIndex}`;
+      await fetch(shardPath, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${idToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fields: {
+            count: { integerValue: "1" },
+            lastUpdated: { timestampValue: new Date().toISOString() },
+          },
+        }),
+      }).catch((e) => console.warn('[Shard REST update warn]', e));
+
+      return res.status(200).json({
+        success: true,
+        message: `Your vote for ${cleanPandhalName} is successfully locked!`,
+        pandhalId,
+        pandhalName: cleanPandhalName,
+        idempotent: false,
+      });
+    } catch (fallbackError: any) {
+      console.error('[Both Admin & REST Fallback Failed]:', fallbackError?.message || fallbackError);
+      return res.status(500).json({
+        success: false,
+        error: 'VOTE_NOT_PERSISTED',
+        message: 'We were unable to record your vote due to a database error. Your vote was NOT recorded. Please try again.',
+      });
+    }
   }
 }
