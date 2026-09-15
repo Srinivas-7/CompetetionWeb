@@ -576,35 +576,49 @@ export const PANDHALS_DATA = [
   {
     "id": "pandhal-15",
     "number": 15,
-    "name": "Prasanna Yuva Mandali",
+    "name": "Ekanath yuvaka sangha",
     "photos": [
       {
         "id": "pandhal-15-img-1",
-        "src": "/pandhals/pandhal-15/IMG_7223.webp",
-        "thumbSrc": "/pandhals/pandhal-15/IMG_7223-thumb.webp",
-        "alt": "Prasanna Yuva Mandali - Photo 1",
-        "aspectRatio": 0.75
+        "src": "/pandhals/pandhal-15/IMG_2158.webp",
+        "thumbSrc": "/pandhals/pandhal-15/IMG_2158-thumb.webp",
+        "alt": "Ekanath yuvaka sangha - Photo 1",
+        "aspectRatio": 0.563
       },
       {
         "id": "pandhal-15-img-2",
-        "src": "/pandhals/pandhal-15/IMG_7224.webp",
-        "thumbSrc": "/pandhals/pandhal-15/IMG_7224-thumb.webp",
-        "alt": "Prasanna Yuva Mandali - Photo 2",
-        "aspectRatio": 0.75
+        "src": "/pandhals/pandhal-15/IMG_2149-1.webp",
+        "thumbSrc": "/pandhals/pandhal-15/IMG_2149-1-thumb.webp",
+        "alt": "Ekanath yuvaka sangha - Photo 2",
+        "aspectRatio": 0.563
       },
       {
         "id": "pandhal-15-img-3",
-        "src": "/pandhals/pandhal-15/IMG_7225.webp",
-        "thumbSrc": "/pandhals/pandhal-15/IMG_7225-thumb.webp",
-        "alt": "Prasanna Yuva Mandali - Photo 3",
-        "aspectRatio": 0.75
+        "src": "/pandhals/pandhal-15/IMG_2151.webp",
+        "thumbSrc": "/pandhals/pandhal-15/IMG_2151-thumb.webp",
+        "alt": "Ekanath yuvaka sangha - Photo 3",
+        "aspectRatio": 0.563
       },
       {
         "id": "pandhal-15-img-4",
-        "src": "/pandhals/pandhal-15/IMG_7226.webp",
-        "thumbSrc": "/pandhals/pandhal-15/IMG_7226-thumb.webp",
-        "alt": "Prasanna Yuva Mandali - Photo 4",
-        "aspectRatio": 0.75
+        "src": "/pandhals/pandhal-15/IMG_2152.webp",
+        "thumbSrc": "/pandhals/pandhal-15/IMG_2152-thumb.webp",
+        "alt": "Ekanath yuvaka sangha - Photo 4",
+        "aspectRatio": 0.563
+      },
+      {
+        "id": "pandhal-15-img-5",
+        "src": "/pandhals/pandhal-15/IMG_2153.webp",
+        "thumbSrc": "/pandhals/pandhal-15/IMG_2153-thumb.webp",
+        "alt": "Ekanath yuvaka sangha - Photo 5",
+        "aspectRatio": 0.563
+      },
+      {
+        "id": "pandhal-15-img-6",
+        "src": "/pandhals/pandhal-15/IMG_2157.webp",
+        "thumbSrc": "/pandhals/pandhal-15/IMG_2157-thumb.webp",
+        "alt": "Ekanath yuvaka sangha - Photo 6",
+        "aspectRatio": 1.778
       }
     ]
   },
