@@ -25,11 +25,13 @@ export const PandhalCard = memo(function PandhalCard({
         overflow: 'hidden'
       }}
     >
-      {/* 1. Photo Stage (Free size natural aspect ratio, no crop) */}
+      {/* 1. Photo Stage (Free size natural aspect ratio) */}
       <div 
         onClick={() => onCardClick(pandhal.id)}
         style={{ 
           width: '100%', 
+          aspectRatio: coverPhoto.aspectRatio ? `${coverPhoto.aspectRatio}` : '3 / 4',
+          minHeight: '160px',
           overflow: 'hidden', 
           position: 'relative',
           background: '#1A0C0C',
@@ -42,7 +44,8 @@ export const PandhalCard = memo(function PandhalCard({
           alt={coverPhoto.alt || pandhal.name} 
           style={{ 
             width: '100%', 
-            height: 'auto', 
+            height: '100%', 
+            objectFit: 'cover',
             display: 'block',
             transition: 'transform 0.3s ease'
           }}
