@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { VALID_PANDHAL_IDS } from './_lib/constants';
+
+const VALID_PANDHAL_IDS = Array.from({ length: 21 }, (_, i) => `pandhal-${String(i + 1).padStart(2, '0')}`);
 
 interface CachedCounters {
   counts: Record<string, number>;
