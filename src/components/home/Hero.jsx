@@ -1,8 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+
+function calculateTimeRemaining(targetTimestamp) {
+  const diff = Math.max(0, targetTimestamp - Date.now());
+  const totalSeconds = Math.floor(diff / 1000);
+  const seconds = totalSeconds % 60;
+  const minutes = Math.floor((totalSeconds / 60) % 60);
+  const hours = Math.floor(totalSeconds / 3600);
+  return {
+    diff,
+    hours: String(hours).padStart(2, '0'),
+    minutes: String(minutes).padStart(2, '0'),
+    seconds: String(seconds).padStart(2, '0'),
+    isEnded: diff <= 0
+  };
+}
 
 export function Hero({ onExploreClick, totalVotes = 0 }) {
   const { user, logout } = useAuth();
+
+  // Countdown timer to tomorrow 1:00 PM
+  const [targetTimestamp] = useState(() => {
+    const target = new Date();
+    target.setDate(target.getDate() + 1);
+    target.setHours(13, 0, 0, 0);
+    return target.getTime();
+  });
+
+  const [timeLeft, setTimeLeft] = useState(() => calculateTimeRemaining(targetTimestamp));
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeRemaining(targetTimestamp));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [targetTimestamp]);
 
   return (
     <div style={{ background: 'var(--bg-page)', color: 'var(--text-primary)', overflow: 'hidden' }}>
@@ -48,32 +80,45 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               <span 
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  fontWeight: 800,
-                  fontSize: '0.94rem',
+                  fontWeight: 900,
+                  fontSize: '1rem',
                   letterSpacing: '-0.02em',
                   color: 'var(--maroon-primary)',
-                  whiteSpace: 'nowrap'
+                  display: 'block',
+                  lineHeight: 1
                 }}
               >
-                GAJ<span style={{ color: 'var(--gold-primary)' }}>OTSAV 2026</span>
+                GAJ<span style={{ color: 'var(--gold-primary)' }}>OTSAV</span>
+              </span>
+              <span 
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.62rem',
+                  fontWeight: 800,
+                  color: 'var(--text-secondary)',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase'
+                }}
+              >
+                KHAMMAM 2026
               </span>
             </div>
           </div>
 
-          {/* Right User Profile + Live Pill + Quick Action */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-            {/* Logged in Google User Pill */}
-            {user && (
+          {/* Right Action Bar */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {user ? (
               <div 
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '5px',
-                  background: 'rgba(107, 20, 20, 0.08)',
-                  border: '1px solid rgba(107, 20, 20, 0.2)',
+                  gap: '6px',
+                  background: '#FFFFFF',
+                  border: '1px solid #EADECB',
                   borderRadius: 'var(--radius-pill)',
-                  padding: '2px 8px 2px 2px',
-                  cursor: 'pointer'
+                  padding: '3px 8px 3px 3px',
+                  cursor: 'pointer',
+                  boxShadow: '0 1px 4px rgba(0, 0, 0, 0.04)'
                 }}
                 onClick={logout}
                 title={`Signed in as ${user.email}. Click to sign out.`}
@@ -85,14 +130,12 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                     style={{ width: '22px', height: '22px', borderRadius: '50%', border: '1px solid var(--gold-primary)' }}
                   />
                 ) : (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8, color: 'var(--maroon-primary)' }}>
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                  </svg>
+                  <span style={{ fontSize: '0.72rem' }}>👤</span>
                 )}
                 <span 
                   style={{ 
                     fontFamily: 'var(--font-sans)', 
-                    fontSize: '0.68rem', 
+                    fontSize: '0.72rem', 
                     fontWeight: 700, 
                     color: 'var(--maroon-primary)', 
                     maxWidth: '80px', 
@@ -103,19 +146,24 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                 >
                   {user.displayName?.split(' ')[0] || user.email?.split('@')[0]}
                 </span>
-                <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>✕</span>
               </div>
-            )}
+            ) : null}
 
+            {/* Quick Explore CTA */}
             <button
               onClick={onExploreClick}
-              className="btn-3d-pink"
               style={{
+                background: 'var(--maroon-primary)',
+                color: '#FFFFFF',
+                border: '1px solid var(--maroon-dark)',
+                borderRadius: 'var(--radius-pill)',
                 padding: '6px 14px',
-                fontSize: '0.74rem',
-                fontFamily: 'var(--font-display)',
-                whiteSpace: 'nowrap',
-                flexShrink: 0,
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 800,
+                fontSize: '0.78rem',
+                letterSpacing: '0.04em',
+                cursor: 'pointer',
+                boxShadow: '0 2px 6px rgba(107, 20, 20, 0.25)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '3px'
@@ -127,13 +175,14 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         </div>
       </header>
 
-      {/* 2. Important Notice Marquee Banner */}
+      {/* 2. Royal Maroon & Gold Announcement Ribbon */}
       <div 
         role="region"
         aria-label="Important Announcement"
         style={{
           background: 'linear-gradient(90deg, #4A0E17 0%, #6B1414 50%, #4A0E17 100%)',
           color: '#FFFFFF',
+          borderTop: '1px solid rgba(212, 175, 55, 0.3)',
           borderBottom: '1.5px solid var(--gold-primary)',
           padding: '8px 0',
           overflow: 'hidden',
@@ -148,7 +197,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
           style={{ 
             gap: '36px', 
             whiteSpace: 'nowrap',
-            animationDuration: '22s'
+            animationDuration: '24s'
           }}
         >
           {[1, 2, 3, 4].map((i) => (
@@ -156,21 +205,49 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
               key={i} 
               style={{ 
                 fontFamily: 'var(--font-mono)', 
-                fontSize: '0.84rem', 
+                fontSize: '0.82rem', 
                 fontWeight: 700, 
-                letterSpacing: '0.04em',
+                letterSpacing: '0.03em',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '8px',
+                gap: '10px',
                 color: '#FFF8EB'
               }}
             >
-              <span style={{ color: 'var(--gold-light)', fontSize: '0.95rem' }}>📢</span>
-              <span style={{ color: 'var(--gold-light)', fontWeight: 800 }}>IMPORTANT NOTICE:</span>
-              <span style={{ color: '#FFFFFF' }}>The Voting will be closed tommorow at 1pm</span>
-              <span style={{ color: 'var(--gold-primary)', margin: '0 8px' }}>★</span>
+              <span 
+                style={{ 
+                  color: 'var(--gold-light)', 
+                  background: 'rgba(212, 175, 55, 0.16)',
+                  border: '1px solid rgba(212, 175, 55, 0.38)',
+                  padding: '2px 8px',
+                  borderRadius: 'var(--radius-pill)',
+                  fontWeight: 800,
+                  fontSize: '0.72rem',
+                  letterSpacing: '0.06em'
+                }}
+              >
+                NOTICE
+              </span>
+              <span style={{ color: '#FFFFFF', fontWeight: 600 }}>
+                The Voting will be closed tomorrow at 1:00 PM
+              </span>
+              <span 
+                style={{ 
+                  background: 'rgba(0, 0, 0, 0.35)', 
+                  border: '1px solid rgba(212, 175, 55, 0.35)',
+                  borderRadius: '6px',
+                  padding: '2px 8px',
+                  color: 'var(--gold-light)',
+                  fontWeight: 800,
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.8rem'
+                }}
+              >
+                {timeLeft.isEnded ? 'Voting Closed' : `Ends in ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`}
+              </span>
+              <span style={{ color: 'var(--gold-primary)', margin: '0 4px', fontSize: '0.7rem' }}>✦</span>
               <span style={{ color: 'rgba(255, 255, 255, 0.85)' }}>Cast your verified community vote today!</span>
-              <span style={{ color: 'var(--gold-primary)', margin: '0 8px' }}>★</span>
+              <span style={{ color: 'var(--gold-primary)', margin: '0 4px', fontSize: '0.7rem' }}>✦</span>
             </span>
           ))}
         </div>

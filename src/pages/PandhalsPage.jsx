@@ -5,6 +5,21 @@ import { Modal } from '../components/common/Modal';
 import { useAuth } from '../context/AuthContext';
 import { Footer } from '../components/common/Footer';
 
+function calculateTimeRemaining(targetTimestamp) {
+  const diff = Math.max(0, targetTimestamp - Date.now());
+  const totalSeconds = Math.floor(diff / 1000);
+  const seconds = totalSeconds % 60;
+  const minutes = Math.floor((totalSeconds / 60) % 60);
+  const hours = Math.floor(totalSeconds / 3600);
+  return {
+    diff,
+    hours: String(hours).padStart(2, '0'),
+    minutes: String(minutes).padStart(2, '0'),
+    seconds: String(seconds).padStart(2, '0'),
+    isEnded: diff <= 0
+  };
+}
+
 export function PandhalsPage({
   pandhals = [],
   liveCounts = {},
@@ -18,6 +33,23 @@ export function PandhalsPage({
 }) {
   const { user, logout } = useAuth();
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+
+  // Countdown timer to tomorrow 1:00 PM
+  const [targetTimestamp] = useState(() => {
+    const target = new Date();
+    target.setDate(target.getDate() + 1);
+    target.setHours(13, 0, 0, 0);
+    return target.getTime();
+  });
+
+  const [timeLeft, setTimeLeft] = useState(() => calculateTimeRemaining(targetTimestamp));
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeRemaining(targetTimestamp));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [targetTimestamp]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -180,9 +212,229 @@ export function PandhalsPage({
             21 PANDALS
           </h1>
 
-          <p style={{ margin: 0, fontSize: '0.88rem', color: 'rgba(255, 255, 255, 0.82)', fontWeight: 500 }}>
+          <p style={{ margin: '0 0 14px', fontSize: '0.88rem', color: 'rgba(255, 255, 255, 0.82)', fontWeight: 500 }}>
             Discover. Vote. Support.
           </p>
+
+          {/* Attractive Prominent Vote Ends In Countdown Card */}
+          <div
+            style={{
+              maxWidth: '380px',
+              width: '100%',
+              margin: '14px auto 0',
+              background: 'linear-gradient(135deg, rgba(38, 7, 7, 0.95) 0%, rgba(58, 12, 12, 0.95) 100%)',
+              border: '1.5px solid rgba(212, 175, 55, 0.65)',
+              borderRadius: '16px',
+              padding: '12px 16px',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45), 0 0 18px rgba(212, 175, 55, 0.22)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              boxSizing: 'border-box'
+            }}
+          >
+            {/* Header: Live Pulse + Label + Target Time Badge */}
+            <div 
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '8px',
+                marginBottom: '10px',
+                paddingBottom: '8px',
+                borderBottom: '1px solid rgba(212, 175, 55, 0.2)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span 
+                  style={{ 
+                    display: 'inline-block', 
+                    width: '8px', 
+                    height: '8px', 
+                    borderRadius: '50%', 
+                    background: timeLeft.isEnded ? '#888888' : '#FF3B30',
+                    flexShrink: 0
+                  }} 
+                />
+                <span 
+                  style={{ 
+                    fontFamily: 'var(--font-mono)', 
+                    fontSize: '0.78rem', 
+                    fontWeight: 800, 
+                    color: '#FFFFFF', 
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  Vote Ends In
+                </span>
+              </div>
+
+              <span 
+                style={{ 
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.7rem', 
+                  fontWeight: 800, 
+                  color: 'var(--gold-light)', 
+                  background: 'rgba(212, 175, 55, 0.15)',
+                  border: '1px solid rgba(212, 175, 55, 0.35)',
+                  borderRadius: 'var(--radius-pill)',
+                  padding: '2px 9px',
+                  letterSpacing: '0.03em'
+                }}
+              >
+                Tomorrow • 1:00 PM
+              </span>
+            </div>
+
+            {/* Countdown Digit Blocks */}
+            {timeLeft.isEnded ? (
+              <div 
+                style={{ 
+                  padding: '10px', 
+                  fontFamily: 'var(--font-heading)', 
+                  fontWeight: 800, 
+                  fontSize: '1.05rem', 
+                  color: '#FFA0A0',
+                  letterSpacing: '0.04em'
+                }}
+              >
+                Voting is Closed
+              </div>
+            ) : (
+              <div 
+                style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: '1fr auto 1fr auto 1fr', 
+                  alignItems: 'center', 
+                  gap: '6px' 
+                }}
+              >
+                {/* Hours Box */}
+                <div 
+                  style={{ 
+                    background: 'linear-gradient(180deg, #2C0909 0%, #150303 100%)', 
+                    border: '1px solid rgba(212, 175, 55, 0.38)', 
+                    borderRadius: '10px', 
+                    padding: '6px 4px',
+                    boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 3px 8px rgba(0, 0, 0, 0.35)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center'
+                  }}
+                >
+                  <span 
+                    style={{ 
+                      fontFamily: 'var(--font-mono)', 
+                      fontSize: '1.35rem', 
+                      fontWeight: 900, 
+                      lineHeight: 1.1,
+                      color: '#FFE28A',
+                      textShadow: '0 0 10px rgba(255, 215, 0, 0.4)'
+                    }}
+                  >
+                    {timeLeft.hours}
+                  </span>
+                  <span 
+                    style={{ 
+                      fontFamily: 'var(--font-mono)', 
+                      fontSize: '0.6rem', 
+                      fontWeight: 800, 
+                      color: 'rgba(255, 255, 255, 0.65)', 
+                      letterSpacing: '0.08em',
+                      marginTop: '2px'
+                    }}
+                  >
+                    HOURS
+                  </span>
+                </div>
+
+                {/* Colon */}
+                <span style={{ color: 'var(--gold-primary)', fontWeight: 900, fontSize: '1.1rem' }}>:</span>
+
+                {/* Minutes Box */}
+                <div 
+                  style={{ 
+                    background: 'linear-gradient(180deg, #2C0909 0%, #150303 100%)', 
+                    border: '1px solid rgba(212, 175, 55, 0.38)', 
+                    borderRadius: '10px', 
+                    padding: '6px 4px',
+                    boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 3px 8px rgba(0, 0, 0, 0.35)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center'
+                  }}
+                >
+                  <span 
+                    style={{ 
+                      fontFamily: 'var(--font-mono)', 
+                      fontSize: '1.35rem', 
+                      fontWeight: 900, 
+                      lineHeight: 1.1,
+                      color: '#FFE28A',
+                      textShadow: '0 0 10px rgba(255, 215, 0, 0.4)'
+                    }}
+                  >
+                    {timeLeft.minutes}
+                  </span>
+                  <span 
+                    style={{ 
+                      fontFamily: 'var(--font-mono)', 
+                      fontSize: '0.6rem', 
+                      fontWeight: 800, 
+                      color: 'rgba(255, 255, 255, 0.65)', 
+                      letterSpacing: '0.08em',
+                      marginTop: '2px'
+                    }}
+                  >
+                    MINS
+                  </span>
+                </div>
+
+                {/* Colon */}
+                <span style={{ color: 'var(--gold-primary)', fontWeight: 900, fontSize: '1.1rem' }}>:</span>
+
+                {/* Seconds Box */}
+                <div 
+                  style={{ 
+                    background: 'linear-gradient(180deg, #2C0909 0%, #150303 100%)', 
+                    border: '1px solid rgba(212, 175, 55, 0.38)', 
+                    borderRadius: '10px', 
+                    padding: '6px 4px',
+                    boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 3px 8px rgba(0, 0, 0, 0.35)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center'
+                  }}
+                >
+                  <span 
+                    style={{ 
+                      fontFamily: 'var(--font-mono)', 
+                      fontSize: '1.35rem', 
+                      fontWeight: 900, 
+                      lineHeight: 1.1,
+                      color: '#FFE28A',
+                      textShadow: '0 0 10px rgba(255, 215, 0, 0.4)'
+                    }}
+                  >
+                    {timeLeft.seconds}
+                  </span>
+                  <span 
+                    style={{ 
+                      fontFamily: 'var(--font-mono)', 
+                      fontSize: '0.6rem', 
+                      fontWeight: 800, 
+                      color: 'rgba(255, 255, 255, 0.65)', 
+                      letterSpacing: '0.08em',
+                      marginTop: '2px'
+                    }}
+                  >
+                    SECS
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
