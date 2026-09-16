@@ -87,8 +87,8 @@ class VotingService {
   }
 
   /**
-   * Subscribes to the authenticated user's individual voter record in Firestore.
-   * Multiplexes across all components so only 1 single onSnapshot listener exists in the browser.
+   * Syncs the authenticated user's individual voter record.
+   * Performs one-time lean sync via getDoc (eliminating noisy persistent WebChannel disconnects and Quota stream errors).
    * 
    * @param {string} uid - Firebase Auth User UID
    * @param {function} callback - Receives { pandhalId, pandhalName, votedAt } or null
@@ -96,10 +96,6 @@ class VotingService {
    */
   subscribeUserVote(uid, callback) {
     if (!uid) {
-      if (this.activeFirestoreUnsubscribe) {
-        this.activeFirestoreUnsubscribe();
-        this.activeFirestoreUnsubscribe = null;
-      }
       this.currentUid = null;
       this.myVoteCache = null;
       this.subscribers.clear();
@@ -107,66 +103,42 @@ class VotingService {
       return () => { };
     }
 
-    // UID changed: reset existing listener
     if (this.currentUid !== uid) {
-      if (this.activeFirestoreUnsubscribe) {
-        this.activeFirestoreUnsubscribe();
-        this.activeFirestoreUnsubscribe = null;
-      }
       this.currentUid = uid;
       this.myVoteCache = this.getMyVote(uid);
       this.subscribers.clear();
     }
 
     this.subscribers.add(callback);
-
-    // Initial emit for instant UI render from scoped local storage
     callback(this.myVoteCache);
 
-    // Start single shared onSnapshot listener if not already running
-    if (!this.activeFirestoreUnsubscribe && db) {
-      try {
-        const voterDocRef = doc(db, 'voters', `${EVENT_ID}_${uid}`);
-        this.activeFirestoreUnsubscribe = onSnapshot(
-          voterDocRef,
-          (docSnap) => {
-            if (docSnap.exists()) {
-              const data = docSnap.data();
-              const voteData = {
-                pandhalId: data.pandhalId,
-                pandhalName: data.pandhalName || data.pandhalId,
-                votedAt: data.votedAt,
-              };
-              this.setMyVote(voteData, uid);
-              this.subscribers.forEach((cb) => {
-                try { cb(voteData); } catch { /* ignore */ }
-              });
-            } else {
-              this.clearMyVote(uid);
-              this.subscribers.forEach((cb) => {
-                try { cb(null); } catch { /* ignore */ }
-              });
-            }
-          },
-          (err) => {
-            console.warn('[VotingService] subscribeUserVote warning:', err?.message || err);
-            const cached = this.getMyVote(uid);
+    if (db) {
+      const voterDocRef = doc(db, 'voters', `${EVENT_ID}_${uid}`);
+      getDoc(voterDocRef)
+        .then((docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            const voteData = {
+              pandhalId: data.pandhalId,
+              pandhalName: data.pandhalName || data.pandhalId,
+              votedAt: data.votedAt,
+            };
+            this.setMyVote(voteData, uid);
             this.subscribers.forEach((cb) => {
-              try { cb(cached); } catch { /* ignore */ }
+              try { cb(voteData); } catch { /* ignore */ }
             });
           }
-        );
-      } catch (err) {
-        console.warn('[VotingService] subscribeUserVote error:', err);
-      }
+        })
+        .catch(() => {
+          const cached = this.getMyVote(uid);
+          this.subscribers.forEach((cb) => {
+            try { cb(cached); } catch { /* ignore */ }
+          });
+        });
     }
 
     return () => {
       this.subscribers.delete(callback);
-      if (this.subscribers.size === 0 && this.activeFirestoreUnsubscribe) {
-        this.activeFirestoreUnsubscribe();
-        this.activeFirestoreUnsubscribe = null;
-      }
     };
   }
 

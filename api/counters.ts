@@ -128,12 +128,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       zeroCounts[id] = 0;
     });
 
-    return res.status(200).json({
-      success: true,
-      counts: instanceCache ? instanceCache.counts : zeroCounts,
-      totalVotes: instanceCache ? instanceCache.totalVotes : 0,
-      updatedAt: new Date().toISOString(),
-      fallback: true,
-    });
+    try {
+      res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=10');
+      return res.status(200).json({
+        success: true,
+        counts: instanceCache ? instanceCache.counts : zeroCounts,
+        totalVotes: instanceCache ? instanceCache.totalVotes : 0,
+        updatedAt: new Date().toISOString(),
+        fallback: true,
+      });
+    } catch {
+      return res.status(200).end();
+    }
   }
 }
