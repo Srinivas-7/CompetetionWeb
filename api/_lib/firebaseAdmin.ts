@@ -48,10 +48,11 @@ export function getAdminApp(): App | null {
           privateKey: formatPrivateKey(privateKeyRaw),
         }),
       });
-    } else {
-      appInstance = initializeApp({ projectId });
+      return appInstance;
     }
-    return appInstance;
+
+    console.warn('[firebaseAdmin] No service account credentials found. Admin SDK gracefully disabled.');
+    return null;
   } catch (err) {
     console.warn('[firebaseAdmin] Failed to initialize admin app:', err);
     return null;
