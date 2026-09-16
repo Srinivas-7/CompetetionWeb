@@ -11,13 +11,13 @@ interface CachedCounters {
 
 // In-instance memory micro-cache (reduces duplicate Firestore reads across concurrent requests to same container)
 let instanceCache: CachedCounters | null = null;
-const INSTANCE_CACHE_TTL_MS = 15000; // 15 seconds
+const INSTANCE_CACHE_TTL_MS = 5000; // 5 seconds
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // 1. CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Cache-Control');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -31,16 +31,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  // 2. Edge CDN Caching Headers
-  // s-maxage=20: Vercel Edge CDN caches for 20 seconds
-  // stale-while-revalidate=60: Serves stale copy instantly up to 60s while refreshing in background
-  res.setHeader('Cache-Control', 'public, s-maxage=20, stale-while-revalidate=60');
+  // 2. Edge CDN Caching Headers (15s maxage + 15s stale-while-revalidate for tight live updates)
+  res.setHeader('Cache-Control', 'public, s-maxage=15, stale-while-revalidate=15');
 
   const now = Date.now();
 
   // Check in-instance micro-cache first
   if (instanceCache && now - instanceCache.timestamp < INSTANCE_CACHE_TTL_MS) {
     res.setHeader('X-Cache-Status', 'HIT-INSTANCE');
+    console.info(`[API_COUNTERS_HIT] Container micro-cache hit: totalVotes ${instanceCache.totalVotes} (age: ${Math.round((now - instanceCache.timestamp) / 1000)}s)`);
     return res.status(200).json({
       success: true,
       counts: instanceCache.counts,
@@ -60,12 +59,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       throw new Error('ADMIN_DB_UNAVAILABLE');
     }
 
-    // Query both shard subcollections and top-level counters
+    // Query both shard subcollections and top-level counters in parallel
     const [shardsSnapshot, countersSnapshot] = await Promise.all([
       adminDb.collectionGroup('shards').get().catch(() => null),
       adminDb.collection('counters').get().catch(() => null),
     ]);
 
+    let shardSumCount = 0;
     if (shardsSnapshot) {
       shardsSnapshot.forEach((docSnap) => {
         const data = docSnap.data();
@@ -76,10 +76,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         if (pandhalId && counts[pandhalId] !== undefined) {
           counts[pandhalId] += count;
+          shardSumCount += count;
         }
       });
     }
 
+    let topLevelSumCount = 0;
     if (countersSnapshot) {
       countersSnapshot.forEach((docSnap) => {
         const data = docSnap.data();
@@ -90,6 +92,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         if (pandhalId && counts[pandhalId] !== undefined) {
           counts[pandhalId] = Math.max(counts[pandhalId], topTotal);
+          topLevelSumCount += topTotal;
         }
       });
     }
@@ -106,6 +109,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       timestamp: now,
       updatedAt,
     };
+
+    console.info(`[API_COUNTERS_FETCH] Fresh Firestore read committed: totalVotes ${totalVotes} (shardsSum: ${shardSumCount}, topSum: ${topLevelSumCount})`);
 
     res.setHeader('X-Cache-Status', 'MISS-FETCHED');
     return res.status(200).json({

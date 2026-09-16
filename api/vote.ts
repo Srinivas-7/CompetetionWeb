@@ -281,6 +281,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (txResult.status === 'IDEMPOTENT_SUCCESS') {
+      console.info(`[API_VOTE_IDEMPOTENT] Idempotent vote re-asserted for UID ${uid.slice(0, 8)}... on ${pandhalId}`);
       return res.status(200).json({
         success: true,
         message: `Your vote for ${txResult.pandhalName} is successfully locked!`,
@@ -289,6 +290,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         idempotent: true,
       });
     }
+
+    console.info(`[API_VOTE_COMMITTED] Atomic ballot committed for UID ${uid.slice(0, 8)}... -> ${pandhalId} (shard_${shardIndex}, topCounter +1)`);
 
     return res.status(200).json({
       success: true,

@@ -313,15 +313,21 @@ class VotingService {
   async fetchLiveCounts() {
     // 1. Primary: Serverless Edge endpoint with CDN caching
     try {
-      const response = await fetch('/api/counters');
+      const response = await fetch(`/api/counters?_t=${Date.now()}`, {
+        headers: { 'Cache-Control': 'no-cache' }
+      });
       const contentType = response.headers.get('content-type') || '';
       if (response.ok && contentType.includes('application/json')) {
         const data = await response.json();
         if (data.success && data.counts && !data.fallback) {
-          this.countsCache = { ...this.countsCache, ...data.counts };
+          Object.entries(data.counts).forEach(([id, val]) => {
+            this.countsCache[id] = Math.max(this.countsCache[id] || 0, Number(val) || 0);
+          });
+          let total = 0;
+          Object.values(this.countsCache).forEach((v) => { total += (v || 0); });
           return {
-            counts: this.countsCache,
-            totalVotes: typeof data.totalVotes === 'number' ? data.totalVotes : 0,
+            counts: { ...this.countsCache },
+            totalVotes: Math.max(total, typeof data.totalVotes === 'number' ? data.totalVotes : 0),
           };
         }
       }
