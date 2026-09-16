@@ -1,5 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getAdminDb } from './_lib/firebaseAdmin';
 import { VALID_PANDHAL_IDS } from './_lib/constants';
 
 interface CachedCounters {
@@ -53,7 +52,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       counts[id] = 0;
     });
 
-    const adminDb = getAdminDb();
+    let adminDb = null;
+    try {
+      const adminModule = await import('./_lib/firebaseAdmin');
+      adminDb = adminModule.getAdminDb();
+    } catch {
+      adminDb = null;
+    }
     if (adminDb) {
       // Query both shard subcollections and top-level counters in parallel
       const [shardsSnapshot, countersSnapshot] = await Promise.all([
