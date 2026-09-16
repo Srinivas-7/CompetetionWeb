@@ -3,7 +3,10 @@ import { PANDHALS_DATA } from '../data/pandhals';
 import { auth, db, getAppCheckToken } from '../lib/firebase';
 import {
   doc,
-  onSnapshot
+  onSnapshot,
+  collectionGroup,
+  collection,
+  getDocs
 } from 'firebase/firestore';
 
 const EVENT_ID = 'ganapathi_chaturthi_2026';
@@ -301,19 +304,20 @@ class VotingService {
   }
 
   /**
-   * Fetches latest aggregated live counts from the serverless edge endpoint (/api/counters).
-   * Edge-cached on Vercel CDN for 20s (stale-while-revalidate=60s).
-   * Generates ZERO direct Firestore document reads from connected browser clients.
+   * Fetches latest aggregated live counts.
+   * 1. Primary: Serverless edge endpoint (/api/counters) with Edge CDN caching (zero client reads).
+   * 2. Resilient Fallback: Direct Firestore read if serverless endpoint is offline or in local fallback.
    * 
    * @returns {Promise<{counts: Record<string, number>, totalVotes: number}>}
    */
   async fetchLiveCounts() {
+    // 1. Primary: Serverless Edge endpoint with CDN caching
     try {
       const response = await fetch('/api/counters');
       const contentType = response.headers.get('content-type') || '';
       if (response.ok && contentType.includes('application/json')) {
         const data = await response.json();
-        if (data.success && data.counts) {
+        if (data.success && data.counts && !data.fallback) {
           this.countsCache = { ...this.countsCache, ...data.counts };
           return {
             counts: this.countsCache,
@@ -322,7 +326,59 @@ class VotingService {
         }
       }
     } catch (err) {
-      console.warn('[VotingService] fetchLiveCounts network note:', err);
+      // API endpoint unavailable or running in local dev
+    }
+
+    // 2. Resilient Client Fallback: If API returned fallback or failed, query Firestore directly
+    if (db) {
+      try {
+        const [shardsSnapshot, countersSnapshot] = await Promise.all([
+          getDocs(collectionGroup(db, 'shards')).catch(() => null),
+          getDocs(collection(db, 'counters')).catch(() => null),
+        ]);
+
+        const directCounts = {};
+        PANDHALS_DATA.forEach((p) => {
+          directCounts[p.id] = 0;
+        });
+
+        if (shardsSnapshot) {
+          shardsSnapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const count = typeof data.count === 'number' ? data.count : 0;
+            const pathSegments = docSnap.ref.path.split('/');
+            const pandhalId = pathSegments[1];
+
+            if (pandhalId && directCounts[pandhalId] !== undefined) {
+              directCounts[pandhalId] += count;
+            }
+          });
+        }
+
+        if (countersSnapshot) {
+          countersSnapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const pandhalId = docSnap.id;
+            const topTotal = typeof data.totalVotes === 'number'
+              ? data.totalVotes
+              : (typeof data.count === 'number' ? data.count : 0);
+
+            if (pandhalId && directCounts[pandhalId] !== undefined) {
+              directCounts[pandhalId] = Math.max(directCounts[pandhalId], topTotal);
+            }
+          });
+        }
+
+        let total = 0;
+        Object.values(directCounts).forEach((v) => {
+          total += (v || 0);
+        });
+
+        this.countsCache = { ...this.countsCache, ...directCounts };
+        return { counts: this.countsCache, totalVotes: total };
+      } catch (firestoreErr) {
+        console.warn('[VotingService] Direct Firestore fallback note:', firestoreErr);
+      }
     }
 
     let total = 0;

@@ -60,20 +60,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       throw new Error('ADMIN_DB_UNAVAILABLE');
     }
 
-    // Query all shard subcollections across all pandhals
-    const shardsSnapshot = await adminDb.collectionGroup('shards').get();
+    // Query both shard subcollections and top-level counters
+    const [shardsSnapshot, countersSnapshot] = await Promise.all([
+      adminDb.collectionGroup('shards').get().catch(() => null),
+      adminDb.collection('counters').get().catch(() => null),
+    ]);
 
-    shardsSnapshot.forEach((docSnap) => {
-      const data = docSnap.data();
-      const count = typeof data.count === 'number' ? data.count : 0;
-      
-      const pathSegments = docSnap.ref.path.split('/');
-      const pandhalId = pathSegments[1];
+    if (shardsSnapshot) {
+      shardsSnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const count = typeof data.count === 'number' ? data.count : 0;
+        
+        const pathSegments = docSnap.ref.path.split('/');
+        const pandhalId = pathSegments[1];
 
-      if (pandhalId && counts[pandhalId] !== undefined) {
-        counts[pandhalId] += count;
-      }
-    });
+        if (pandhalId && counts[pandhalId] !== undefined) {
+          counts[pandhalId] += count;
+        }
+      });
+    }
+
+    if (countersSnapshot) {
+      countersSnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const pandhalId = docSnap.id;
+        const topTotal = typeof data.totalVotes === 'number'
+          ? data.totalVotes
+          : (typeof data.count === 'number' ? data.count : 0);
+
+        if (pandhalId && counts[pandhalId] !== undefined) {
+          counts[pandhalId] = Math.max(counts[pandhalId], topTotal);
+        }
+      });
+    }
 
     let totalVotes = 0;
     Object.values(counts).forEach((val) => {
