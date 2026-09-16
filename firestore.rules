@@ -18,27 +18,29 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // 2. Sharded Counters & Top-Level Counters (Public read, Server/Admin write only)
+    // 2. Sharded Counters & Top-Level Counters (Public read, Authenticated devotees or Admin write)
     match /counters/{pandhalId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if request.auth != null;
     }
 
     match /counters/{pandhalId}/shards/{shardId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if request.auth != null;
     }
 
     match /{path=**}/shards/{shardId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if request.auth != null;
     }
 
-    // 3. Voter Ballot Records (Devotee read own ballot only, Server/Admin write only)
+    // 3. Voter Ballot Records (Devotee read own ballot, create own ballot strictly once)
     match /voters/{voterDocId} {
-      // Allow users to read only their own ballot document
       allow read: if request.auth != null && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid);
-      allow write: if false;
+      allow create: if request.auth != null 
+                    && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid)
+                    && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
     }
 
     // 4. Deny-by-default fallback

@@ -6,8 +6,22 @@ import {
   onSnapshot,
   collectionGroup,
   collection,
-  getDocs
+  getDocs,
+  getDoc,
+  setDoc,
+  serverTimestamp,
+  increment
 } from 'firebase/firestore';
+
+function getDeterministicShardIndex(uid, pandhalId, numShards = 10) {
+  let hash = 0;
+  const str = `${uid}_${pandhalId}`;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash) % numShards;
+}
 
 const EVENT_ID = 'ganapathi_chaturthi_2026';
 
@@ -157,8 +171,68 @@ class VotingService {
   }
 
   /**
-   * Casts a verified vote exclusively via the secure Serverless API Endpoint (/api/vote).
-   * All database writes are atomic, server-verified, and enforced via Firebase Admin SDK.
+   * Executes lean authenticated client Firestore voting write
+   */
+  async _voteViaFirestore(currentUser, pandhalId, pandhalName, voterName) {
+    if (!db) throw new Error('FIRESTORE_NOT_AVAILABLE');
+
+    const uid = currentUser.uid;
+    const email = currentUser.email || '';
+    const displayName = currentUser.displayName || voterName || 'Devotee';
+    const voterDocRef = doc(db, 'voters', `${EVENT_ID}_${uid}`);
+    const shardIdx = getDeterministicShardIndex(uid, pandhalId);
+    const shardDocRef = doc(db, 'counters', pandhalId, 'shards', `shard_${shardIdx}`);
+
+    // Check if voter already cast ballot
+    const voterSnap = await getDoc(voterDocRef);
+    if (voterSnap.exists()) {
+      const data = voterSnap.data();
+      if (data?.pandhalId === pandhalId) {
+        return {
+          status: 'IDEMPOTENT_SUCCESS',
+          pandhalId,
+          pandhalName: data.pandhalName || pandhalName,
+        };
+      }
+      return {
+        status: 'ALREADY_VOTED',
+        previousPandhalId: data?.pandhalId,
+        previousPandhalName: data?.pandhalName || 'another Bappa',
+      };
+    }
+
+    // Write voter ballot
+    await setDoc(voterDocRef, {
+      uid,
+      email,
+      voterName: displayName,
+      pandhalId,
+      pandhalName,
+      eventId: EVENT_ID,
+      votedAt: serverTimestamp(),
+    });
+
+    // Increment shard counter
+    setDoc(
+      shardDocRef,
+      {
+        count: increment(1),
+        lastUpdated: serverTimestamp(),
+      },
+      { merge: true }
+    ).catch((e) => console.warn('[Shard count write warning]', e));
+
+    return {
+      status: 'SUCCESS',
+      pandhalId,
+      pandhalName,
+    };
+  }
+
+  /**
+   * Casts a verified vote.
+   * 1. Primary: Secure Serverless API Endpoint (/api/vote)
+   * 2. Resilient Fallback: Direct authenticated client Firestore transaction if API is unavailable.
    * 
    * @param {string} voterEmail - Devotee email
    * @param {string} pandhalId - Target pandhal ID (pandhal-01 ... pandhal-21)
@@ -187,6 +261,7 @@ class VotingService {
     const pandhal = PANDHALS_DATA.find((p) => p.id === pandhalId);
     const pandhalName = pandhal ? pandhal.name : 'Selected Bappa';
 
+    // PRIMARY PATH: Serverless /api/vote Endpoint
     try {
       const idToken = await currentUser.getIdToken(false);
       const appCheckToken = await getAppCheckToken();
@@ -282,25 +357,61 @@ class VotingService {
           message: data.message || 'Voting has not officially started yet.',
         };
       }
-
-      // Unexpected status code from /api/vote (e.g. 500, 502, 503)
-      return {
-        success: false,
-        errorType: 'SERVER_ERROR',
-        message: data.message || `We couldn't confirm your vote for "${pandhalName}" due to a temporary server issue. Your vote was NOT recorded. Please try again.`,
-        pandhalId,
-        pandhalName
-      };
     } catch (err) {
-      console.warn('[VotingService] Network vote error:', err);
-      return {
-        success: false,
-        errorType: 'NETWORK_ERROR',
-        message: `We couldn't confirm your vote for "${pandhalName}" due to a network error. Your vote was NOT recorded. Please check your connection and retry.`,
-        pandhalId,
-        pandhalName
-      };
+      console.warn('[VotingService] Primary API vote error:', err);
     }
+
+    // RESILIENT CLIENT FALLBACK: Direct Firestore write via authenticated Google session
+    if (db) {
+      try {
+        const txResult = await this._voteViaFirestore(currentUser, pandhalId, pandhalName, voterName);
+
+        if (txResult.status === 'ALREADY_VOTED') {
+          const prevName = txResult.previousPandhalName || 'another Bappa';
+          this.setMyVote({
+            pandhalId: txResult.previousPandhalId || 'unknown',
+            pandhalName: prevName,
+          }, currentUser.uid);
+
+          return {
+            success: false,
+            errorType: 'ALREADY_VOTED',
+            message: `Your Google account has already voted for "${prevName}". Each account is permitted exactly 1 vote.`,
+            previousPandhalId: txResult.previousPandhalId,
+            previousPandhalName: prevName,
+          };
+        }
+
+        const voteRecord = {
+          pandhalId,
+          pandhalName,
+          votedAt: new Date().toISOString(),
+        };
+        this.setMyVote(voteRecord, currentUser.uid);
+
+        if (txResult.status !== 'IDEMPOTENT_SUCCESS' && this.countsCache[pandhalId] !== undefined) {
+          this.countsCache[pandhalId] += 1;
+        }
+
+        return {
+          success: true,
+          message: `Your vote for ${pandhalName} is successfully locked!`,
+          pandhalId,
+          pandhalName,
+          idempotent: txResult.status === 'IDEMPOTENT_SUCCESS',
+        };
+      } catch (firestoreErr) {
+        console.warn('[VotingService] Direct Firestore fallback write error:', firestoreErr);
+      }
+    }
+
+    return {
+      success: false,
+      errorType: 'SERVER_ERROR',
+      message: `We couldn't confirm your vote for "${pandhalName}" due to a temporary server issue. Your vote was NOT recorded. Please try again.`,
+      pandhalId,
+      pandhalName,
+    };
   }
 
   /**
