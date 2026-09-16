@@ -19,8 +19,10 @@ const SCAN_DIRS = ['src', 'api'];
 const SCAN_FILES = ['firestore.rules'];
 const EXCLUDED_FILES = [
   'setLaunchTime.js',
+  'set-launch-time.ts',
   'checkNoHardcodedTimestamps.js',
-  'testLaunchGateBypass.js'
+  'testLaunchGateBypass.js',
+  'verify-data-snapshot.js'
 ];
 
 let violations = [];

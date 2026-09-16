@@ -11,11 +11,12 @@ import {
   type Auth, 
   type User 
 } from 'firebase/auth';
+import { initializeAppCheck, ReCaptchaV3Provider, getToken, type AppCheck } from 'firebase/app-check';
 
 // Client-side Firebase configuration from VITE_ environment variables
 const apiKey = import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyBxqgieHExe8CpvjfZZebh3yt22R7-_Tg4";
 const authDomain = import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "bappatrail-fef2d.firebaseapp.com";
-const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID || "bappatrail-fef2d";
+const projectId = process.env.VITE_FIREBASE_PROJECT_ID || import.meta.env.VITE_FIREBASE_PROJECT_ID || "bappatrail-fef2d";
 const storageBucket = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "bappatrail-fef2d.firebasestorage.app";
 const messagingSenderId = import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "707993544116";
 const appId = import.meta.env.VITE_FIREBASE_APP_ID || "1:707993544116:web:a5cbdcad3860b2806bbee1";
@@ -44,8 +45,36 @@ export const auth: Auth = getAuth(app);
 // 3. Client-side Firestore
 export const db: Firestore = getFirestore(app);
 
-// 3. Google Auth Provider
+// 4. Google Auth Provider
 export const googleProvider = new GoogleAuthProvider();
+
+// 5. Client-side App Check (Silent reCAPTCHA v3 bot protection)
+let appCheckInstance: AppCheck | null = null;
+const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+
+if (typeof window !== 'undefined' && recaptchaSiteKey) {
+  try {
+    appCheckInstance = initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(recaptchaSiteKey),
+      isTokenAutoRefreshEnabled: true,
+    });
+  } catch (err) {
+    console.warn('[Firebase AppCheck] Client initialization warning:', err);
+  }
+}
+
+/**
+ * Retrieves current App Check token if available
+ */
+export async function getAppCheckToken(): Promise<string | null> {
+  if (!appCheckInstance) return null;
+  try {
+    const result = await getToken(appCheckInstance, false);
+    return result?.token || null;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Sign in with Google with popup + redirect fallback

@@ -9,6 +9,9 @@
     "preview": "vite preview",
     "check:timestamps": "node scripts/checkNoHardcodedTimestamps.js",
     "test:bypass": "node scripts/testLaunchGateBypass.js",
+    "test:hardening": "node scripts/test-hardening.mjs",
+    "snapshot:capture": "node scripts/verify-data-snapshot.js capture",
+    "snapshot:verify": "node scripts/verify-data-snapshot.js compare snapshot_baseline.json",
     "set-launch-time": "node scripts/setLaunchTime.js"
   },
   "dependencies": {

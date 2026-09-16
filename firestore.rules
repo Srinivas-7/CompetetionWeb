@@ -4,50 +4,47 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // =========================================================================
-    // GANAPATHI TRAIL 2026 - PRODUCTION SECURITY RULES (FULLY LIVE & OPEN)
+    // GANAPATHI TRAIL 2026 - HARDENED PRODUCTION SECURITY RULES
     // 
-    // - 1 Vote per authenticated user UID (cannot update or delete)
-    // - Distributed counters and shards are publicly readable and writeable by voters
-    // - System config is publicly readable, Admin write only
+    // - All writes to voters/ and counters/ are STRICTLY SERVER-SIDE ONLY (Admin SDK in api/vote.ts)
+    // - Direct client writes are completely disabled (allow write: if false)
+    // - Deny-by-default across all collections
+    // - Existing shard counts and voter documents preserved as-is with zero data loss
     // =========================================================================
 
-    // 1. Dynamic System Configuration (Public read, Admin write only)
+    // 1. Dynamic System Configuration (Public read, Server/Admin write only)
     match /config/{configDocId} {
       allow read: if true;
       allow write: if false;
     }
 
-    // 2. Sharded Counters & Top-Level Counters
+    // 2. Sharded Counters & Top-Level Counters (Public read, Server/Admin write only)
     match /counters/{pandhalId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if false;
     }
 
     match /counters/{pandhalId}/shards/{shardId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if false;
     }
 
     match /{path=**}/shards/{shardId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if false;
     }
 
-    // 3. Voter Ballot Records (1 vote per authenticated user UID)
+    // 3. Voter Ballot Records (Devotee read own ballot only, Server/Admin write only)
     match /voters/{voterDocId} {
       // Allow users to read only their own ballot document
       allow read: if request.auth != null && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid);
-      
-      // Allow authenticated users to create only their own unique vote doc (cannot update or delete)
-      allow create: if request.auth != null 
-                    && voterDocId == ('ganapathi_chaturthi_2026_' + request.auth.uid);
-      allow update, delete: if false;
+      allow write: if false;
     }
 
-    // 4. Default fallback
+    // 4. Deny-by-default fallback
     match /{document=**} {
-      allow read: if true;
-      allow write: if request.auth != null;
+      allow read, write: if false;
     }
   }
 }
+

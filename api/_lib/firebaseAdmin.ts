@@ -1,6 +1,9 @@
 import { initializeApp, getApps, cert, type App } from 'firebase-admin/app';
-import { getFirestore, type Firestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue, Timestamp, type Firestore } from 'firebase-admin/firestore';
 import { getAuth, type Auth } from 'firebase-admin/auth';
+import { getAppCheck, type AppCheck } from 'firebase-admin/app-check';
+
+export { FieldValue, Timestamp };
 
 /**
  * Safely sanitizes the Firebase private key across environments:
@@ -23,6 +26,7 @@ function formatPrivateKey(key?: string): string {
 let appInstance: App | null = null;
 let dbInstance: Firestore | null = null;
 let authInstance: Auth | null = null;
+let appCheckInstance: AppCheck | null = null;
 
 export function getAdminApp(): App | null {
   if (appInstance) return appInstance;
@@ -79,3 +83,17 @@ export function getAdminAuth(): Auth | null {
     return null;
   }
 }
+
+export function getAdminAppCheck(): AppCheck | null {
+  if (appCheckInstance) return appCheckInstance;
+  try {
+    const app = getAdminApp();
+    if (!app) return null;
+    appCheckInstance = getAppCheck(app);
+    return appCheckInstance;
+  } catch (err) {
+    console.warn('[firebaseAdmin] Failed to get AppCheck admin instance:', err);
+    return null;
+  }
+}
+

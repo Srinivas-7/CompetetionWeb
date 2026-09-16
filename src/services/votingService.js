@@ -1,35 +1,21 @@
 import { isValidPandhalId } from '../utils/validation';
 import { PANDHALS_DATA } from '../data/pandhals';
-import { auth, db } from '../lib/firebase';
+import { auth, db, getAppCheckToken } from '../lib/firebase';
 import {
   doc,
-  onSnapshot,
-  getDoc,
-  setDoc,
-  collectionGroup,
-  getDocs,
-  serverTimestamp,
-  increment
+  onSnapshot
 } from 'firebase/firestore';
 
 const EVENT_ID = 'ganapathi_chaturthi_2026';
-const NUM_SHARDS = 10;
-
-function getDeterministicShardIndex(uid, pandhalId) {
-  let hash = 0;
-  const str = `${EVENT_ID}:${uid}:${pandhalId}`;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash) % NUM_SHARDS;
-}
 
 class VotingService {
   constructor() {
     this.currentUid = null;
     this.myVoteCache = null;
     this.countsCache = {};
+    this.subscribers = new Set();
+    this.activeFirestoreUnsubscribe = null;
+
     PANDHALS_DATA.forEach((p) => {
       this.countsCache[p.id] = 0;
     });
@@ -85,7 +71,7 @@ class VotingService {
 
   /**
    * Subscribes to the authenticated user's individual voter record in Firestore.
-   * Security rules permit reading only the user's own voter document (/voters/{EVENT_ID}_{UID}).
+   * Multiplexes across all components so only 1 single onSnapshot listener exists in the browser.
    * 
    * @param {string} uid - Firebase Auth User UID
    * @param {function} callback - Receives { pandhalId, pandhalName, votedAt } or null
@@ -93,124 +79,83 @@ class VotingService {
    */
   subscribeUserVote(uid, callback) {
     if (!uid) {
+      if (this.activeFirestoreUnsubscribe) {
+        this.activeFirestoreUnsubscribe();
+        this.activeFirestoreUnsubscribe = null;
+      }
       this.currentUid = null;
       this.myVoteCache = null;
+      this.subscribers.clear();
       callback(null);
       return () => { };
     }
 
-    // Switch active UID and fetch this specific user's cached record (if any)
-    this.currentUid = uid;
-    this.myVoteCache = this.getMyVote(uid);
+    // UID changed: reset existing listener
+    if (this.currentUid !== uid) {
+      if (this.activeFirestoreUnsubscribe) {
+        this.activeFirestoreUnsubscribe();
+        this.activeFirestoreUnsubscribe = null;
+      }
+      this.currentUid = uid;
+      this.myVoteCache = this.getMyVote(uid);
+      this.subscribers.clear();
+    }
 
-    // Initial emit for fast render
+    this.subscribers.add(callback);
+
+    // Initial emit for instant UI render from scoped local storage
     callback(this.myVoteCache);
 
-    if (!db) {
-      return () => { };
-    }
-
-    try {
-      const voterDocRef = doc(db, 'voters', `${EVENT_ID}_${uid}`);
-      const unsubscribe = onSnapshot(
-        voterDocRef,
-        (docSnap) => {
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            const voteData = {
-              pandhalId: data.pandhalId,
-              pandhalName: data.pandhalName || data.pandhalId,
-              votedAt: data.votedAt,
-            };
-            this.setMyVote(voteData, uid);
-            callback(voteData);
-          } else {
-            // User has NOT voted in Firestore! Clear any cache and notify listeners with null
-            this.clearMyVote(uid);
-            callback(null);
+    // Start single shared onSnapshot listener if not already running
+    if (!this.activeFirestoreUnsubscribe && db) {
+      try {
+        const voterDocRef = doc(db, 'voters', `${EVENT_ID}_${uid}`);
+        this.activeFirestoreUnsubscribe = onSnapshot(
+          voterDocRef,
+          (docSnap) => {
+            if (docSnap.exists()) {
+              const data = docSnap.data();
+              const voteData = {
+                pandhalId: data.pandhalId,
+                pandhalName: data.pandhalName || data.pandhalId,
+                votedAt: data.votedAt,
+              };
+              this.setMyVote(voteData, uid);
+              this.subscribers.forEach((cb) => {
+                try { cb(voteData); } catch { /* ignore */ }
+              });
+            } else {
+              this.clearMyVote(uid);
+              this.subscribers.forEach((cb) => {
+                try { cb(null); } catch { /* ignore */ }
+              });
+            }
+          },
+          (err) => {
+            console.warn('[VotingService] subscribeUserVote warning:', err?.message || err);
+            const cached = this.getMyVote(uid);
+            this.subscribers.forEach((cb) => {
+              try { cb(cached); } catch { /* ignore */ }
+            });
           }
-        },
-        (err) => {
-          console.warn('[VotingService] subscribeUserVote warning:', err?.message || err);
-          // On network/permission error, only emit this specific user's scoped cache
-          callback(this.getMyVote(uid));
-        }
-      );
-
-      return () => {
-        if (typeof unsubscribe === 'function') unsubscribe();
-      };
-    } catch (err) {
-      console.warn('[VotingService] subscribeUserVote error:', err);
-      callback(this.getMyVote(uid));
-      return () => { };
-    }
-  }
-
-  /**
-   * Executes lean client-side Firestore voting write (1 read + 1 write)
-   */
-  async _voteViaFirestore(currentUser, pandhalId, pandhalName, voterName) {
-    if (!db) throw new Error('FIRESTORE_NOT_AVAILABLE');
-
-    const uid = currentUser.uid;
-    const email = currentUser.email || '';
-    const displayName = currentUser.displayName || voterName || 'Devotee';
-    const voterDocId = `${EVENT_ID}_${uid}`;
-    const voterDocRef = doc(db, 'voters', voterDocId);
-    const shardIdx = getDeterministicShardIndex(uid, pandhalId);
-    const shardDocRef = doc(db, 'counters', pandhalId, 'shards', `shard_${shardIdx}`);
-
-    // Check if voter already cast ballot
-    const voterSnap = await getDoc(voterDocRef);
-    if (voterSnap.exists()) {
-      const data = voterSnap.data();
-      if (data?.pandhalId === pandhalId) {
-        return {
-          status: 'IDEMPOTENT_SUCCESS',
-          pandhalId,
-          pandhalName: data.pandhalName || pandhalName,
-        };
+        );
+      } catch (err) {
+        console.warn('[VotingService] subscribeUserVote error:', err);
       }
-      return {
-        status: 'ALREADY_VOTED',
-        previousPandhalId: data?.pandhalId,
-        previousPandhalName: data?.pandhalName || 'another Bappa',
-      };
     }
 
-    // Write voter ballot
-    await setDoc(voterDocRef, {
-      uid,
-      email,
-      voterName: displayName,
-      pandhalId,
-      pandhalName,
-      eventId: EVENT_ID,
-      votedAt: serverTimestamp(),
-    });
-
-    // Increment shard counter
-    setDoc(
-      shardDocRef,
-      {
-        count: increment(1),
-        lastUpdated: serverTimestamp(),
-      },
-      { merge: true }
-    ).catch(e => console.warn('[Shard count write warning]', e));
-
-    return {
-      status: 'SUCCESS',
-      pandhalId,
-      pandhalName,
+    return () => {
+      this.subscribers.delete(callback);
+      if (this.subscribers.size === 0 && this.activeFirestoreUnsubscribe) {
+        this.activeFirestoreUnsubscribe();
+        this.activeFirestoreUnsubscribe = null;
+      }
     };
   }
 
   /**
-   * Casts a verified vote with dual redundancy:
-   * 1. Direct authenticated Client Firestore Transaction
-   * 2. Fallback to Serverless API Endpoint (/api/vote)
+   * Casts a verified vote exclusively via the secure Serverless API Endpoint (/api/vote).
+   * All database writes are atomic, server-verified, and enforced via Firebase Admin SDK.
    * 
    * @param {string} voterEmail - Devotee email
    * @param {string} pandhalId - Target pandhal ID (pandhal-01 ... pandhal-21)
@@ -239,59 +184,18 @@ class VotingService {
     const pandhal = PANDHALS_DATA.find((p) => p.id === pandhalId);
     const pandhalName = pandhal ? pandhal.name : 'Selected Bappa';
 
-    // PRIMARY PATH: Direct Client Firestore Transaction
-    if (db) {
-      try {
-        const txResult = await this._voteViaFirestore(currentUser, pandhalId, pandhalName, voterName);
-
-        if (txResult.status === 'ALREADY_VOTED') {
-          const prevName = txResult.previousPandhalName || 'another Bappa';
-          this.setMyVote({
-            pandhalId: txResult.previousPandhalId || 'unknown',
-            pandhalName: prevName,
-          }, currentUser.uid);
-
-          return {
-            success: false,
-            errorType: 'ALREADY_VOTED',
-            message: `Your Google account has already voted for "${prevName}". Each account is permitted exactly 1 vote.`,
-            previousPandhalId: txResult.previousPandhalId,
-            previousPandhalName: prevName,
-          };
-        }
-
-        // Success (Fresh vote or idempotent safe retry)
-        const voteRecord = {
-          pandhalId,
-          pandhalName,
-          votedAt: new Date().toISOString(),
-        };
-        this.setMyVote(voteRecord, currentUser.uid);
-
-        if (txResult.status !== 'IDEMPOTENT_SUCCESS' && this.countsCache[pandhalId] !== undefined) {
-          this.countsCache[pandhalId] += 1;
-        }
-
-        return {
-          success: true,
-          message: `Your vote for ${pandhalName} is successfully locked!`,
-          pandhalId,
-          pandhalName,
-          idempotent: txResult.status === 'IDEMPOTENT_SUCCESS',
-        };
-      } catch (firestoreErr) {
-        console.warn('[VotingService] Client Firestore tx fallback triggering:', firestoreErr?.message || firestoreErr);
-      }
-    }
-
-    // SECONDARY PATH: Serverless /api/vote Endpoint
     try {
       const idToken = await currentUser.getIdToken(false);
+      const appCheckToken = await getAppCheckToken();
 
       const requestHeaders = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${idToken}`,
       };
+
+      if (appCheckToken) {
+        requestHeaders['X-Firebase-AppCheck'] = appCheckToken;
+      }
 
       const response = await fetch('/api/vote', {
         method: 'POST',
@@ -353,6 +257,14 @@ class VotingService {
       }
 
       if (response.status === 401) {
+        if (data.error === 'GOOGLE_SIGN_IN_REQUIRED') {
+          return {
+            success: false,
+            errorType: 'GOOGLE_SIGN_IN_REQUIRED',
+            message: data.message || 'To ensure fair community voting, please sign in with your Google account. Past votes remain securely counted.',
+          };
+        }
+
         return {
           success: false,
           errorType: 'INVALID_TOKEN',
@@ -372,7 +284,7 @@ class VotingService {
       return {
         success: false,
         errorType: 'SERVER_ERROR',
-        message: `We couldn't confirm your vote for "${pandhalName}" due to a server issue. Your vote was NOT recorded. Please try again.`,
+        message: data.message || `We couldn't confirm your vote for "${pandhalName}" due to a temporary server issue. Your vote was NOT recorded. Please try again.`,
         pandhalId,
         pandhalName
       };
@@ -389,46 +301,13 @@ class VotingService {
   }
 
   /**
-   * Fetches latest aggregated shard counts from the serverless edge endpoint (/api/counters).
-   * Edge-cached for 20s (stale-while-revalidate=60s).
-   * Automatically falls back to direct Firestore shard queries in local dev or network failure.
+   * Fetches latest aggregated live counts from the serverless edge endpoint (/api/counters).
+   * Edge-cached on Vercel CDN for 20s (stale-while-revalidate=60s).
+   * Generates ZERO direct Firestore document reads from connected browser clients.
    * 
    * @returns {Promise<{counts: Record<string, number>, totalVotes: number}>}
    */
   async fetchLiveCounts() {
-    // 1. Direct Firestore Read (Reads shards directly for live numbers)
-    if (db) {
-      try {
-        const shardsSnapshot = await getDocs(collectionGroup(db, 'shards'));
-        const directCounts = {};
-        PANDHALS_DATA.forEach((p) => {
-          directCounts[p.id] = 0;
-        });
-
-        shardsSnapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          const count = typeof data.count === 'number' ? data.count : 0;
-          const pathSegments = docSnap.ref.path.split('/');
-          const pandhalId = pathSegments[1];
-
-          if (pandhalId && directCounts[pandhalId] !== undefined) {
-            directCounts[pandhalId] += count;
-          }
-        });
-
-        let total = 0;
-        Object.values(directCounts).forEach((v) => {
-          total += v;
-        });
-
-        this.countsCache = { ...this.countsCache, ...directCounts };
-        return { counts: this.countsCache, totalVotes: total };
-      } catch (firestoreErr) {
-        // Fallback to API
-      }
-    }
-
-    // 2. Serverless Edge endpoint with CDN caching
     try {
       const response = await fetch('/api/counters');
       const contentType = response.headers.get('content-type') || '';
@@ -443,7 +322,7 @@ class VotingService {
         }
       }
     } catch (err) {
-      // API endpoint unavailable
+      console.warn('[VotingService] fetchLiveCounts network note:', err);
     }
 
     let total = 0;
