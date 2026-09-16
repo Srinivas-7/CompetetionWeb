@@ -16,7 +16,7 @@ import { initializeAppCheck, ReCaptchaV3Provider, getToken, type AppCheck } from
 // Client-side Firebase configuration from VITE_ environment variables
 const apiKey = import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyBxqgieHExe8CpvjfZZebh3yt22R7-_Tg4";
 const authDomain = import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "bappatrail-fef2d.firebaseapp.com";
-const projectId = process.env.VITE_FIREBASE_PROJECT_ID || import.meta.env.VITE_FIREBASE_PROJECT_ID || "bappatrail-fef2d";
+const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID || "bappatrail-fef2d";
 const storageBucket = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "bappatrail-fef2d.firebasestorage.app";
 const messagingSenderId = import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "707993544116";
 const appId = import.meta.env.VITE_FIREBASE_APP_ID || "1:707993544116:web:a5cbdcad3860b2806bbee1";

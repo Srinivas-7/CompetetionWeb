@@ -127,18 +127,67 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         </div>
       </header>
 
-      {/* 2. Hero Section */}
+      {/* 2. Important Notice Marquee Banner */}
+      <div 
+        role="region"
+        aria-label="Important Announcement"
+        style={{
+          background: 'linear-gradient(90deg, #4A0E17 0%, #6B1414 50%, #4A0E17 100%)',
+          color: '#FFFFFF',
+          borderBottom: '1.5px solid var(--gold-primary)',
+          padding: '8px 0',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          boxShadow: '0 2px 10px rgba(74, 14, 23, 0.35)',
+          position: 'relative'
+        }}
+      >
+        <div 
+          className="animate-marquee" 
+          style={{ 
+            gap: '36px', 
+            whiteSpace: 'nowrap',
+            animationDuration: '22s'
+          }}
+        >
+          {[1, 2, 3, 4].map((i) => (
+            <span 
+              key={i} 
+              style={{ 
+                fontFamily: 'var(--font-mono)', 
+                fontSize: '0.84rem', 
+                fontWeight: 700, 
+                letterSpacing: '0.04em',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                color: '#FFF8EB'
+              }}
+            >
+              <span style={{ color: 'var(--gold-light)', fontSize: '0.95rem' }}>📢</span>
+              <span style={{ color: 'var(--gold-light)', fontWeight: 800 }}>IMPORTANT NOTICE:</span>
+              <span style={{ color: '#FFFFFF' }}>The Voting will be closed tommorow at 1pm</span>
+              <span style={{ color: 'var(--gold-primary)', margin: '0 8px' }}>★</span>
+              <span style={{ color: 'rgba(255, 255, 255, 0.85)' }}>Cast your verified community vote today!</span>
+              <span style={{ color: 'var(--gold-primary)', margin: '0 8px' }}>★</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* 3. Hero Section */}
       <section 
         style={{
           maxWidth: 'var(--container-max)',
           margin: '0 auto',
-          padding: '28px 16px 24px',
+          padding: 'clamp(42px, 7vw, 60px) 16px 28px',
           textAlign: 'center',
           position: 'relative'
         }}
       >
         {/* Official Utsav Sticker */}
-        <div style={{ marginBottom: '18px' }}>
+        <div style={{ marginBottom: '22px' }}>
           <span 
             style={{
               display: 'inline-block',
