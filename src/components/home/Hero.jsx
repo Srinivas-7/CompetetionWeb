@@ -19,10 +19,9 @@ function calculateTimeRemaining(targetTimestamp) {
 export function Hero({ onExploreClick, totalVotes = 0 }) {
   const { user, logout } = useAuth();
 
-  // Countdown timer to tomorrow 1:00 PM
+  // Countdown timer to today 1:00 PM
   const [targetTimestamp] = useState(() => {
     const target = new Date();
-    target.setDate(target.getDate() + 1);
     target.setHours(13, 0, 0, 0);
     return target.getTime();
   });
@@ -229,7 +228,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
                 NOTICE
               </span>
               <span style={{ color: '#FFFFFF', fontWeight: 600 }}>
-                The Voting will be closed tomorrow at 1:00 PM
+                The Voting will be closed today at 1:00 PM
               </span>
               <span 
                 style={{ 

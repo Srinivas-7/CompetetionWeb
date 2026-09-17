@@ -34,10 +34,9 @@ export function PandhalsPage({
   const { user, logout } = useAuth();
   const [showLeaderboard, setShowLeaderboard] = useState(false);
 
-  // Countdown timer to tomorrow 1:00 PM
+  // Countdown timer to today 1:00 PM
   const [targetTimestamp] = useState(() => {
     const target = new Date();
-    target.setDate(target.getDate() + 1);
     target.setHours(13, 0, 0, 0);
     return target.getTime();
   });
@@ -266,7 +265,7 @@ export function PandhalsPage({
                     textTransform: 'uppercase'
                   }}
                 >
-                  Vote Ends In
+                  Voting Ends In
                 </span>
               </div>
 
@@ -283,7 +282,7 @@ export function PandhalsPage({
                   letterSpacing: '0.03em'
                 }}
               >
-                Tomorrow • 1:00 PM
+                Today • 1:00 PM
               </span>
             </div>
 
