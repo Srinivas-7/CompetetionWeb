@@ -1,39 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useAuth } from '../../context/AuthContext';
-
-function calculateTimeRemaining(targetTimestamp) {
-  const diff = Math.max(0, targetTimestamp - Date.now());
-  const totalSeconds = Math.floor(diff / 1000);
-  const seconds = totalSeconds % 60;
-  const minutes = Math.floor((totalSeconds / 60) % 60);
-  const hours = Math.floor(totalSeconds / 3600);
-  return {
-    diff,
-    hours: String(hours).padStart(2, '0'),
-    minutes: String(minutes).padStart(2, '0'),
-    seconds: String(seconds).padStart(2, '0'),
-    isEnded: diff <= 0
-  };
-}
 
 export function Hero({ onExploreClick, totalVotes = 0 }) {
   const { user, logout } = useAuth();
-
-  // Countdown timer to today 1:00 PM
-  const [targetTimestamp] = useState(() => {
-    const target = new Date();
-    target.setHours(13, 0, 0, 0);
-    return target.getTime();
-  });
-
-  const [timeLeft, setTimeLeft] = useState(() => calculateTimeRemaining(targetTimestamp));
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeRemaining(targetTimestamp));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [targetTimestamp]);
 
   return (
     <div style={{ background: 'var(--bg-page)', color: 'var(--text-primary)', overflow: 'hidden' }}>
@@ -174,85 +143,7 @@ export function Hero({ onExploreClick, totalVotes = 0 }) {
         </div>
       </header>
 
-      {/* 2. Royal Maroon & Gold Announcement Ribbon */}
-      <div 
-        role="region"
-        aria-label="Important Announcement"
-        style={{
-          background: 'linear-gradient(90deg, #4A0E17 0%, #6B1414 50%, #4A0E17 100%)',
-          color: '#FFFFFF',
-          borderTop: '1px solid rgba(212, 175, 55, 0.3)',
-          borderBottom: '1.5px solid var(--gold-primary)',
-          padding: '8px 0',
-          overflow: 'hidden',
-          display: 'flex',
-          alignItems: 'center',
-          boxShadow: '0 2px 10px rgba(74, 14, 23, 0.35)',
-          position: 'relative'
-        }}
-      >
-        <div 
-          className="animate-marquee" 
-          style={{ 
-            gap: '36px', 
-            whiteSpace: 'nowrap',
-            animationDuration: '24s'
-          }}
-        >
-          {[1, 2, 3, 4].map((i) => (
-            <span 
-              key={i} 
-              style={{ 
-                fontFamily: 'var(--font-mono)', 
-                fontSize: '0.82rem', 
-                fontWeight: 700, 
-                letterSpacing: '0.03em',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                color: '#FFF8EB'
-              }}
-            >
-              <span 
-                style={{ 
-                  color: 'var(--gold-light)', 
-                  background: 'rgba(212, 175, 55, 0.16)',
-                  border: '1px solid rgba(212, 175, 55, 0.38)',
-                  padding: '2px 8px',
-                  borderRadius: 'var(--radius-pill)',
-                  fontWeight: 800,
-                  fontSize: '0.72rem',
-                  letterSpacing: '0.06em'
-                }}
-              >
-                NOTICE
-              </span>
-              <span style={{ color: '#FFFFFF', fontWeight: 600 }}>
-                The Voting will be closed today at 1:00 PM
-              </span>
-              <span 
-                style={{ 
-                  background: 'rgba(0, 0, 0, 0.35)', 
-                  border: '1px solid rgba(212, 175, 55, 0.35)',
-                  borderRadius: '6px',
-                  padding: '2px 8px',
-                  color: 'var(--gold-light)',
-                  fontWeight: 800,
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '0.8rem'
-                }}
-              >
-                {timeLeft.isEnded ? 'Voting Closed' : `Ends in ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`}
-              </span>
-              <span style={{ color: 'var(--gold-primary)', margin: '0 4px', fontSize: '0.7rem' }}>✦</span>
-              <span style={{ color: 'rgba(255, 255, 255, 0.85)' }}>Cast your verified community vote today!</span>
-              <span style={{ color: 'var(--gold-primary)', margin: '0 4px', fontSize: '0.7rem' }}>✦</span>
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* 3. Hero Section */}
+      {/* 2. Hero Section */}
       <section 
         style={{
           maxWidth: 'var(--container-max)',
