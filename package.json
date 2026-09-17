@@ -15,8 +15,11 @@
     "set-launch-time": "node scripts/setLaunchTime.js"
   },
   "dependencies": {
+    "canvas-confetti": "^1.9.4",
     "firebase": "^10.12.2",
     "firebase-admin": "^14.3.0",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

@@ -140,10 +140,13 @@ function MainDashboard() {
   };
 
   // 1. DEDICATED VOTE PAGE
-  if (currentPage === 'vote' && selectedVotePandhal) {
+  if (currentPage === 'vote') {
     return (
       <VotePage 
-        pandhal={selectedVotePandhal}
+        pandhal={selectedVotePandhal || pandhals[0]}
+        liveCounts={liveCounts}
+        totalVotes={totalVotes}
+        myVote={myVote}
         onBack={handleCloseVote}
         onVoteRecorded={handleVoteRecorded}
       />
