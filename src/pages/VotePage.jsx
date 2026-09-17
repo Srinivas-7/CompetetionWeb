@@ -143,7 +143,7 @@ export function VotePage({
             }}
           >
             <span>←</span>
-            <span>Back to Pandhals</span>
+            <span>{isClosed ? 'Back to Home' : 'Back to Pandhals'}</span>
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

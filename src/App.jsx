@@ -11,6 +11,7 @@ import { usePandhal } from './hooks/usePandhal';
 import { useAuth } from './context/AuthContext';
 import { pandhalService } from './services/pandhalService';
 import { votingService } from './services/votingService';
+import { isVotingClosed } from './utils/timeUtils';
 
 function MainDashboard() {
   const { user } = useAuth();
@@ -139,6 +140,20 @@ function MainDashboard() {
     setMyVote(votingService.getMyVote(user?.uid));
   };
 
+  // AFTER 1:00 PM / VOTING CLOSED: Completely replace voting and pandhals page with the Thank You & Leaderboard Results Page
+  if (isVotingClosed() && (currentPage === 'vote' || currentPage === 'pandhals')) {
+    return (
+      <VotePage 
+        pandhal={selectedVotePandhal || pandhals[0]}
+        liveCounts={liveCounts}
+        totalVotes={totalVotes}
+        myVote={myVote}
+        onBack={() => navigateTo('home')}
+        onVoteRecorded={handleVoteRecorded}
+      />
+    );
+  }
+
   // 1. DEDICATED VOTE PAGE
   if (currentPage === 'vote') {
     return (
@@ -153,7 +168,7 @@ function MainDashboard() {
     );
   }
 
-  // 2. DEDICATED PANDHALS LIST PAGE
+  // 2. DEDICATED PANDHALS LIST PAGE (Before 1:00 PM)
   if (currentPage === 'pandhals') {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
