@@ -328,29 +328,12 @@ export function VotePage({
                   fontSize: 'clamp(1.6rem, 5vw, 2.2rem)',
                   fontWeight: 900,
                   color: 'var(--maroon-primary)',
-                  margin: '0 0 8px',
+                  margin: '0 0 16px',
                   lineHeight: 1.2
                 }}
               >
                 Thank You for Voting!
               </h1>
-              
-              <p 
-                style={{
-                  fontSize: '0.98rem',
-                  color: 'var(--text-secondary)',
-                  lineHeight: 1.5,
-                  maxWidth: '580px',
-                  margin: '0 auto 24px'
-                }}
-              >
-                {pandhal ? (
-                  <>Your sacred vote for <strong style={{ color: 'var(--maroon-primary)' }}>{pandhal.name}</strong> has been officially recorded in the live community tally.</>
-                ) : (
-                  <>Your sacred vote has been officially secured and counted in the live community tally.</>
-                )}
-                {' '}Ganpati Bappa Morya!
-              </p>
 
               {/* Action Buttons: Download PDF & Celebrate Confetti */}
               <div 
