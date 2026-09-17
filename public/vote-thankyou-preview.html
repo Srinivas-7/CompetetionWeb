@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Thank You For Voting | Gajotsav 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Unbounded:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Unbounded:wght@600;700;800;900&display=swap"
+    rel="stylesheet">
   <!-- Confetti script -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <!-- jsPDF & autoTable for instant PDF generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-  
+
   <style>
     :root {
       --bg-page: #FBF7F0;
@@ -52,7 +55,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background-image: 
+      background-image:
         radial-gradient(circle at 10% 20%, rgba(200, 157, 71, 0.08) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(107, 20, 20, 0.06) 0%, transparent 40%);
     }
@@ -266,8 +269,15 @@
     }
 
     @keyframes popIn {
-      0% { transform: scale(0.4); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+      0% {
+        transform: scale(0.4);
+        opacity: 0;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     .thankyou-title {
@@ -399,9 +409,20 @@
     }
 
     @keyframes pulse {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
+      }
+
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(22, 163, 74, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+      }
     }
 
     .leaderboard-desc {
@@ -487,10 +508,25 @@
       flex-shrink: 0;
     }
 
-    .rank-1-badge { background: var(--maroon-primary); color: #FFFFFF; }
-    .rank-2-badge { background: var(--gold-dark); color: #FFFFFF; }
-    .rank-3-badge { background: var(--gold-primary); color: #FFFFFF; }
-    .rank-other-badge { background: #EADECB; color: var(--text-primary); }
+    .rank-1-badge {
+      background: var(--maroon-primary);
+      color: #FFFFFF;
+    }
+
+    .rank-2-badge {
+      background: var(--gold-dark);
+      color: #FFFFFF;
+    }
+
+    .rank-3-badge {
+      background: var(--gold-primary);
+      color: #FFFFFF;
+    }
+
+    .rank-other-badge {
+      background: #EADECB;
+      color: var(--text-primary);
+    }
 
     .cand-info {
       min-width: 0;
@@ -556,6 +592,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Top Navigation Bar -->
@@ -566,7 +603,8 @@
         <span>Back to Pandhals</span>
       </a>
       <div class="nav-brand">
-        <img src="public/assets/cute-bappa-logo.jpg" onerror="this.src='/assets/cute-bappa-logo.jpg'" alt="Bappa Logo" />
+        <img src="public/assets/cute-bappa-logo.jpg" onerror="this.src='/assets/cute-bappa-logo.jpg'"
+          alt="Bappa Logo" />
         <span class="nav-brand-title">GAJOTSAV <span style="color: var(--gold-primary);">2026</span></span>
       </div>
     </div>
@@ -574,7 +612,7 @@
 
   <!-- Main Content Stage -->
   <main class="main-wrap">
-    
+
     <!-- 1. #1 Winner Spotlight Banner on Top -->
     <div class="winner-spotlight-card">
       <div class="winner-crown-badge">
@@ -582,7 +620,8 @@
       </div>
 
       <div class="winner-body">
-        <img src="public/assets/cute-bappa-logo.jpg" onerror="this.src='/assets/cute-bappa-logo.jpg'" alt="Winner Bappa" class="winner-photo" />
+        <img src="public/assets/cute-bappa-logo.jpg" onerror="this.src='/assets/cute-bappa-logo.jpg'" alt="Winner Bappa"
+          class="winner-photo" />
         <div class="winner-details">
           <h2 class="winner-name">#03 Raja Ganapathi Yuvaka Sangham 🏆</h2>
           <div class="winner-meta">
@@ -630,7 +669,8 @@
         </div>
 
         <div class="head-actions">
-          <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); background: #FDFBF7; padding: 6px 12px; border-radius: var(--radius-pill); border: 1px solid #EADECB;">
+          <div
+            style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); background: #FDFBF7; padding: 6px 12px; border-radius: var(--radius-pill); border: 1px solid #EADECB;">
             Total Votes: <strong style="color: var(--maroon-primary);">2,845</strong>
           </div>
         </div>
@@ -638,7 +678,7 @@
 
       <!-- Leaderboard List: Top 5 Only -->
       <div class="leaderboard-list" id="leaderboard-container">
-        
+
         <!-- Rank 1 Winner -->
         <div class="rank-row top-1">
           <div class="row-progress-fill" style="width: 100%;"></div>
@@ -724,7 +764,8 @@
 
     <!-- Footer Trust Info -->
     <div class="footer-trust">
-      🌸 Gajotsav 2026 Community Celebration • All votes secured with cryptographic anti-tamper ledger • Ganpati Bappa Morya!
+      🌸 Gajotsav 2026 Community Celebration • All votes secured with cryptographic anti-tamper ledger • Ganpati Bappa
+      Morya!
     </div>
 
   </main>
@@ -797,8 +838,7 @@
         const dateStr = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
         doc.text(`Generated on: ${dateStr} IST`, 14, 36);
         doc.text(`Total Verified Votes Counted: 2,845`, 130, 36);
-        doc.text(`Verification Hash: TXN-GJ26-AUDIT-VERIFIED`, 14, 42);
-        doc.text(`System Status: 100% Impartial & Audited`, 130, 42);
+
 
         // Prepare table data without location column
         const tableBody = ALL_PANDHALS_LEADERBOARD.map(item => [
@@ -810,7 +850,7 @@
 
         // Draw Table using autoTable
         doc.autoTable({
-          startY: 48,
+          startY: 42,
           head: [['Rank', 'Pandhal Name', 'Votes', 'Share']],
           body: tableBody,
           theme: 'grid',
@@ -851,4 +891,5 @@
     }
   </script>
 </body>
+
 </html>

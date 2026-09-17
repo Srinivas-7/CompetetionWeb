@@ -797,8 +797,6 @@
         const dateStr = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
         doc.text(`Generated on: ${dateStr} IST`, 14, 36);
         doc.text(`Total Verified Votes Counted: 2,845`, 130, 36);
-        doc.text(`Verification Hash: TXN-GJ26-AUDIT-VERIFIED`, 14, 42);
-        doc.text(`System Status: 100% Impartial & Audited`, 130, 42);
 
         // Prepare table data without location column
         const tableBody = ALL_PANDHALS_LEADERBOARD.map(item => [
@@ -810,7 +808,7 @@
 
         // Draw Table using autoTable
         doc.autoTable({
-          startY: 48,
+          startY: 42,
           head: [['Rank', 'Pandhal Name', 'Votes', 'Share']],
           body: tableBody,
           theme: 'grid',

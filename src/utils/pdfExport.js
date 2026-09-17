@@ -30,8 +30,6 @@ export function downloadFullLeaderboardPDF(sortedPandhals = [], totalVotes = 0) 
     const dateStr = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
     doc.text(`Generated on: ${dateStr} IST`, 14, 36);
     doc.text(`Total Verified Votes Counted: ${(totalVotes || 0).toLocaleString('en-IN')}`, 130, 36);
-    doc.text(`Verification Hash: TXN-GJ26-AUDIT-VERIFIED`, 14, 42);
-    doc.text(`System Status: 100% Impartial & Audited`, 130, 42);
 
     // 3. Prepare table data (Rank, Pandhal Name, Votes, Share)
     const effectiveTotal = totalVotes > 0 ? totalVotes : 1;
@@ -48,7 +46,7 @@ export function downloadFullLeaderboardPDF(sortedPandhals = [], totalVotes = 0) 
 
     // 4. Draw Table using autoTable
     autoTable(doc, {
-      startY: 48,
+      startY: 42,
       head: [['Rank', 'Pandhal Name', 'Votes', 'Share']],
       body: tableBody,
       theme: 'grid',
